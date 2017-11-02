@@ -1,0 +1,10 @@
+image: rabits/qt:5.9-desktop
+
+stages:
+  - build
+
+job1:
+  stage: build
+  script:
+    - qmake *.pro
+    - make
