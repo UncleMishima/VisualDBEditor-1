@@ -2,7 +2,12 @@
 
 Controller::Controller(QObject *parent): QObject(parent)
 {
-
+    quickView.setSource(QUrl(QStringLiteral("qrc:/main.qml")));
 }
 
-void start();
+Controller::~Controller(){}
+
+void Controller::start()
+{
+    quickView.show();
+}

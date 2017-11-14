@@ -8,6 +8,8 @@ class Controller: QObject
     Q_OBJECT
 public:
     explicit Controller(QObject *parent = nullptr);
+    ~Controller();
+    void start();
 
 signals:
     void openConnection(DBType tm, QString url, QString dbName,
@@ -15,7 +17,7 @@ signals:
 
 private:
     QVector<QTableView*> *tableViews;
-    QQuickView *quickView;
+    QQuickView quickView;
 
 };
 
