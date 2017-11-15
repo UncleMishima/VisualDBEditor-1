@@ -1,31 +1,56 @@
 import QtQuick 2.5
-import QtQuick.Window 2.2
+import QtQuick.Controls 1.4
+import QtQuick.Layouts 1.3
 
-Window {
+Item {
+    id: root
     visible: true
-    width: 640
-    height: 480
-    title: qsTr("Hello World")
+    width: 1000
+    height: 750
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            console.log(qsTr('Clicked on background. Text: "' + textEdit.text + '"'))
+    ToolBar {
+        id: toolBar
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.top: parent.top
+
+        RowLayout {
+            anchors.fill: parent
+
+            ToolButton {
+                text: "Open"
+            }
         }
+   }
+
+    Item {
+        id: contentItem
+        x: 55
+        y: 165
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.top: toolBar.bottom
+        anchors.bottom: statusBar.top
     }
 
-    TextEdit {
-        id: textEdit
-        text: qsTr("Enter some text...")
-        verticalAlignment: Text.AlignVCenter
-        anchors.top: parent.top
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: 20
-        Rectangle {
+    StatusBar {
+        id: statusBar
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+
+        RowLayout {
             anchors.fill: parent
-            anchors.margins: -10
-            color: "transparent"
-            border.width: 1
+
+            Text {
+                id: widthAndHeightText
+                text: "w: " + parent.width + " h: " + parent.height
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
+                fontSizeMode: Text.Fit
+                font.pixelSize: 12
+            }
         }
     }
 }
+
