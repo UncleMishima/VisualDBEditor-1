@@ -17,7 +17,7 @@ signals:
 
 private:
     QVector<QTableView*> *tableViews;
-    QQuickView quickView;
+    QQuickWidget quickWidget;
 
 };
 
