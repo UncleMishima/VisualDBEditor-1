@@ -3,7 +3,7 @@ import QtQuick 2.5
 Item  {
     id: tableFrame
     width: 100
-    height: 200
+    height: 50
     property int dragStep: 20
     property alias headerColor: header.color
     property alias headerText: headerText.text

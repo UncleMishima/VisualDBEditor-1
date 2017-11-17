@@ -31,6 +31,13 @@ Item {
         anchors.left: parent.left
         anchors.top: toolBar.bottom
         anchors.bottom: statusBar.top
+
+        MouseArea {
+            anchors.fill: parent
+
+            onDoubleClicked: controller.createTableFrame("table", mouseX, mouseY, parent)
+
+        }
     }
 
     StatusBar {
