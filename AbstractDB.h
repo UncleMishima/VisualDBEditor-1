@@ -3,14 +3,15 @@
 
 #include <QVector>
 
-#include "table.h"
+#include "GlobalDefinitions.h"
+#include "Table.h"
 
 class AbstractDB
 {
 public:
     AbstractDB();
 
-    virtual void fillTables(QVector<Table *> *tables) = 0;
+    virtual void fillTables(DisplayMode m, QVector<Table *> *tables) = 0;
 
 };
 

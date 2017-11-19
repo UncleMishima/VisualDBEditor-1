@@ -9,8 +9,8 @@
 #include <QStringList>
 #include <QTableView>
 
-#include "table.h"
-#include "abstractdb.h"
+#include "Table.h"
+#include "AbstractDB.h"
 
 class XmlDB : public AbstractDB
 {
@@ -24,7 +24,7 @@ public:
 
     void fillModel(Table* tb, QStringList& fields, QStringList& rows);
 
-    void fillTables(QVector<Table *> *tables);
+    void fillTables(DisplayMode m, QVector<Table *> *tables);
 
     QTableView tv;
 

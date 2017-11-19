@@ -1,4 +1,4 @@
-#include "xmldb.h"
+#include "XmlDB.h"
 
 #include <QObject>
 #include <QDebug>
@@ -175,7 +175,7 @@ void XmlDB::fillModel(Table* tb, QStringList& fields, QStringList& rows)
     //tb->model->setItem(1, 1, new QStandardItem(rows[3]));
 }
 
-void XmlDB::fillTables(QVector<Table *> *tables)
+void XmlDB::fillTables(DisplayMode m, QVector<Table *> *tables)
 {
-
+    tables = &(this->tables);
 }

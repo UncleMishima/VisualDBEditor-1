@@ -1,4 +1,4 @@
-#include "table.h"
+#include "Table.h"
 
 Table::Table(QObject *parent) : QObject(parent)
 {

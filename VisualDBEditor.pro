@@ -17,10 +17,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += main.cpp \
-    Controller.cpp
+    Controller.cpp \
+    Table.cpp \
+    XmlDB.cpp \
+    AbstractDB.cpp \
+    DBHandler.cpp
 
 RESOURCES += qml.qrc
 
 HEADERS += \
     Controller.h \
-    GlobalDefinitions.h
+    GlobalDefinitions.h \
+    Table.h \
+    XmlDB.h \
+    AbstractDB.h \
+    DBHandler.h
