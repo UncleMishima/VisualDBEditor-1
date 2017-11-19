@@ -11,7 +11,7 @@ class AbstractDB
 public:
     AbstractDB();
 
-    virtual void fillTables(DisplayMode m, QVector<Table *> *tables) = 0;
+    virtual QVector<Table *>* fillTables(DisplayMode m, QVector<Table *> *tables) = 0;
 
 };
 
