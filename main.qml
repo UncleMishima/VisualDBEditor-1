@@ -21,7 +21,7 @@ Item {
                 text: "Open"
             }
         }
-   }
+    }
 
     Item {
         id: contentItem
@@ -32,12 +32,18 @@ Item {
         anchors.top: toolBar.bottom
         anchors.bottom: statusBar.top
 
-        MouseArea {
-            anchors.fill: parent
-
-            onDoubleClicked: controller.createTableFrame("table", mouseX, mouseY, parent)
-
+        // debug
+        TableFrame {
+            id: frame
+            x: 200
+            y: 200
+            width: 315
+            height: 180
+            yOffset: toolBar.height
+            parentWidget: quickWidget
+            model: debugModel
         }
+
     }
 
     StatusBar {

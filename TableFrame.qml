@@ -1,13 +1,21 @@
 import QtQuick 2.5
+import QTableViewWrapper 1.0
 
 Item  {
     id: tableFrame
     width: 100
     height: 50
+
     property int dragStep: 20
+    property int yOffset: 0
+    property alias tableView: tableView
     property alias headerColor: header.color
     property alias headerText: headerText.text
     property alias headerHeight: headerText.height
+    property alias parentWidget: tableView.parentWidget
+    property alias model: tableView.model
+
+    function show () {tableView.show()}
 
     Rectangle {
         id: header
@@ -39,6 +47,9 @@ Item  {
                 if (containsPress === true)
                     tableFrame.y = dragStep * (Math.floor(tableFrame.y / dragStep))
             }
+
+            // debug
+            onDoubleClicked: tableView.show()
         }
 
         Text {
@@ -49,5 +60,13 @@ Item  {
             fontSizeMode: Text.Fit
             text: "Text"
         }
+    }
+
+    QTableViewWrapper {
+        id: tableView
+        x: tableFrame.x
+        y: tableFrame.y + headerHeight + yOffset
+        width: tableFrame.width
+        height: tableFrame.height - headerHeight
     }
 }

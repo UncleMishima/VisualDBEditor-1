@@ -4,6 +4,7 @@
 #include <QQuickItem>
 
 #include "GlobalDefinitions.h"
+#include "QTableViewWrapper.h"
 
 class Controller: QObject
 {
