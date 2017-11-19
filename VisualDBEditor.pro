@@ -18,11 +18,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp \
     Controller.cpp \
-    QTableViewWrapper.cpp
+    QTableViewWrapper.cpp \
+    Table.cpp \
+    XmlDB.cpp \
+    AbstractDB.cpp \
+    DBHandler.cpp
 
 RESOURCES += qml.qrc
 
 HEADERS += \
     Controller.h \
     GlobalDefinitions.h \
-    QTableViewWrapper.h
+    QTableViewWrapper.h \
+    Table.h \
+    XmlDB.h \
+    AbstractDB.h \
+    DBHandler.h
