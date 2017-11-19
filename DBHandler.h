@@ -29,7 +29,7 @@ public slots:
             ConnectionFlags f
             );
 
-    void fillTables(DisplayMode m, QVector<Table*>* tables);
+    void fillTables(DisplayMode m, QVector<Table *> *tables);
     void save(QVector<Table*>* tables);
 
 private:

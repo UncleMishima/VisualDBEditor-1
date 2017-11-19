@@ -3,8 +3,8 @@
 #include <QDebug>
 #include <QQmlContext>
 
-// debud
-QStandardItemModel debugModel(3, 3);
+// debug
+DBHandler dbHandler;
 
 Controller::Controller(QObject *parent): QObject(parent)
 {
@@ -13,17 +13,21 @@ Controller::Controller(QObject *parent): QObject(parent)
     qmlRegisterType<QTableViewWrapper>("QTableViewWrapper", 1, 0,
                                        "QTableViewWrapper");
 
-    // debug
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-            debugModel.setItem(i, j, new QStandardItem("sdfsdf"));
-
-    }
-    quickWidget.rootContext()->setContextProperty("debugModel", &debugModel);
 
     quickWidget.setSource(QUrl(QStringLiteral("qrc:/main.qml")));
     quickWidget.setResizeMode(QQuickWidget::SizeRootObjectToView);
+
+    // debug
+    connect(this, SIGNAL(openConnection(DBType,QString,QString,
+                                        QString,QString,ConnectionFlags)),
+            &dbHandler, SLOT(openConnection(DBType,QString,QString,
+                                            QString,QString,ConnectionFlags)));
+    connect(this, SIGNAL(fillTables(DisplayMode,QVector<Table*>*)),
+            &dbHandler, SLOT(fillTables(DisplayMode,QVector<Table*>*)));
+    connect(&dbHandler, SIGNAL(fillTablesSuccess(QVector<Table*>*)),
+            this, SLOT(fillTablesSuccess(QVector<Table*>*)));
+    connect(&dbHandler, SIGNAL(connectionSuccess()),
+            this, SLOT(connectionSuccess()));
 
 }
 
@@ -35,26 +39,45 @@ Controller::~Controller()
 void Controller::start()
 {
     quickWidget.show();
+
+    //debug
+    emit openConnection(XML_FILE, "test.xml", "", "", "", CREATE);
 }
 
-void Controller::createTableFrame(QString name, int x, int y, QQuickItem *parentItem)
+void Controller::connectionSuccess()
+{
+    emit fillTables(OBJECTS, nullptr);
+}
+
+void Controller::fillTablesSuccess(QVector<Table*>* tables)
+{
+    //debug
+    for (int i = 0; i < tables->size(); i++)
+        createTableFrame(tables->at(i));
+}
+
+void Controller::createTableFrame(Table *table)
 {
     QQmlComponent component(quickWidget.engine(), QUrl(QStringLiteral("qrc:/TableFrame.qml")));
     QObject *tableFrame = component.create();
     QQuickItem *item = qobject_cast<QQuickItem*>(tableFrame);
 
     QQuickItem *root = quickWidget.rootObject();
-    qDebug() << "root: " << root->property("id");
 
-    QList<QQuickItem*> childItems= root->childItems();
-    foreach (QQuickItem *child, childItems)
-        qDebug() << "child: " << child->property("id");
+    item->setParentItem(root);
+    item->setX(table->getCoordX());
+    item->setY(table->getCoordY());
+    item->setWidth(table->getWidth());
+    item->setHeight(table->getHeight());
 
-    item->setParentItem(parentItem);
-    item->setX(x);
-    item->setY(y);
+    tableFrame->setProperty("headerText", table->getName());
+    //tableFrame->setProperty("model", table->getRowsModel());
+    //tableFrame->setProperty("parentWidget", quickWidget);
 
-    tableFrame->setProperty("headerText", name);
+    QTableView *tableView = tableFrame->property("tableView").value<QTableView*>();
+    tableView->setParent(&quickWidget);
+    tableView->setModel(table->getRowsModel());
+    tableView->show();
 
     tableFrames.push_back(tableFrame);
 }

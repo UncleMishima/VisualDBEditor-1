@@ -16,7 +16,7 @@ void XmlDB::readXmlFile(QString path)
 
     if (!file->open(QIODevice::ReadOnly | QIODevice::Text) )
     {
-       qDebug() << "Error: File not open";
+       //qDebug() << "Error: File not open";
        return;
     }
 
@@ -36,7 +36,7 @@ void XmlDB::readXmlFile(QString path)
 
             if(xmlReader.name() == "Database")
             {
-                qDebug() << "[Database]: ";
+                //qDebug() << "[Database]: ";
                 int numOfTables = xmlReader.attributes().value("tablesCount").toString().toInt();
 
                 xmlReader.readNext();
@@ -45,7 +45,7 @@ void XmlDB::readXmlFile(QString path)
 
                 //xmlReader.readNext();
 
-                qDebug() << "Count of tables: " << numOfTables << " Access mode: " << accessMode;
+                //qDebug() << "Count of tables: " << numOfTables << " Access mode: " << accessMode;
             }
 
             if(xmlReader.name() == "Table")
@@ -54,9 +54,6 @@ void XmlDB::readXmlFile(QString path)
             }
         }
     }
-
-    tv.setModel(tables.at(1)->getRowsModel());
-    tv.show();
 }
 
 void XmlDB::parseTable(QXmlStreamReader& xmlReader)
@@ -64,8 +61,8 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
     if(xmlReader.tokenType() != QXmlStreamReader::StartElement
             && xmlReader.name() != "Table")
     {
-        qDebug() << "Called XML parseQuestionElement "
-                 << "without a question Element in the XML stream!";
+        //qDebug() << "Called XML parseQuestionElement "
+        //         << "without a question Element in the XML stream!";
 
         return;
     }
@@ -75,13 +72,13 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
     //set table's name
     QString tName = xmlReader.attributes().value("name").toString();
     tb->setName(tName);
-    qDebug() << "tables name" << tb->getName();
+    //qDebug() << "tables name" << tb->getName();
 
     //set counts of fields and rows
     int countOfFields = xmlReader.attributes().value("fieldsCount").toString().toInt();
     int countOfRows = xmlReader.attributes().value("rowsCount").toString().toInt();
     tb->setFieldsAndRows(countOfFields, countOfRows);
-    qDebug() << "get counts" << tb->getFieldsCount() << tb->getRowsCount();
+    //qDebug() << "get counts" << tb->getFieldsCount() << tb->getRowsCount();
 
     //set table's model size
     int current = 0;
@@ -92,13 +89,13 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
     int xCoord = xmlReader.attributes().value("xCoord").toString().toInt();
     int yCoord = xmlReader.attributes().value("yCoord").toString().toInt();
     tb->setCoord(xCoord, yCoord);
-    qDebug() << "get coords" << tb->getCoordX() << tb->getCoordY();
+    //qDebug() << "get coords" << tb->getCoordX() << tb->getCoordY();
 
     //set table's resize
     int width = xmlReader.attributes().value("width").toString().toInt();
     int height = xmlReader.attributes().value("heigh").toString().toInt();
     tb->setResize(width, height);
-    qDebug() << "get resize" << tb->getWidth() << tb->getHeight();
+    //qDebug() << "get resize" << tb->getWidth() << tb->getHeight();
 
     //xmlReader.readNext();
 
@@ -113,7 +110,7 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
                 {
                     model->setItem(i, 0, new QStandardItem(xmlReader.attributes().at(i).name().toString())  );
                     model->setItem(i, 1, new QStandardItem(xmlReader.attributes().at(i).value().toString()) );
-                    //qDebug() << xmlReader.attributes().at(i).name() << xmlReader.attributes().at(i).value();
+                    ////qDebug() << xmlReader.attributes().at(i).name() << xmlReader.attributes().at(i).value();
                 }
                 tb->setFieldsModel(model);
             }
@@ -133,7 +130,7 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
 
                         //model->setItem(i, 1, new QStandardItem(xmlReader.attributes().at(i).value().toString()) );
                         //rows << xmlReader.attributes().at(i).value().toString();
-                        //qDebug() << xmlReader.attributes().at(i).name() << xmlReader.attributes().at(i).value();
+                        ////qDebug() << xmlReader.attributes().at(i).name() << xmlReader.attributes().at(i).value();
 
                     }
                     ++current;
@@ -160,12 +157,12 @@ void XmlDB::parseField(QXmlStreamReader &)
 
 void XmlDB::fillModel(Table* tb, QStringList& fields, QStringList& rows)
 {
-    qDebug() << "Here we are";
+    //qDebug() << "Here we are";
 //    for(int i = 0; i < fields.size(); i++)
 //    {
 //        for(int j = 0; j < rows.size(); j++)
 //        {
-//            //qDebug() << i << j << fields[i] << rows[j];
+//            ////qDebug() << i << j << fields[i] << rows[j];
 //        }
 //    }
 
@@ -175,7 +172,7 @@ void XmlDB::fillModel(Table* tb, QStringList& fields, QStringList& rows)
     //tb->model->setItem(1, 1, new QStandardItem(rows[3]));
 }
 
-void XmlDB::fillTables(DisplayMode m, QVector<Table *> *tables)
+QVector<Table *>* XmlDB::fillTables(DisplayMode m, QVector<Table *> *tables)
 {
-    tables = &(this->tables);
+    return &(this->tables);
 }

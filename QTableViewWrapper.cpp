@@ -10,7 +10,7 @@ void QTableViewWrapper::setDisplayMod(DisplayMode mode)
     switch (mode)
     {
         case OBJECTS:
-        tableView.show();
+        _tableView.show();
 
         default:
         break;
