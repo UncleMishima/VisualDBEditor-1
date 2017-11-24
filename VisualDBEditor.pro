@@ -18,7 +18,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp \
     Controller.cpp \
-    QTableViewWrapper.cpp \
     Table.cpp \
     XmlDB.cpp \
     AbstractDB.cpp \
@@ -29,7 +28,6 @@ SOURCES += main.cpp \
 HEADERS += \
     Controller.h \
     GlobalDefinitions.h \
-    QTableViewWrapper.h \
     Table.h \
     XmlDB.h \
     AbstractDB.h \
