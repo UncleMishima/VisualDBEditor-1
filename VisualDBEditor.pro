@@ -22,9 +22,9 @@ SOURCES += main.cpp \
     Table.cpp \
     XmlDB.cpp \
     AbstractDB.cpp \
-    DBHandler.cpp
-
-RESOURCES += qml.qrc
+    DBHandler.cpp \
+    DraggableWidget.cpp \
+    TableView.cpp
 
 HEADERS += \
     Controller.h \
@@ -33,4 +33,6 @@ HEADERS += \
     Table.h \
     XmlDB.h \
     AbstractDB.h \
-    DBHandler.h
+    DBHandler.h \
+    DraggableWidget.h \
+    TableView.h
