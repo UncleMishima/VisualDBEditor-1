@@ -1,4 +1,6 @@
 #include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QSizeGrip>
 
 #include "TableView.h"
 
@@ -12,6 +14,9 @@ TableView::TableView(QWidget *parent,
 {
     setGeometry(geometry);
 
+    setWindowFlags(Qt::SubWindow);
+    new QSizeGrip(this);
+
     if (model != nullptr)
         view->setModel(model);
 
@@ -21,10 +26,8 @@ TableView::TableView(QWidget *parent,
                           "font: 10pt;");
 
     QVBoxLayout *layout = new QVBoxLayout;
-
     layout->setSpacing(0);
     layout->addWidget(header);
     layout->addWidget(view);
-
     setLayout(layout);
 }
