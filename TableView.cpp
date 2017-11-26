@@ -10,6 +10,9 @@ TableView::TableView(QWidget *parent): DraggableWidget(parent),
                                        tableName(new QLabel),
                                        view(new QTableView)
 {
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     setWindowFlags(Qt::SubWindow);
     new QSizeGrip(this);
 
@@ -93,4 +96,16 @@ void TableView::resizeEvent(QResizeEvent *event)
     if (oldSize.height() != size.height())
         emit heightChanged(id, size.height());
 
+}
+
+void TableView::enterEvent(QEvent*)
+{
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+}
+
+void TableView::leaveEvent(QEvent*)
+{
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
