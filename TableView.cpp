@@ -1,6 +1,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QSizeGrip>
+#include <QMoveEvent>
+#include <QResizeEvent>
 
 #include "TableView.h"
 
@@ -33,6 +35,13 @@ void TableView::setModel(QAbstractItemModel *model)
         view->setVisible(true);
 }
 
+void TableView::setTableName(const QString &name)
+{
+    tableName->setText(name);
+
+    emit tableNameChanged(id, name);
+}
+
 void TableView::setAccesMod(AccessMod mod)
 {
     switch (mod)
@@ -59,4 +68,29 @@ void TableView::setAccesMod(AccessMod mod)
             break;
         }
     }
+}
+
+void TableView::moveEvent(QMoveEvent *event)
+{
+    const QPoint &oldPos = event->oldPos();
+    const QPoint &pos = event->pos();
+
+    if (oldPos.x() != pos.x())
+        emit xChanged(id, pos.x());
+
+    if (oldPos.y() != pos.y())
+        emit yChanged(id, pos.y());
+}
+
+void TableView::resizeEvent(QResizeEvent *event)
+{
+    const QSize &oldSize = event->oldSize();
+    const QSize &size = event->size();
+
+    if (oldSize.width() != size.width())
+        emit widthChanged(id, size.width());
+
+    if (oldSize.height() != size.height())
+        emit heightChanged(id, size.height());
+
 }
