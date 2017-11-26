@@ -32,3 +32,31 @@ void TableView::setModel(QAbstractItemModel *model)
     else
         view->setVisible(true);
 }
+
+void TableView::setAccesMod(AccessMod mod)
+{
+    switch (mod)
+    {
+        case VIEW_ONLY:
+        {
+            setDraggable(false);
+            view->setEditTriggers(QAbstractItemView::NoEditTriggers);
+            break;
+        }
+
+        case DATA_EDIT:
+        {
+            setDraggable(false);
+            view->setEditTriggers(QAbstractItemView::DoubleClicked);
+            break;
+
+        }
+
+        case STRUCTURE_EDIT:
+        {
+            setDraggable(true);
+            view->setEditTriggers(QAbstractItemView::DoubleClicked);
+            break;
+        }
+    }
+}

@@ -14,10 +14,17 @@ class TableView: public DraggableWidget
 public:
     explicit TableView(QWidget *parent = nullptr);
 
+    void setId(uint i) {id = i;}
     void setTableName(const QString &name) {tableName->setText(name);}
     void setModel(QAbstractItemModel *model);
+    void setAccesMod(AccessMod mod);
+
+    uint getId() const {return id;}
+    QString getTableName() const {return tableName->text();}
+    QAbstractItemModel* getModel() const {return view->model();}
 
 private:
+    uint id;
     QLabel *tableName;
     QTableView *view;
 };

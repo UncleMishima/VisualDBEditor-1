@@ -2,19 +2,23 @@
 
 #include "DraggableWidget.h"
 
-DraggableWidget::DraggableWidget(QWidget *parent) : QWidget(parent)
+DraggableWidget::DraggableWidget(QWidget *parent): QWidget(parent),
+                                                   _isDraggable(true)
 {
 
 }
 
 void DraggableWidget::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton)
+    if (_isDraggable && event->button() == Qt::LeftButton)
         dragStartPos = event->globalPos();
 }
 
 void DraggableWidget::mouseMoveEvent(QMouseEvent *event)
 {
+    if (!_isDraggable)
+        return;
+
     if (!(event->buttons() & Qt::LeftButton))
         return;
 

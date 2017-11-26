@@ -53,8 +53,11 @@ void Controller::fillTablesSuccess(QVector<Table*>* tables)
 void Controller::createTableFrame(Table *table)
 {
     TableView *tv = new TableView(mainW);
+
     tv->setTableName(table->getName());
     tv->setGeometry(table->getCoordX(), table->getCoordY(), table->getWidth(), table->getHeight());
     tv->setModel(table->getRowsModel());
+    tv->setAccesMod(STRUCTURE_EDIT);
+
     tv->show();
 }
