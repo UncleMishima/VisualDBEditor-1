@@ -1,22 +1,14 @@
 #include "Controller.h"
+#include "TableView.h"
 
 #include <QDebug>
-#include <QQmlContext>
 
 // debug
 DBHandler dbHandler;
+QWidget* mainW;
 
 Controller::Controller(QObject *parent): QObject(parent)
 {
-    quickWidget.rootContext()->setContextProperty("controller", this);
-    quickWidget.rootContext()->setContextProperty("quickWidget", &quickWidget);
-    qmlRegisterType<QTableViewWrapper>("QTableViewWrapper", 1, 0,
-                                       "QTableViewWrapper");
-
-
-    quickWidget.setSource(QUrl(QStringLiteral("qrc:/main.qml")));
-    quickWidget.setResizeMode(QQuickWidget::SizeRootObjectToView);
-
     // debug
     connect(this, SIGNAL(openConnection(DBType,QString,QString,
                                         QString,QString,ConnectionFlags)),
@@ -33,14 +25,16 @@ Controller::Controller(QObject *parent): QObject(parent)
 
 Controller::~Controller()
 {
-    freeResources();
 }
 
 void Controller::start()
 {
-    quickWidget.show();
-
     //debug
+    mainW = new QWidget;
+    mainW->resize(1000, 750);
+
+    mainW->show();
+
     emit openConnection(XML_FILE, "test.xml", "", "", "", CREATE);
 }
 
@@ -58,39 +52,12 @@ void Controller::fillTablesSuccess(QVector<Table*>* tables)
 
 void Controller::createTableFrame(Table *table)
 {
-    QQmlComponent component(quickWidget.engine(), QUrl(QStringLiteral("qrc:/TableFrame.qml")));
-    QObject *tableFrame = component.create();
-    QQuickItem *item = qobject_cast<QQuickItem*>(tableFrame);
+    TableView *tv = new TableView(mainW);
 
-    QQuickItem *root = quickWidget.rootObject();
+    tv->setTableName(table->getName());
+    tv->setGeometry(table->getCoordX(), table->getCoordY(), table->getWidth(), table->getHeight());
+    tv->setModel(table->getRowsModel());
+    tv->setAccesMod(STRUCTURE_EDIT);
 
-    item->setParentItem(root);
-    item->setX(table->getCoordX());
-    item->setY(table->getCoordY());
-    item->setWidth(table->getWidth());
-    item->setHeight(table->getHeight());
-
-    tableFrame->setProperty("headerText", table->getName());
-    //tableFrame->setProperty("model", table->getRowsModel());
-    //tableFrame->setProperty("parentWidget", quickWidget);
-
-    QTableView *tableView = tableFrame->property("tableView").value<QTableView*>();
-    tableView->setParent(&quickWidget);
-    tableView->setModel(table->getRowsModel());
-    tableView->show();
-
-    tableFrames.push_back(tableFrame);
+    tv->show();
 }
-
-void Controller::freeResources()
-{
-    if (tableViews != nullptr)
-    {
-        foreach (QTableView *view, *tableViews)
-            delete view;
-    }
-
-    foreach (QObject *frame, tableFrames)
-        delete frame;
-}
-

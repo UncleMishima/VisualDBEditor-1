@@ -1,10 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include <QQuickItem>
-
 #include "GlobalDefinitions.h"
-#include "QTableViewWrapper.h"
 #include "DBHandler.h"
 
 class Controller: QObject
@@ -26,12 +23,6 @@ public slots:
     void fillTablesSuccess(QVector<Table*>* tables);
 
 private:
-    QVector<QTableView*> *tableViews;
-    QVector<QObject*> tableFrames;
-    QQuickWidget quickWidget;
-
-    void freeResources();
-
 };
 
 #endif // CONTROLLER_H

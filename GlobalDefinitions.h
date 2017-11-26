@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QVector>
 #include <QTableView>
-#include <QQuickWidget>
 #include <QString>
 #include <QStandardItemModel>
 
