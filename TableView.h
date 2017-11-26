@@ -6,21 +6,19 @@
 #include <QAbstractItemModel>
 
 #include "DraggableWidget.h"
+#include "GlobalDefinitions.h"
 
 class TableView: public DraggableWidget
 {
     Q_OBJECT
 public:
-    explicit TableView(QWidget *parent = nullptr,
-                       const QString &tableName = QString(),
-                       const QRect &geometry = QRect(),
-                       QAbstractItemModel *model = nullptr);
+    explicit TableView(QWidget *parent = nullptr);
 
-    void setTableName(const QString &name) {header->setText(name);}
-    void setModel(QAbstractItemModel *model) {view->setModel(model);}
+    void setTableName(const QString &name) {tableName->setText(name);}
+    void setModel(QAbstractItemModel *model);
 
 private:
-    QLabel *header;
+    QLabel *tableName;
     QTableView *view;
 };
 

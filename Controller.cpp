@@ -33,8 +33,6 @@ void Controller::start()
     mainW = new QWidget;
     mainW->resize(1000, 750);
 
-    TableView *tv = new TableView(mainW,"some name", QRect(0, 0, 100, 50));
-
     mainW->show();
 
     emit openConnection(XML_FILE, "test.xml", "", "", "", CREATE);
@@ -54,8 +52,9 @@ void Controller::fillTablesSuccess(QVector<Table*>* tables)
 
 void Controller::createTableFrame(Table *table)
 {
-    TableView *tv = new TableView(mainW, table->getName(),
-                                 QRect(table->getCoordX(), table->getCoordY(), table->getWidth(), table->getHeight()),
-                                 table->getRowsModel());
+    TableView *tv = new TableView(mainW);
+    tv->setTableName(table->getName());
+    tv->setGeometry(table->getCoordX(), table->getCoordY(), table->getWidth(), table->getHeight());
+    tv->setModel(table->getRowsModel());
     tv->show();
 }

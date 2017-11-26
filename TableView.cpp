@@ -4,30 +4,31 @@
 
 #include "TableView.h"
 
-TableView::TableView(QWidget *parent,
-                     const QString &tableName,
-                     const QRect &geometry,
-                     QAbstractItemModel *model)
-                     : DraggableWidget(parent),
-                       header(new QLabel(tableName)),
-                       view(new QTableView)
+TableView::TableView(QWidget *parent): DraggableWidget(parent),
+                                       tableName(new QLabel),
+                                       view(new QTableView)
 {
-    setGeometry(geometry);
-
     setWindowFlags(Qt::SubWindow);
     new QSizeGrip(this);
 
-    if (model != nullptr)
-        view->setModel(model);
-
-    header->setFrameStyle(QFrame::StyledPanel);
-    header->setAlignment(Qt::AlignCenter);
-    header->setStyleSheet("background-color: grey;"
+    tableName->setFrameStyle(QFrame::StyledPanel);
+    tableName->setAlignment(Qt::AlignCenter);
+    tableName->setStyleSheet("background-color: grey;"
                           "font: 10pt;");
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setSpacing(0);
-    layout->addWidget(header);
+    layout->addWidget(this->tableName);
     layout->addWidget(view);
     setLayout(layout);
+}
+
+void TableView::setModel(QAbstractItemModel *model)
+{
+    view->setModel(model);
+
+    if (model == nullptr)
+        view->setVisible(false);
+    else
+        view->setVisible(true);
 }
