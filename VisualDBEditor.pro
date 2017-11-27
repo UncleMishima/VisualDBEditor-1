@@ -1,4 +1,4 @@
-QT += quick widgets quickwidgets
+QT += widgets
 
 TARGET = VisualDBEditor
 TEMPLATE = app
