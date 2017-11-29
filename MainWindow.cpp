@@ -11,10 +11,17 @@ MainWindow::MainWindow(DBHandler *h, QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     dbHandler(h),
-    tableViews(nullptr)
+    tableViews(nullptr),
+    tablesScene(new QWidget),
+    scrollArea(new QScrollArea)
 {
     ui->setupUi(this);
+
     createMenu();
+
+    //tablesScene->resize();
+    //scrollArea
+    //setCentralWidget();
 }
 
 MainWindow::~MainWindow()

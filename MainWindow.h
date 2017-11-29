@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QScrollArea>
 
 #include <GlobalDefinitions.h>
 
@@ -38,6 +39,9 @@ private:
     DBHandler *dbHandler;
     DisplayMode displayMode;
     QVector<TableView*> *tableViews;
+    // TableView widgets and relations are drawn inside this widget
+    QWidget *tablesScene;
+    QScrollArea *scrollArea;
 
     void createMenu();
     void freeResources();

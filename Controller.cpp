@@ -33,7 +33,7 @@ void Controller::start()
     //debug
     mainW = new MainWindow(&dbHandler);
 
-    mainW->show();
+    mainW->showMaximized();
 
     emit openConnection(XML_FILE, "test.xml", "", "", "", CREATE);
 }
