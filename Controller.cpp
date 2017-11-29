@@ -1,11 +1,12 @@
 #include "Controller.h"
 #include "TableView.h"
+#include "MainWindow.h"
 
 #include <QDebug>
 
 // debug
 DBHandler dbHandler;
-QWidget* mainW;
+MainWindow *mainW;
 
 Controller::Controller(QObject *parent): QObject(parent)
 {
@@ -30,8 +31,7 @@ Controller::~Controller()
 void Controller::start()
 {
     //debug
-    mainW = new QWidget;
-    mainW->resize(1000, 750);
+    mainW = new MainWindow(&dbHandler);
 
     mainW->show();
 
@@ -52,7 +52,7 @@ void Controller::fillTablesSuccess(QVector<Table*>* tables)
 
 void Controller::createTableFrame(Table *table)
 {
-    TableView *tv = new TableView(mainW);
+    TableView *tv = new TableView(mainW->centralWidget());
 
     tv->setTableName(table->getName());
     tv->setGeometry(table->getCoordX(), table->getCoordY(), table->getWidth(), table->getHeight());

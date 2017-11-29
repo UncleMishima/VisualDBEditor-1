@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     AbstractDB.cpp \
     DBHandler.cpp \
     DraggableWidget.cpp \
-    TableView.cpp
+    TableView.cpp \
+    MainWindow.cpp
 
 HEADERS += \
     Controller.h \
@@ -33,4 +34,8 @@ HEADERS += \
     AbstractDB.h \
     DBHandler.h \
     DraggableWidget.h \
-    TableView.h
+    TableView.h \
+    MainWindow.h
+
+FORMS += \
+    MainWindow.ui
