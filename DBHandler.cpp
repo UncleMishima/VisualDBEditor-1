@@ -22,12 +22,40 @@ void DBHandler::fillTables(DisplayMode m, QVector<Table *> *tables)
     emit fillTablesSuccess(t);
 }
 
-//void DBHandler::setAccessMod(AccessMod am)
-//{
-//    accessMod = am;
-//}
+void DBHandler::setTables(QVector<Table*>* tbs)
+{
+    tables = tbs;
+}
 
-//AccessMod DBHandler::getAccessMod()
-//{
-//    return accessMod;
-//}
+QVector<Table*>* DBHandler::getTables()
+{
+    return tables;
+}
+
+
+void DBHandler::setAccessMod(AccessMod am)
+{
+    accessMod = am;
+}
+
+AccessMod DBHandler::getAccessMod()
+{
+    return accessMod;
+}
+
+QVector< std::tuple<QString, QRect, QAbstractItemModel*> >* DBHandler::getTablesData()
+{
+    return tablesData;
+}
+
+void DBHandler::save()
+{
+
+}
+
+void DBHandler::freeUnusedMemmory()
+{
+
+}
+
+

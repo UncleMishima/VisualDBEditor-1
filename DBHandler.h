@@ -1,6 +1,7 @@
 #ifndef DBHANDLER_H
 #define DBHANDLER_H
 
+#include <tuple>
 #include "AbstractDB.h"
 #include "GlobalDefinitions.h"
 #include "XmlDB.h"
@@ -11,6 +12,14 @@ class DBHandler : public QObject
 public:
     DBHandler();
 
+    void setTables(QVector<Table*>*);
+    QVector<Table*>* getTables();
+
+    void setAccessMod(AccessMod am);
+    AccessMod getAccessMod();
+
+    QVector< std::tuple<QString, QRect, QAbstractItemModel*> >* getTablesData();
+
 signals:
     void connectionSuccess();
     void connectionFailed(QString errorMsg);
@@ -19,8 +28,9 @@ signals:
     void saveSuccess();
     void daveFailed(QString errorMsg);
 
-    //void setAccessMod(AccessMod am);
-    //AccessMod getAccessMod();
+
+
+
 
 public slots:
     void openConnection(
@@ -38,6 +48,8 @@ private:
     AbstractDB* db;
     QVector<Table*>* tables;
     AccessMod accessMod;
+
+    QVector< std::tuple<QString, QRect, QAbstractItemModel*> >* tablesData;
 
     void save();
     void freeUnusedMemmory();
