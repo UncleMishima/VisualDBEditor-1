@@ -1,25 +1,27 @@
 #include "Controller.h"
-#include "TableView.h"
 #include "MainWindow.h"
+#include "DBHandler.h"
 
-#include <QDebug>
-
-// debug
-DBHandler dbHandler;
-MainWindow *mainW;
-
-Controller::Controller(QObject *parent): QObject(parent)
+Controller::Controller()
 {
-    // debug
+
+    // debug For now this is it, later we will create it in another thread
+    dbHandler = new DBHandler;
+
+    mainWindow = new MainWindow(dbHandler);
+
     connect(this, SIGNAL(openConnection(DBType,QString,QString,
                                         QString,QString,ConnectionFlags)),
-            &dbHandler, SLOT(openConnection(DBType,QString,QString,
+            dbHandler, SLOT(openConnection(DBType,QString,QString,
                                             QString,QString,ConnectionFlags)));
-    connect(this, SIGNAL(fillTables(DisplayMode,QVector<Table*>*)),
-            &dbHandler, SLOT(fillTables(DisplayMode,QVector<Table*>*)));
-    connect(&dbHandler, SIGNAL(fillTablesSuccess(QVector<Table*>*)),
-            this, SLOT(fillTablesSuccess(QVector<Table*>*)));
-    connect(&dbHandler, SIGNAL(connectionSuccess()),
+
+    connect(this, SIGNAL(fillTables()),
+            dbHandler, SLOT(fillTables()));
+
+    connect(dbHandler, SIGNAL(fillTablesSuccess()),
+            this, SLOT(fillTablesSuccess()));
+
+    connect(dbHandler, SIGNAL(connectionSuccess()),
             this, SLOT(connectionSuccess()));
 
 }
@@ -30,28 +32,18 @@ Controller::~Controller()
 
 void Controller::start()
 {
-    //debug
-    mainW = new MainWindow(&dbHandler);
-
-    mainW->showMaximized();
+    mainWindow->showMaximized();
 
     emit openConnection(XML_FILE, "test.xml", "", "", "", CREATE);
 }
 
 void Controller::connectionSuccess()
 {
-    emit fillTables(OBJECTS, nullptr);
+    emit fillTables();
 }
 
-void Controller::fillTablesSuccess(QVector<Table*>* tables)
+void Controller::fillTablesSuccess()
 {
-    //debug
-    for (int i = 0; i < tables->size(); i++)
-        createTableFrame(tables->at(i));
+    mainWindow->showTables(AccessMod::STRUCTURE_EDIT, DisplayMode::OBJECTS);
 }
 
-// debug
-void Controller::createTableFrame(Table *table)
-{
-    mainW->createTableView(table);
-}

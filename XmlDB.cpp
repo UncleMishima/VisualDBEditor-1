@@ -172,7 +172,7 @@ void XmlDB::fillModel(Table* tb, QStringList& fields, QStringList& rows)
     //tb->model->setItem(1, 1, new QStandardItem(rows[3]));
 }
 
-QVector<Table *>* XmlDB::fillTables(DisplayMode m, QVector<Table *> *tables)
+QVector<Table *>* XmlDB::fillTables()
 {
     return &(this->tables);
 }

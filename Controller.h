@@ -1,28 +1,33 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "GlobalDefinitions.h"
-#include "DBHandler.h"
+#include <QObject>
 
-class Controller: QObject
+#include "GlobalDefinitions.h"
+
+class DBHandler;
+class MainWindow;
+
+class Controller: public QObject
 {
     Q_OBJECT
 public:
-    explicit Controller(QObject *parent = nullptr);
+    explicit Controller();
     ~Controller();
     void start();
-    Q_INVOKABLE void createTableFrame(Table *table);
 
 signals:
     void openConnection(DBType tm, QString url, QString dbName,
                         QString userName, QString password, ConnectionFlags f);
-    void fillTables(DisplayMode m, QVector<Table*>* tables);
+    void fillTables();
 
 public slots:
     void connectionSuccess();
-    void fillTablesSuccess(QVector<Table*>* tables);
+    void fillTablesSuccess();
 
 private:
+    DBHandler *dbHandler;
+    MainWindow *mainWindow;
 };
 
 #endif // CONTROLLER_H

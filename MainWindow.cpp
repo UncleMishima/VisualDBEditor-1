@@ -10,8 +10,7 @@
 // debug
 #include "Table.h"
 
-MainWindow::MainWindow(DBHandler *h, QWidget *parent):
-    QMainWindow(parent),
+MainWindow::MainWindow(DBHandler *h):
     ui(new Ui::MainWindow),
     dbHandler(h),
     tableViews(nullptr),
@@ -67,7 +66,7 @@ void MainWindow::createMenu()
 
 void MainWindow::showTables(AccessMod accesMod, DisplayMode displayMod)
 {
-
+    freeResources();
 }
 
 void MainWindow::freeResources()

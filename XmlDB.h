@@ -24,7 +24,7 @@ public:
 
     void fillModel(Table* tb, QStringList& fields, QStringList& rows);
 
-    QVector<Table *>* fillTables(DisplayMode m, QVector<Table *> *tables) override;
+    QVector<Table *>* fillTables() override;
 
     QTableView tv;
 

@@ -20,7 +20,7 @@ class MainWindow: public QMainWindow
     Q_OBJECT
 
 public:
-     explicit MainWindow(DBHandler *h, QWidget *parent = 0);
+     explicit MainWindow(DBHandler *h);
     ~MainWindow();
 
     void showTables(AccessMod accesMod, DisplayMode displayMod);

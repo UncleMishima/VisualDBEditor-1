@@ -16,13 +16,13 @@ void DBHandler::openConnection(DBType t, QString url, QString dbName, QString us
     emit connectionSuccess();
 }
 
-void DBHandler::fillTables(DisplayMode m, QVector<Table *> *tables)
+void DBHandler::fillTables()
 {
-    QVector<Table *> *t = db->fillTables(m, tables);
-    emit fillTablesSuccess(t);
+    db->fillTables();
+    emit fillTablesSuccess();
 }
 
-void DBHandler::save(QVector<Table *> *tables)
+void DBHandler::save()
 {
 
 }
