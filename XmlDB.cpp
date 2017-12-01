@@ -102,6 +102,8 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
 
     //xmlReader.readNext();
 
+    int index = 0;
+
     while(!(xmlReader.tokenType() == QXmlStreamReader::EndElement
             && xmlReader.name() == "Table"))
     {
@@ -115,11 +117,15 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
                 int width = xmlReader.attributes().value("width").toString().toInt();
                 int heigh = xmlReader.attributes().value("heigh").toString().toInt();
 
-                tb->setDisplayMode(displayMode);
-                tb->setCoord(xCoord, yCoord);
-                tb->setResize(width, heigh);
+                tb->setCoord(xCoord, yCoord, index);
+                tb->setResize(width, heigh, index);
 
+                ++index;
+
+                //qDebug() << index;
+                //qDebug() << displayMode;
                 qDebug() << displayMode << xCoord << yCoord << width << heigh;
+
             }
 
             if(xmlReader.name() == "Fields")
@@ -148,7 +154,7 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
 
                         //model->setItem(i, 1, new QStandardItem(xmlReader.attributes().at(i).value().toString()) );
                         //rows << xmlReader.attributes().at(i).value().toString();
-                        ////qDebug() << xmlReader.attributes().at(i).name() << xmlReader.attributes().at(i).value();
+                        //qDebug() << xmlReader.attributes().at(j).name() << xmlReader.attributes().at(j).value();
 
                     }
                     ++current;

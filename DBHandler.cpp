@@ -48,6 +48,35 @@ QVector< std::tuple<QString, QRect, QAbstractItemModel*> >* DBHandler::getTables
     return tablesData;
 }
 
+void DBHandler::setTableName(uint tableID, QString tableName, DisplayMode mode)
+{
+    tables->at(tableID)->setName(tableName);
+}
+
+void DBHandler::setTableX(uint tableID, int x, DisplayMode mode)
+{
+    tables->at(tableID)->setCoordX(x);
+}
+
+
+void DBHandler::setTableY(uint tableID, int y, DisplayMode mode)
+{
+    tables->at(tableID)->setCoordY(y);
+}
+
+void DBHandler::setTableH(uint tableID, int h, DisplayMode mode)
+{
+    tables->at(tableID)->setCoordX(h);
+}
+
+
+void DBHandler::setTableW(uint tableID, int w, DisplayMode mode)
+{
+    tables->at(tableID)->setCoordY(w);
+}
+
+
+
 void DBHandler::save()
 {
 
