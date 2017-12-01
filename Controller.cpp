@@ -50,14 +50,8 @@ void Controller::fillTablesSuccess(QVector<Table*>* tables)
         createTableFrame(tables->at(i));
 }
 
+// debug
 void Controller::createTableFrame(Table *table)
 {
-    TableView *tv = new TableView(mainW->centralWidget());
-
-    tv->setTableName(table->getName());
-    tv->setGeometry(table->getCoordX(), table->getCoordY(), table->getWidth(), table->getHeight());
-    tv->setModel(table->getRowsModel());
-    tv->setAccesMod(STRUCTURE_EDIT);
-
-    tv->show();
+    mainW->createTableView(table);
 }

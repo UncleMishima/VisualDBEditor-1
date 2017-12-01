@@ -7,6 +7,9 @@
 #include "DBHandler.h"
 #include "TableView.h"
 
+// debug
+#include "Table.h"
+
 MainWindow::MainWindow(DBHandler *h, QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -19,9 +22,8 @@ MainWindow::MainWindow(DBHandler *h, QWidget *parent):
 
     createMenu();
 
-    //tablesScene->resize();
-    //scrollArea
-    //setCentralWidget();
+    scrollArea->setWidget(tablesScene);
+    setCentralWidget(scrollArea);
 }
 
 MainWindow::~MainWindow()
@@ -80,25 +82,65 @@ void MainWindow::freeResources()
     tableViews = nullptr;
 }
 
-void MainWindow::xChanged(uint tableId, int x)
+void MainWindow::tableXChanged(uint tableId, int x)
 {
+    tablesScene->adjustSize();
+}
+
+void MainWindow::tableYChanged(uint tableId, int y)
+{
+
+    tablesScene->adjustSize();
+}
+
+void MainWindow::tableWidthChanged(uint tableId, int wtableIdth)
+{
+    tablesScene->adjustSize();
 
 }
 
-void MainWindow::yChanged(uint tableId, int y)
+void MainWindow::tableHeightChanged(uint tableId, int height)
 {
-
-}
-
-void MainWindow::widthChanged(uint tableId, int wtableIdth)
-{
-
-}
-
-void MainWindow::heightChanged(uint tableId, int height)
-{
+    tablesScene->adjustSize();
 }
 
 void MainWindow::tableNameChanged(uint tableId, QString name)
 {
+    tablesScene->adjustSize();
+}
+
+// debug
+void MainWindow::createTableView(Table *table)
+{
+    TableView *tv = new TableView(tablesScene);
+
+    tv->setTableName(table->getName());
+    tv->setGeometry(table->getCoordX(), table->getCoordY(),
+                    table->getWidth(), table->getHeight());
+    tv->setModel(table->getRowsModel());
+    tv->setAccesMod(STRUCTURE_EDIT);
+    tv->show();
+
+    // debug
+    tablesScene->adjustSize();
+
+    connect(tv, SIGNAL(xChanged(uint,int)),
+            this, SLOT(tableXChanged(uint,int)));
+
+    connect(tv, SIGNAL(yChanged(uint,int)),
+            this, SLOT(tableYChanged(uint,int)));
+
+    connect(tv, SIGNAL(widthChanged(uint,int)),
+            this, SLOT(tableWidthChanged(uint,int)));
+
+    connect(tv, SIGNAL(heightChanged(uint,int)),
+            this, SLOT(tableHeightChanged(uint,int)));
+
+    connect(tv, SIGNAL(tableNameChanged(uint,QString)),
+            this, SLOT(tableNameChanged(uint,QString)));
+
+    if (tableViews == nullptr)
+        tableViews = new QVector<TableView*>;
+
+    tableViews->push_back(tv);
 }

@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QScrollArea>
 
-#include <GlobalDefinitions.h>
+#include "GlobalDefinitions.h"
 
 namespace Ui {
 class MainWindow;
@@ -12,6 +12,8 @@ class MainWindow;
 
 class DBHandler;
 class TableView;
+    // debug
+    class Table;
 
 class MainWindow: public QMainWindow
 {
@@ -23,13 +25,16 @@ public:
 
     void showTables(AccessMod accesMod, DisplayMode displayMod);
 
+    // debug
+    void createTableView(Table *table);
+
 private slots:
     void slot_fileOpen();
     void slot_fileSave();
-    void xChanged(uint tableId, int x);
-    void yChanged(uint tableId, int y);
-    void widthChanged(uint tableId, int wtableIdth);
-    void heightChanged(uint tableId, int height);
+    void tableXChanged(uint tableId, int x);
+    void tableYChanged(uint tableId, int y);
+    void tableWidthChanged(uint tableId, int wtableIdth);
+    void tableHeightChanged(uint tableId, int height);
     void tableNameChanged(uint tableId, QString name);
 
 private:
