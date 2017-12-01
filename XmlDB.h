@@ -18,7 +18,6 @@ public:
     XmlDB(QString fp);
 
     void parseTable(QXmlStreamReader& );
-    void parseField(QXmlStreamReader& );
 
     void readXmlFile(QString);
 

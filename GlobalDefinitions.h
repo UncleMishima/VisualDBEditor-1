@@ -16,9 +16,9 @@ enum DBType
 
 enum DisplayMode
 {
-    CLASSES,
-    FIELDS,
-    OBJECTS
+    CLASSES = 0,
+    FIELDS = 1,
+    OBJECTS = 2
 };
 
 enum AccessMod

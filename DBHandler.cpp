@@ -22,7 +22,12 @@ void DBHandler::fillTables(DisplayMode m, QVector<Table *> *tables)
     emit fillTablesSuccess(t);
 }
 
-void DBHandler::save(QVector<Table *> *tables)
-{
+//void DBHandler::setAccessMod(AccessMod am)
+//{
+//    accessMod = am;
+//}
 
-}
+//AccessMod DBHandler::getAccessMod()
+//{
+//    return accessMod;
+//}

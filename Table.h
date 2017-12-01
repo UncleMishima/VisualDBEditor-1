@@ -6,14 +6,23 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 
+struct Coords
+{
+    int displayMode;
+    int xCoord;
+    int yCoord;
+    int width;
+    int height;
+};
+
 class Table : public QObject
 {
     Q_OBJECT
 private:
     QString name;
-
-    int xCoord, yCoord;
-    int width, height;
+    Coords coords;
+    //int xCoord, yCoord;
+    //int width, height;
     int fieldsCount, rowsCount;
 
     QStandardItemModel* fieldsModel;
@@ -31,6 +40,7 @@ public:
     int getHeight();
     int getFieldsCount();
     int getRowsCount();
+    int getDisplayMode();
 
     //QStandardItemModel* getRowsModel();
     QStandardItemModel* getModel();
@@ -45,6 +55,7 @@ public slots:
     void setRowsModel(QStandardItemModel* );
     void setFieldsModel(QStandardItemModel* );
     void setModel(QStandardItemModel* );
+    void setDisplayMode(int);
 
 };
 

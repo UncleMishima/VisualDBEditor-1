@@ -48,16 +48,21 @@ void Table::setRowsModel(QStandardItemModel *im)
     rowsModel = im;
 }
 
+void Table::setDisplayMode(int dm)
+{
+    coords.displayMode = dm;
+}
+
 void Table::setCoord(int x, int y)
 {
-    xCoord = x;
-    yCoord = y;
+    coords.xCoord = x;
+    coords.yCoord = y;
 }
 
 void Table::setResize(int w, int h)
 {
-    width = w;
-    height = h;
+    coords.width = w;
+    coords.height = h;
 }
 
 void Table::setFieldsAndRows(int f, int r)
@@ -68,22 +73,22 @@ void Table::setFieldsAndRows(int f, int r)
 
 int Table::getCoordX()
 {
-    return xCoord;
+    return coords.xCoord;
 }
 
 int Table::getCoordY()
 {
-    return yCoord;
+    return coords.yCoord;
 }
 
 int Table::getWidth()
 {
-    return width;
+    return coords.width;
 }
 
 int Table::getHeight()
 {
-    return height;
+    return coords.height;
 }
 
 int Table::getFieldsCount()
@@ -94,4 +99,9 @@ int Table::getFieldsCount()
 int Table::getRowsCount()
 {
     return rowsCount;
+}
+
+int Table::getDisplayMode()
+{
+    return coords.displayMode;
 }

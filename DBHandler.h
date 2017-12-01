@@ -19,6 +19,9 @@ signals:
     void saveSuccess();
     void daveFailed(QString errorMsg);
 
+    //void setAccessMod(AccessMod am);
+    //AccessMod getAccessMod();
+
 public slots:
     void openConnection(
             DBType t,
@@ -30,10 +33,14 @@ public slots:
             );
 
     void fillTables(DisplayMode m, QVector<Table *> *tables);
-    void save(QVector<Table*>* tables);
 
 private:
     AbstractDB* db;
+    QVector<Table*>* tables;
+    AccessMod accessMod;
+
+    void save();
+    void freeUnusedMemmory();
 
 };
 
