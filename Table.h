@@ -5,60 +5,43 @@
 #include <QString>
 #include <QStandardItemModel>
 #include <QStandardItem>
+#include "GlobalDefinitions.h"
 
-#define DISPLAYNODE_COUNT 3
+#define DISPLAY_MODES_COUNT 3
 
-class Table : public QObject
+class Table
 {
-    Q_OBJECT
 private:
     QString name;
-    int coordX[DISPLAYNODE_COUNT];
-    int coordY[DISPLAYNODE_COUNT];
-    int tableWidth[DISPLAYNODE_COUNT];
-    int tableHeight[DISPLAYNODE_COUNT];
-
-    int xCoord, yCoord, width, height;
-
-    int fieldsCount, rowsCount;
+    int coordX[DISPLAY_MODES_COUNT];
+    int coordY[DISPLAY_MODES_COUNT];
+    int tableWidth[DISPLAY_MODES_COUNT];
+    int tableHeight[DISPLAY_MODES_COUNT];
 
     QStandardItemModel* fieldsModel;
-    QStandardItemModel* rowsModel;
-    QStandardItemModel* model;
+    QStandardItemModel* objectsModel;
 
 public:
     explicit Table(QObject *parent = 0);
 
-
     QString getName();
-    int getCoordX();
-    int getCoordY();
-    int getWidth();
-    int getHeight();
-
-    int getCoordX(int i);
-    int getCoordY(int i);
-    int getWidth(int i);
-    int getHeight(int i);
-
-    int getFieldsCount();
-    int getRowsCount();
-
-    //QStandardItemModel* getRowsModel();
-    QStandardItemModel* getModel();
+    int getCoordX(DisplayMode mode);
+    int getCoordY(DisplayMode mode);
+    int getWidth(DisplayMode mode);
+    int getHeight(DisplayMode mode);
+    QRect getGeometry(DisplayMode mode);
     QStandardItemModel* getFieldsModel();
-    QStandardItemModel* getRowsModel();
+    QStandardItemModel* getObjectsModel();
 
-public slots:
-    void setName(QString name);
+    void setName(const QString &name);
 
-    void setCoord(int x, int y, int i);
-    void setResize(int w, int h, int i);
+    void setCoord(int x, int y, DisplayMode mode);
+    void setResize(int w, int h, DisplayMode mode);
 
-    void setCoordX(int x);
-    void setCoordY(int y);
-    void setWidth(int w);
-    void setHeight(int h);
+    void setCoordX(int x, DisplayMode mode);
+    void setCoordY(int y, DisplayMode mode);
+    void setWidth(int w, DisplayMode mode);
+    void setHeight(int h, DisplayMode mode);
 
     void setFieldsAndRows(int f, int r);
     void setRowsModel(QStandardItemModel* );
@@ -66,6 +49,5 @@ public slots:
     void setModel(QStandardItemModel* );
 
 };
-
 
 #endif // TABLE_H

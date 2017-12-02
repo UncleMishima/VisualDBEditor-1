@@ -7,9 +7,6 @@
 #include "DBHandler.h"
 #include "TableView.h"
 
-// debug
-#include "Table.h"
-
 MainWindow::MainWindow(DBHandler *h):
     ui(new Ui::MainWindow),
     dbHandler(h),
@@ -64,9 +61,60 @@ void MainWindow::createMenu()
     fileMenu->addAction(fileExit);
 }
 
-void MainWindow::showTables(AccessMod accesMod, DisplayMode displayMod)
+void MainWindow::showTables(AccessMod accesMod, DisplayMode displayMode)
 {
     freeResources();
+
+    this->displayMode = displayMode;
+
+    int tablesCount = dbHandler->getTablesCount();
+    tableViews = new QVector<TableView*>(tablesCount);
+
+    for (int i = 0; i < tablesCount; i++)
+    {
+        TableView *tv = new TableView(tablesScene);
+
+        tv->setID(i);
+        tv->setTableName(dbHandler->getTableName(i));
+        tv->setGeometry(dbHandler->getTableGeometry(i, displayMode));
+
+        switch (displayMode)
+        {
+            case CLASSES:
+                tv->setModel(nullptr);
+                break;
+
+            case FIELDS:
+                tv->setModel(dbHandler->getTableFieldsModel(i));
+                break;
+
+            case OBJECTS:
+                tv->setModel(dbHandler->getTableObjectsModel(i));
+                break;
+        }
+
+        tv->setAccesMod(accesMod);
+        tv->show();
+
+        connect(tv, SIGNAL(xChanged(uint,int)),
+                this, SLOT(tableXChanged(uint,int)));
+
+        connect(tv, SIGNAL(yChanged(uint,int)),
+                this, SLOT(tableYChanged(uint,int)));
+
+        connect(tv, SIGNAL(widthChanged(uint,int)),
+                this, SLOT(tableWidthChanged(uint,int)));
+
+        connect(tv, SIGNAL(heightChanged(uint,int)),
+                this, SLOT(tableHeightChanged(uint,int)));
+
+        connect(tv, SIGNAL(tableNameChanged(uint,QString)),
+                this, SLOT(tableNameChanged(uint,QString)));
+
+        (*tableViews)[i] = tv;
+    }
+
+   tablesScene->adjustSize();
 }
 
 void MainWindow::freeResources()
@@ -81,65 +129,37 @@ void MainWindow::freeResources()
     tableViews = nullptr;
 }
 
-void MainWindow::tableXChanged(uint tableId, int x)
+void MainWindow::tableXChanged(uint tableID, int x)
 {
     tablesScene->adjustSize();
+
+    dbHandler->setTableX(tableID, x, displayMode);
 }
 
-void MainWindow::tableYChanged(uint tableId, int y)
+void MainWindow::tableYChanged(uint tableID, int y)
 {
-
     tablesScene->adjustSize();
+
+    dbHandler->setTableY(tableID, y, displayMode);
 }
 
-void MainWindow::tableWidthChanged(uint tableId, int wtableIdth)
+void MainWindow::tableWidthChanged(uint tableID, int width)
 {
     tablesScene->adjustSize();
 
+    dbHandler->setTableWidth(tableID, width, displayMode);
 }
 
-void MainWindow::tableHeightChanged(uint tableId, int height)
+void MainWindow::tableHeightChanged(uint tableID, int height)
 {
     tablesScene->adjustSize();
+
+    dbHandler->setTableHeight(tableID, height, displayMode);
 }
 
-void MainWindow::tableNameChanged(uint tableId, QString name)
+void MainWindow::tableNameChanged(uint tableID, const QString &name)
 {
     tablesScene->adjustSize();
-}
 
-// debug
-void MainWindow::createTableView(Table *table)
-{
-    TableView *tv = new TableView(tablesScene);
-
-    tv->setTableName(table->getName());
-    tv->setGeometry(table->getCoordX(), table->getCoordY(),
-                    table->getWidth(), table->getHeight());
-    tv->setModel(table->getRowsModel());
-    tv->setAccesMod(STRUCTURE_EDIT);
-    tv->show();
-
-    // debug
-    tablesScene->adjustSize();
-
-    connect(tv, SIGNAL(xChanged(uint,int)),
-            this, SLOT(tableXChanged(uint,int)));
-
-    connect(tv, SIGNAL(yChanged(uint,int)),
-            this, SLOT(tableYChanged(uint,int)));
-
-    connect(tv, SIGNAL(widthChanged(uint,int)),
-            this, SLOT(tableWidthChanged(uint,int)));
-
-    connect(tv, SIGNAL(heightChanged(uint,int)),
-            this, SLOT(tableHeightChanged(uint,int)));
-
-    connect(tv, SIGNAL(tableNameChanged(uint,QString)),
-            this, SLOT(tableNameChanged(uint,QString)));
-
-    if (tableViews == nullptr)
-        tableViews = new QVector<TableView*>;
-
-    tableViews->push_back(tv);
+    dbHandler->setTableName(tableID, name);
 }

@@ -12,8 +12,6 @@ class MainWindow;
 
 class DBHandler;
 class TableView;
-    // debug
-    class Table;
 
 class MainWindow: public QMainWindow
 {
@@ -23,19 +21,16 @@ public:
      explicit MainWindow(DBHandler *h);
     ~MainWindow();
 
-    void showTables(AccessMod accesMod, DisplayMode displayMod);
-
-    // debug
-    void createTableView(Table *table);
+    void showTables(AccessMod accesMod, DisplayMode displayMode);
 
 private slots:
     void slot_fileOpen();
     void slot_fileSave();
-    void tableXChanged(uint tableId, int x);
-    void tableYChanged(uint tableId, int y);
-    void tableWidthChanged(uint tableId, int wtableIdth);
-    void tableHeightChanged(uint tableId, int height);
-    void tableNameChanged(uint tableId, QString name);
+    void tableXChanged(uint tableID, int x);
+    void tableYChanged(uint tableID, int y);
+    void tableWidthChanged(uint tableID, int width);
+    void tableHeightChanged(uint tableID, int height);
+    void tableNameChanged(uint tableID, const QString &name);
 
 private:
     Ui::MainWindow *ui;

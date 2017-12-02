@@ -2,11 +2,12 @@
 
 DBHandler::DBHandler()
 {
-
 }
 
 void DBHandler::openConnection(DBType t, QString url, QString dbName, QString userName, QString password, ConnectionFlags f)
 {
+    freeResources();
+
     if(t == XML_FILE)
     {
         db = new XmlDB(url);
@@ -18,7 +19,9 @@ void DBHandler::openConnection(DBType t, QString url, QString dbName, QString us
 
 void DBHandler::fillTables()
 {
-    db->fillTables();
+    Q_ASSERT_X(db != nullptr, "fillTables", "db = nullptr");
+
+    tables = db->fillTables();
     emit fillTablesSuccess();
 }
 
@@ -32,48 +35,104 @@ AccessMod DBHandler::getAccessMod()
     return accessMod;
 }
 
-TablesDataVector* DBHandler::getTablesData(DisplayMode mode)
+int DBHandler::getTablesCount()
 {
-    return nullptr;
+    Q_ASSERT_X(tables != nullptr, "getTablesCount", "tables = nullptr");
+
+    return tables->size();
 }
 
-void DBHandler::setTableName(uint tableID, QString tableName, DisplayMode mode)
+QString DBHandler::getTableName(uint tableID)
 {
+    Q_ASSERT_X(tables != nullptr, "getTableName", "tables = nullptr");
+
+    return tables->at(tableID)->getName();
+}
+
+QRect DBHandler::getTableGeometry(uint tableID, DisplayMode mode)
+{
+    Q_ASSERT_X(tables != nullptr, "getTableGeometry", "tables = nullptr");
+
+    return tables->at(tableID)->getGeometry(mode);
+}
+
+QAbstractItemModel *DBHandler::getTableFieldsModel(uint tableID)
+{
+    Q_ASSERT_X(tables != nullptr, "getTablefieldsModel", "tables = nullptr");
+
+    return tables->at(tableID)->getFieldsModel();
+}
+
+QAbstractItemModel *DBHandler::getTableObjectsModel(uint tableID)
+{
+    Q_ASSERT_X(tables != nullptr, "getTableObjectsModel", "tables = nullptr");
+
+    return tables->at(tableID)->getObjectsModel();
+}
+
+void DBHandler::setTableName(uint tableID, const QString &tableName)
+{
+    Q_ASSERT_X(tables != nullptr, "setTableName", "tables = nullptr");
+
     tables->at(tableID)->setName(tableName);
 }
 
 void DBHandler::setTableX(uint tableID, int x, DisplayMode mode)
 {
-    tables->at(tableID)->setCoordX(x);
-}
+    Q_ASSERT_X(tables != nullptr, "setTableX", "tables = nullptr");
 
+    tables->at(tableID)->setCoordX(x, mode);
+}
 
 void DBHandler::setTableY(uint tableID, int y, DisplayMode mode)
 {
-    tables->at(tableID)->setCoordY(y);
+    Q_ASSERT_X(tables != nullptr, "setTableY", "tables = nullptr");
+
+    tables->at(tableID)->setCoordY(y, mode);
 }
 
 void DBHandler::setTableHeight(uint tableID, int h, DisplayMode mode)
 {
-    tables->at(tableID)->setCoordX(h);
+    Q_ASSERT_X(tables != nullptr, "setTableHeight", "tables = nullptr");
+
+    tables->at(tableID)->setCoordX(h, mode);
 }
 
 
 void DBHandler::setTableWidth(uint tableID, int w, DisplayMode mode)
 {
-    tables->at(tableID)->setCoordY(w);
+    Q_ASSERT_X(tables != nullptr, "setTableWidth", "tables = nullptr");
+
+    tables->at(tableID)->setCoordY(w, mode);
 }
-
-
 
 void DBHandler::save()
 {
+    Q_ASSERT_X(db != nullptr, "save", "db = nullptr");
+    Q_ASSERT_X(tables != nullptr, "save", "tables = nullptr");
+
 
 }
 
 void DBHandler::freeUnusedMemmory()
 {
+    Q_ASSERT_X(db != nullptr, "freeUnusedMemmory", "db = nullptr");
+    Q_ASSERT_X(tables != nullptr, "freeUnusedMemmory", "tables = nullptr");
+
 
 }
 
+void DBHandler::freeResources()
+{
+    if (db != nullptr)
+        delete db;
 
+    if (tables == nullptr)
+        return;
+
+    foreach (Table *t, *tables)
+        delete t;
+
+    delete tables;
+    tables = nullptr;
+}

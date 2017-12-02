@@ -8,21 +8,22 @@
 #include "GlobalDefinitions.h"
 #include "XmlDB.h"
 
-using std::tuple;
-
-typedef QVector<tuple<QString, QRect, QAbstractItemModel*>> TablesDataVector;
-
 class DBHandler : public QObject
 {
     Q_OBJECT
 public:
     DBHandler();
+    ~DBHandler() {freeResources();}
 
-    TablesDataVector* getTablesData(DisplayMode mode);
     AccessMod getAccessMod();
+    int getTablesCount();
+    QString getTableName(uint tableID);
+    QRect getTableGeometry(uint tableID, DisplayMode mode);
+    QAbstractItemModel *getTableFieldsModel(uint tableID);
+    QAbstractItemModel *getTableObjectsModel(uint tableID);
 
     void setAccessMod(AccessMod am);
-    void setTableName(uint tableID, QString tableName, DisplayMode mode);
+    void setTableName(uint tableID, const QString &tableName);
     void setTableX(uint tableID, int x, DisplayMode mode);
     void setTableY(uint tableID, int y, DisplayMode mode);
     void setTableWidth(uint tableID, int w, DisplayMode mode);
@@ -51,8 +52,10 @@ public slots:
 
 private:
     AbstractDB* db = nullptr;
-    QVector<Table*>* tables = nullptr;
+    QVector<Table*> *tables = nullptr;
     AccessMod accessMod;
+
+    void freeResources();
 };
 
 #endif // DBHANDLER_H

@@ -14,12 +14,12 @@ class TableView: public DraggableWidget
 public:
     explicit TableView(QWidget *parent = nullptr);
 
-    void setId(uint i) {id = i;}
+    void setID(uint i) {id = i;}
     void setTableName(const QString &name);
     void setModel(QAbstractItemModel *model);
     void setAccesMod(AccessMod mod);
 
-    uint getId() const {return id;}
+    uint getID() const {return id;}
     QString getTableName() const {return tableName->text();}
     QAbstractItemModel* getModel() const {return view->model();}
 
@@ -28,7 +28,7 @@ signals:
     void yChanged(uint id, int y);
     void widthChanged(uint id, int width);
     void heightChanged(uint id, int height);
-    void tableNameChanged(uint id, QString name);
+    void tableNameChanged(uint id, const QString &name);
 
 protected:
     void moveEvent(QMoveEvent *event) override;

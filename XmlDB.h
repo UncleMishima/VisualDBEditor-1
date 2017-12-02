@@ -25,11 +25,9 @@ public:
 
     QVector<Table *>* fillTables() override;
 
-    QTableView tv;
-
 private:
     QString filePath;
-    QVector<Table* > tables;
+    QVector<Table* > *tables;
     QStringList fields;
     QStringList rows;
 };

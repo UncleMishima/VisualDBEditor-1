@@ -38,6 +38,9 @@ void XmlDB::readXmlFile(QString path)
             {
                 //qDebug() << "[Database]: ";
                 int numOfTables = xmlReader.attributes().value("tablesCount").toString().toInt();
+                tables = new QVector<Table*>;
+                tables->reserve(numOfTables);
+
 
                 xmlReader.readNext();
 
@@ -54,9 +57,6 @@ void XmlDB::readXmlFile(QString path)
             }
         }
     }
-
-    tv.setModel(tables.at(0)->getRowsModel());
-    tv.show();
 }
 
 void XmlDB::parseTable(QXmlStreamReader& xmlReader)
@@ -73,14 +73,13 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
     Table* tb = new Table();
 
     //set table's name
-    QString tName = xmlReader.attributes().value("name").toString();
+    QString tName = xmlReader.attributes().value("tableName").toString();
     tb->setName(tName);
     //qDebug() << "tables name" << tb->getName();
 
     //set counts of fields and rows
     int countOfFields = xmlReader.attributes().value("fieldsCount").toString().toInt();
     int countOfRows = xmlReader.attributes().value("rowsCount").toString().toInt();
-    tb->setFieldsAndRows(countOfFields, countOfRows);
     //qDebug() << "get counts" << tb->getFieldsCount() << tb->getRowsCount();
 
     //set table's model size
@@ -117,8 +116,8 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
                 int width = xmlReader.attributes().value("width").toString().toInt();
                 int heigh = xmlReader.attributes().value("heigh").toString().toInt();
 
-                tb->setCoord(xCoord, yCoord, index);
-                tb->setResize(width, heigh, index);
+                tb->setCoord(xCoord, yCoord, (DisplayMode) index);
+                tb->setResize(width, heigh, (DisplayMode) index);
 
                 ++index;
 
@@ -168,7 +167,7 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
         xmlReader.readNext();
     }
 
-    tables << tb;
+    tables->push_back(tb);
 
     return;
 
@@ -193,5 +192,5 @@ void XmlDB::fillModel(Table* tb, QStringList& fields, QStringList& rows)
 
 QVector<Table *>* XmlDB::fillTables()
 {
-    return &(this->tables);
+    return tables;
 }

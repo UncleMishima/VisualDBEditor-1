@@ -3,9 +3,9 @@
 
 #include <QObject>
 #include <QVector>
-#include <QTableView>
 #include <QString>
-#include <QStandardItemModel>
+#include <QRect>
+#include <QAbstractItemModel>
 
 enum DBType
 {

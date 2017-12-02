@@ -44,6 +44,7 @@ void Controller::connectionSuccess()
 
 void Controller::fillTablesSuccess()
 {
+    // debug For now this is it, later acces mode will be obtained before this call
     mainWindow->showTables(AccessMod::STRUCTURE_EDIT, DisplayMode::OBJECTS);
 }
 
