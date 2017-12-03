@@ -6,6 +6,8 @@
 
 #include "TableView.h"
 
+bool TableView::_isEmitSignals = true;
+
 TableView::TableView(QWidget *parent):
     DraggableWidget(parent),
     tableName(new QLabel),
@@ -43,7 +45,8 @@ void TableView::setTableName(const QString &name)
 {
     tableName->setText(name);
 
-    emit tableNameChanged(id, name);
+    if (_isEmitSignals)
+        emit tableNameChanged(id, name);
 }
 
 void TableView::setAccesMod(AccessMode mode)
@@ -76,6 +79,9 @@ void TableView::setAccesMod(AccessMode mode)
 
 void TableView::moveEvent(QMoveEvent *event)
 {
+    if (!_isEmitSignals)
+        return;
+
     const QPoint &oldPos = event->oldPos();
     const QPoint &pos = event->pos();
 
@@ -88,6 +94,9 @@ void TableView::moveEvent(QMoveEvent *event)
 
 void TableView::resizeEvent(QResizeEvent *event)
 {
+    if (!_isEmitSignals)
+        return;
+
     const QSize &oldSize = event->oldSize();
     const QSize &size = event->size();
 

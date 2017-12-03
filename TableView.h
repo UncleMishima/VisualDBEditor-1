@@ -18,10 +18,12 @@ public:
     void setTableName(const QString &name);
     void setModel(QAbstractItemModel *model);
     void setAccesMod(AccessMode mode);
+    static void setEmitSignals(bool b) {_isEmitSignals = b;}
 
     uint getID() const {return id;}
     QString getTableName() const {return tableName->text();}
     QAbstractItemModel* getModel() const {return view->model();}
+    static bool isEmitSignals() {return _isEmitSignals;}
 
 signals:
     void xChanged(uint id, int x);
@@ -40,6 +42,7 @@ private:
     uint id;
     QLabel *tableName;
     QTableView *view;
+    static bool _isEmitSignals;
 };
 
 #endif // TABLEVIEW_H

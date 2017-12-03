@@ -1,7 +1,6 @@
 #ifndef TABLE_H
 #define TABLE_H
 
-#include <QObject>
 #include <QString>
 #include <QStandardItemModel>
 #include <QStandardItem>
@@ -23,7 +22,7 @@ private:
     QStandardItemModel* objectsModel = nullptr;
 
 public:
-    explicit Table(QObject *parent = 0);
+    explicit Table();
 
     QString getName();
     int getCoordX(DisplayMode mode);
