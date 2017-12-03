@@ -12,19 +12,21 @@ class MainWindow;
 
 class DBHandler;
 class TableView;
+class Controller;
 
 class MainWindow: public QMainWindow
 {
     Q_OBJECT
 
 public:
-     explicit MainWindow(DBHandler *h);
+     explicit MainWindow(DBHandler *h, Controller *c);
     ~MainWindow();
 
     void showTables(AccessMode accesMod, DisplayMode displayMode);
 
 private slots:
     void slot_fileOpen();
+    void slot_fileSaveAs();
     void slot_fileSave();
     void tableXChanged(uint tableID, int x);
     void tableYChanged(uint tableID, int y);
@@ -35,10 +37,12 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QMenu *fileMenu;
-    QAction *fileOpen, *fileExit, *fileSave;
+    QAction *fileOpen, *fileExit, *fileSave, *fileSaveAs;
     DBHandler *dbHandler;
     DisplayMode displayMode;
     QVector<TableView*> *tableViews;
+    Controller* controller;
+
     // TableView widgets and relations are drawn inside this widget
     QWidget *tablesScene;
     QScrollArea *scrollArea;

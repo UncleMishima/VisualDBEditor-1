@@ -18,7 +18,7 @@ void DBHandler::fillTables()
 {
     Q_ASSERT_X(db != nullptr, "fillTables", "db = nullptr");
 
-    tables = db->fillTables();
+    tie<QVector<Table*>*&, AccessMode&>(tables, accessMod) = db->fillTables();
     emit fillTablesSuccess();
 }
 
@@ -108,6 +108,7 @@ void DBHandler::save()
     Q_ASSERT_X(db != nullptr, "save", "db = nullptr");
     Q_ASSERT_X(tables != nullptr, "save", "tables = nullptr");
 
+    db->save();
 
 }
 

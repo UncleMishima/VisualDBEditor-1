@@ -6,6 +6,10 @@
 #include <QString>
 #include <QRect>
 #include <QAbstractItemModel>
+#include <tuple>
+
+using std::tuple;
+using std::tie;
 
 enum DBType
 {
@@ -13,6 +17,12 @@ enum DBType
     POSTGRES_DB
 };
 
+enum XmlFlag
+{
+    NO_FLAG,
+    READ,
+    WRITE
+};
 
 enum DisplayMode
 {

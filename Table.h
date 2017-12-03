@@ -5,6 +5,7 @@
 #include <QString>
 #include <QStandardItemModel>
 #include <QStandardItem>
+
 #include "GlobalDefinitions.h"
 
 #define DISPLAY_MODES_COUNT 3
