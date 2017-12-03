@@ -20,17 +20,16 @@ public:
 
     void parseTable(QXmlStreamReader& );
 
-    void readXmlFile(const QString &);
+    tuple<QVector<Table *> *, AccessMode> readXmlFile(const QString &);
 
-    void writeXmlFile(const QString &);
+    tuple<QVector<Table *>*, AccessMode> fillTables() override;
 
-    QVector<Table *>* fillTables() override;
+    void save();
 
 private:
     QString filePath;
+    QXmlStreamWriter xmlWriter;
     QVector<Table* > *tables;
-    QStringList fields;
-    QStringList rows;
 };
 
 #endif // XMLDB_H

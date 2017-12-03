@@ -5,20 +5,19 @@
 
 XmlDB::XmlDB(const QString &fp) : filePath(fp)
 {
-    readXmlFile(filePath);
-    fields.clear();
-    rows.clear();
+
 }
 
-void XmlDB::readXmlFile(const QString &path)
+tuple<QVector<Table *> *, AccessMode> XmlDB::readXmlFile(const QString &path)
 {
     QFile* file = new QFile(path);
 
     if (!file->open(QIODevice::ReadOnly | QIODevice::Text) )
     {
         qDebug() << "Error: File not open" << file->errorString();
-        return;
     }
+
+    AccessMode accessMode;
 
     QXmlStreamReader xmlReader(file);
 
@@ -42,8 +41,11 @@ void XmlDB::readXmlFile(const QString &path)
 
                 xmlReader.readNext();
 
-                int accessMode = xmlReader.attributes().value("accessMode").toString().toInt();
-                //qDebug() << "Count of tables: " << numOfTables << " Access mode: " << accessMode;
+                //int accessMode = xmlReader.attributes().value("accessMode").toString().toInt();
+                accessMode = (AccessMode)xmlReader.attributes().value("accessMode").toString().toInt();
+                //                qDebug() << "Count of tables: "
+                //                         << numOfTables << " Access mode: "
+                //                         << accessMode;
             }
 
             if(xmlReader.name() == "Table")
@@ -52,6 +54,7 @@ void XmlDB::readXmlFile(const QString &path)
             }
         }
     }
+    return tuple<QVector<Table *> *, AccessMode>(tables, accessMode);
 }
 
 void XmlDB::parseTable(QXmlStreamReader& xmlReader)
@@ -77,8 +80,8 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
 
     //set table's model size
     int current = 0;
-    QStandardItemModel* model = new QStandardItemModel(countOfRows, 2);
-    QStandardItemModel* model2 = new QStandardItemModel(countOfRows, countOfFields);
+    QStandardItemModel* fieldsModel = new QStandardItemModel(countOfFields, 2);
+    QStandardItemModel* objectsModel = new QStandardItemModel(countOfRows, countOfFields);
 
     int index = 0;
 
@@ -94,8 +97,8 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
                 int width = xmlReader.attributes().value("width").toString().toInt();
                 int heigh = xmlReader.attributes().value("heigh").toString().toInt();
 
-                tb->setCoord(xCoord, yCoord, (DisplayMode) index);
-                tb->resize(width, heigh, (DisplayMode) index);
+                tb->setCoord(xCoord, yCoord, (DisplayMode)index);
+                tb->resize(width, heigh, (DisplayMode)index);
 
                 ++index;
 
@@ -107,22 +110,22 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
             {
                 for(int i = 0; i < xmlReader.attributes().size(); i++)
                 {
-                    model->setItem(i, 0, new QStandardItem(xmlReader.attributes().at(i).name().toString())  );
-                    model->setItem(i, 1, new QStandardItem(xmlReader.attributes().at(i).value().toString()) );
-                    ////qDebug() << xmlReader.attributes().at(i).name() << xmlReader.attributes().at(i).value();
+                    fieldsModel->setItem(i, 0, new QStandardItem(xmlReader.attributes().at(i).name().toString())  );
+                    fieldsModel->setItem(i, 1, new QStandardItem(xmlReader.attributes().at(i).value().toString()) );
+                    //qDebug() << xmlReader.attributes().at(i).name() << xmlReader.attributes().at(i).value();
                 }
-                tb->setObjectsModel(model);
+                tb->setObjectsModel(fieldsModel);
             }
 
             if(xmlReader.name() == "Row")
             {
                 for(int j = 0; j < countOfFields; j++)
                 {
-                    model2->setItem(current, j, new QStandardItem(xmlReader.attributes().at(j).value().toString())  );
+                    objectsModel->setItem(current, j, new QStandardItem(xmlReader.attributes().at(j).value().toString())  );
                 }
                 ++current;
 
-                tb->setRowsModel(model2);
+                tb->setRowsModel(objectsModel);
             }
         }
         xmlReader.readNext();
@@ -133,7 +136,102 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
     return;
 }
 
-QVector<Table *>* XmlDB::fillTables()
+tuple<QVector<Table *> *, AccessMode> XmlDB::fillTables()
 {
-    return tables;
+    return readXmlFile(filePath);
+}
+
+
+
+
+
+void XmlDB::save()
+{
+    QFile file(filePath);
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text) )
+    {
+        qDebug() << "Error: File not saved";
+        return;
+    }
+
+    for(int i = 0; i < tables->size(); i++)
+    {
+        int fieldsCount = tables->at(i)->getFieldsModel()->columnCount();
+//        int rowsCount = tables->at(i)->getObjectsModel()->rowCount();
+//        qDebug() << "Table #" << i+1;
+        qDebug() << "Fields" << fieldsCount;
+//        qDebug() << "Rows" << rowsCount;
+//        qDebug() << " ";
+//        qDebug() << "Row 0, Fiels 0" << tables->at(i)->getFieldsModel()->data(tables->at(i)->getFieldsModel()->index(i, 0)).toString();
+//        qDebug() << "Row 0, Fiels 0" << tables->at(i)->getFieldsModel()->item(0, 0)->data(Qt::DisplayRole).toString();
+//        qDebug() << "Row 0, Fiels 1" << tables->at(i)->getFieldsModel()->item(0, 1)->data(Qt::DisplayRole).toString();
+//        qDebug() << "Row 1, Fiels 0" << tables->at(i)->getFieldsModel()->item(1, 0)->data(Qt::DisplayRole).toString();
+//        qDebug() << "Row 1, Fiels 1" << tables->at(i)->getFieldsModel()->item(1, 1)->data(Qt::DisplayRole).toString();
+//        qDebug() << " ";
+//        qDebug() << " ";
+    }
+
+    xmlWriter.setDevice(&file);
+
+    xmlWriter.setAutoFormatting(true);
+
+    xmlWriter.writeStartDocument();
+
+    xmlWriter.writeStartElement("Database");
+    xmlWriter.writeAttribute("tablesCount", QString::number(tables->size()));
+    xmlWriter.writeAttribute("accessMode", "2");
+
+    for(int i = 0; i < tables->size(); i++)
+    {
+        int fieldsCount = tables->at(i)->getFieldsModel()->rowCount();
+        int rowsCount = tables->at(i)->getObjectsModel()->rowCount();
+        xmlWriter.writeStartElement("Table");
+
+        xmlWriter.writeAttribute("tableName", tables->at(i)->getName());
+        xmlWriter.writeAttribute("fieldsCount", QString::number(fieldsCount));
+        xmlWriter.writeAttribute("rowsCount", QString::number(rowsCount));
+
+        for(int j = 0; j < DISPLAY_MODES_COUNT; j++)
+        {
+            xmlWriter.writeStartElement("DispalyParams");
+            xmlWriter.writeAttribute("fieldsCount", QString::number(j));
+            xmlWriter.writeAttribute("xCoord", QString::number(tables->at(i)->getCoordX((DisplayMode)j)));
+            xmlWriter.writeAttribute("yCoord", QString::number(tables->at(i)->getCoordY((DisplayMode)j)));
+            xmlWriter.writeAttribute("width", QString::number(tables->at(i)->getWidth((DisplayMode)j)));
+            xmlWriter.writeAttribute("heigh", QString::number(tables->at(i)->getHeight((DisplayMode)j)));
+            xmlWriter.writeEndElement();
+        }
+
+        xmlWriter.writeStartElement("Fields");
+
+        for(int j = 0; j < fieldsCount; j++)
+        {
+            xmlWriter.writeAttribute(tables->at(i)->getFieldsModel()->item(j, 0)->data(Qt::DisplayRole).toString(),
+                                     //tables->at(i)->getFieldsModel()->data(tables->at(i)->getFieldsModel()->index(0, j)).toString());
+                                     tables->at(i)->getFieldsModel()->item(j, 1)->data(Qt::DisplayRole).toString());
+            //qDebug() << tables->at(i)->getFieldsModel()->item(i, j)->data().toString();
+
+            //qDebug() << tables->at(i)->getFieldsModel()->data(tables->at(i)->getFieldsModel()->index(0, j)).toString();
+        }
+        xmlWriter.writeEndElement();
+
+
+        for(int k = 0; k < rowsCount; k++)
+        {
+            xmlWriter.writeStartElement("Row");
+            for(int j = 0; j < fieldsCount; j++)
+            {
+                xmlWriter.writeAttribute(tables->at(i)->getFieldsModel()->item(j, 0)->data(Qt::DisplayRole).toString(),
+                                         //tables->at(i)->getObjectsModel()->data(tables->at(i)->getFieldsModel()->index(j, k)).toString());
+                                         tables->at(i)->getObjectsModel()->item(k, j)->data(Qt::DisplayRole).toString());
+            }
+            xmlWriter.writeEndElement();
+        }
+
+        xmlWriter.writeEndElement(); //end of Table
+    }
+
+    xmlWriter.writeEndElement(); //end of Database
+    xmlWriter.writeEndDocument(); // end of doc
 }
