@@ -17,8 +17,7 @@ public:
     void start();
 
 signals:
-    void openConnection(DBType tm, QString url, QString dbName,
-                        QString userName, QString password, ConnectionFlags f);
+    void openConnection(DBType type, QStringList options, uint flags);
     void fillTables();
 
 public slots:

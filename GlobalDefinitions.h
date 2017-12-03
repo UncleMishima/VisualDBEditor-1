@@ -21,7 +21,7 @@ enum DisplayMode
     OBJECTS = 2
 };
 
-enum AccessMod
+enum AccessMode
 {
     VIEW_ONLY,
     DATA_EDIT,

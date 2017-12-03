@@ -2,8 +2,9 @@
 
 #include "DraggableWidget.h"
 
-DraggableWidget::DraggableWidget(QWidget *parent): QWidget(parent),
-                                                   _isDraggable(true)
+DraggableWidget::DraggableWidget(QWidget *parent):
+    QWidget(parent),
+    _isDraggable(true)
 {
 
 }

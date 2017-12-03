@@ -17,7 +17,7 @@ public:
     void setID(uint i) {id = i;}
     void setTableName(const QString &name);
     void setModel(QAbstractItemModel *model);
-    void setAccesMod(AccessMod mod);
+    void setAccesMod(AccessMode mode);
 
     uint getID() const {return id;}
     QString getTableName() const {return tableName->text();}

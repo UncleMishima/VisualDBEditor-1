@@ -1,19 +1,16 @@
 #include "DBHandler.h"
+#include "AbstractDB.h"
+#include "Table.h"
 
 DBHandler::DBHandler()
 {
 }
 
-void DBHandler::openConnection(DBType t, QString url, QString dbName, QString userName, QString password, ConnectionFlags f)
+void DBHandler::openConnection(DBType type, QStringList options, uint flags)
 {
     freeResources();
 
-    if(t == XML_FILE)
-    {
-        db = new XmlDB(url);
-    }
-    else qDebug() << "Error: openConnection() : DBHandler";
-
+    db = AbstractDB::openConnection(type, options, flags);
     emit connectionSuccess();
 }
 
@@ -25,12 +22,12 @@ void DBHandler::fillTables()
     emit fillTablesSuccess();
 }
 
-void DBHandler::setAccessMod(AccessMod am)
+void DBHandler::setAccessMod(AccessMode am)
 {
     accessMod = am;
 }
 
-AccessMod DBHandler::getAccessMod()
+AccessMode DBHandler::getAccessMod()
 {
     return accessMod;
 }
@@ -110,14 +107,6 @@ void DBHandler::save()
 {
     Q_ASSERT_X(db != nullptr, "save", "db = nullptr");
     Q_ASSERT_X(tables != nullptr, "save", "tables = nullptr");
-
-
-}
-
-void DBHandler::freeUnusedMemmory()
-{
-    Q_ASSERT_X(db != nullptr, "freeUnusedMemmory", "db = nullptr");
-    Q_ASSERT_X(tables != nullptr, "freeUnusedMemmory", "tables = nullptr");
 
 
 }

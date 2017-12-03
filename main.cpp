@@ -1,5 +1,6 @@
 #include <QApplication>
-#include <Controller.h>
+
+#include "Controller.h"
 
 int main(int argc, char *argv[])
 {

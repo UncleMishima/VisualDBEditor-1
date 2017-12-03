@@ -21,7 +21,7 @@ public:
      explicit MainWindow(DBHandler *h);
     ~MainWindow();
 
-    void showTables(AccessMod accesMod, DisplayMode displayMode);
+    void showTables(AccessMode accesMod, DisplayMode displayMode);
 
 private slots:
     void slot_fileOpen();
@@ -34,7 +34,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QMenu* fileMenu;
+    QMenu *fileMenu;
     QAction *fileOpen, *fileExit, *fileSave;
     DBHandler *dbHandler;
     DisplayMode displayMode;

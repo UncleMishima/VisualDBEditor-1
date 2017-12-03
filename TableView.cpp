@@ -6,9 +6,10 @@
 
 #include "TableView.h"
 
-TableView::TableView(QWidget *parent): DraggableWidget(parent),
-                                       tableName(new QLabel),
-                                       view(new QTableView)
+TableView::TableView(QWidget *parent):
+    DraggableWidget(parent),
+    tableName(new QLabel),
+    view(new QTableView)
 {
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -19,7 +20,7 @@ TableView::TableView(QWidget *parent): DraggableWidget(parent),
     tableName->setFrameStyle(QFrame::StyledPanel);
     tableName->setAlignment(Qt::AlignCenter);
     tableName->setStyleSheet("background-color: grey;"
-                          "font: 10pt;");
+                             "font: 10pt;");
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setSpacing(0);
@@ -45,9 +46,9 @@ void TableView::setTableName(const QString &name)
     emit tableNameChanged(id, name);
 }
 
-void TableView::setAccesMod(AccessMod mod)
+void TableView::setAccesMod(AccessMode mode)
 {
-    switch (mod)
+    switch (mode)
     {
         case VIEW_ONLY:
         {

@@ -16,6 +16,8 @@ MainWindow::MainWindow(DBHandler *h):
 {
     ui->setupUi(this);
 
+    setWindowTitle(QString("VisualDBEditor"));
+
     createMenu();
 
     scrollArea->setWidget(tablesScene);
@@ -31,7 +33,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::slot_fileOpen()
 {
-    QString fileName = QFileDialog::getOpenFileName(this,
+    QString fileName = QFileDialog::getOpenFileName(
+                                this,
                                 QString::fromUtf8("Open file..."),
                                 QDir::currentPath(),
                                 "XML file(*.xml)");
@@ -39,7 +42,8 @@ void MainWindow::slot_fileOpen()
 
 void MainWindow::slot_fileSave()
 {
-    QString filePath = QFileDialog::getSaveFileName(this, "Save Xml", ".", "Xml files (*.xml)");
+    QString filePath = QFileDialog::getSaveFileName(
+                                    this, "Save Xml", ".", "Xml files (*.xml)");
 }
 
 void MainWindow::createMenu()
@@ -61,7 +65,7 @@ void MainWindow::createMenu()
     fileMenu->addAction(fileExit);
 }
 
-void MainWindow::showTables(AccessMod accesMod, DisplayMode displayMode)
+void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
 {
     freeResources();
 

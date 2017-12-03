@@ -18,8 +18,8 @@ private:
     int tableWidth[DISPLAY_MODES_COUNT];
     int tableHeight[DISPLAY_MODES_COUNT];
 
-    QStandardItemModel* fieldsModel;
-    QStandardItemModel* objectsModel;
+    QStandardItemModel* fieldsModel = nullptr;
+    QStandardItemModel* objectsModel = nullptr;
 
 public:
     explicit Table(QObject *parent = 0);
@@ -30,24 +30,21 @@ public:
     int getWidth(DisplayMode mode);
     int getHeight(DisplayMode mode);
     QRect getGeometry(DisplayMode mode);
-    QStandardItemModel* getFieldsModel();
-    QStandardItemModel* getObjectsModel();
+    QStandardItemModel *getFieldsModel();
+    QStandardItemModel *getObjectsModel();
 
     void setName(const QString &name);
 
     void setCoord(int x, int y, DisplayMode mode);
-    void setResize(int w, int h, DisplayMode mode);
+    void resize(int w, int h, DisplayMode mode);
 
     void setCoordX(int x, DisplayMode mode);
     void setCoordY(int y, DisplayMode mode);
     void setWidth(int w, DisplayMode mode);
     void setHeight(int h, DisplayMode mode);
 
-    void setFieldsAndRows(int f, int r);
-    void setRowsModel(QStandardItemModel* );
-    void setFieldsModel(QStandardItemModel* );
-    void setModel(QStandardItemModel* );
-
+    void setRowsModel(QStandardItemModel* im);
+    void setObjectsModel(QStandardItemModel* im);
 };
 
 #endif // TABLE_H

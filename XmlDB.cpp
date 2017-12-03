@@ -1,16 +1,16 @@
-#include "XmlDB.h"
-
-#include <QObject>
 #include <QDebug>
 
-XmlDB::XmlDB(QString fp) : filePath(fp)
+#include "XmlDB.h"
+#include "Table.h"
+
+XmlDB::XmlDB(const QString &fp) : filePath(fp)
 {
     readXmlFile(filePath);
     fields.clear();
     rows.clear();
 }
 
-void XmlDB::readXmlFile(QString path)
+void XmlDB::readXmlFile(const QString &path)
 {
     QFile* file = new QFile(path);
 
@@ -117,7 +117,7 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
                 int heigh = xmlReader.attributes().value("heigh").toString().toInt();
 
                 tb->setCoord(xCoord, yCoord, (DisplayMode) index);
-                tb->setResize(width, heigh, (DisplayMode) index);
+                tb->resize(width, heigh, (DisplayMode) index);
 
                 ++index;
 
@@ -135,7 +135,7 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
                     model->setItem(i, 1, new QStandardItem(xmlReader.attributes().at(i).value().toString()) );
                     ////qDebug() << xmlReader.attributes().at(i).name() << xmlReader.attributes().at(i).value();
                 }
-                tb->setFieldsModel(model);
+                tb->setObjectsModel(model);
             }
 
 

@@ -1,34 +1,28 @@
 #include "Table.h"
 
-Table::Table(QObject *parent)
-{
-    //fieldsModel = nullptr;
-    //rowsModel = nullptr;
-}
-
+Table::Table(QObject *parent){}
 
 QString Table::getName()
 {
     return name;
 }
 
-QStandardItemModel* Table::getFieldsModel()
+QStandardItemModel *Table::getFieldsModel()
 {
     return fieldsModel;
 }
 
-QStandardItemModel* Table::getObjectsModel()
+QStandardItemModel *Table::getObjectsModel()
 {
     return objectsModel;
 }
-
 
 void Table::setName(const QString &name)
 {
     this->name = name;
 }
 
-void Table::setFieldsModel(QStandardItemModel *im)
+void Table::setObjectsModel(QStandardItemModel *im)
 {
     fieldsModel = im;
 }
@@ -44,7 +38,7 @@ void Table::setCoord(int x, int y, DisplayMode mode)
     coordY[mode] = y;
 }
 
-void Table::setResize(int w, int h, DisplayMode mode)
+void Table::resize(int w, int h, DisplayMode mode)
 {
     tableWidth[mode] = w;
     tableHeight[mode] = h;
