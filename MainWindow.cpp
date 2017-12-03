@@ -18,6 +18,7 @@ MainWindow::MainWindow(DBHandler *h):
 
     setWindowTitle(QString("VisualDBEditor"));
 
+    createActions();
     createMenu();
 
     scrollArea->setWidget(tablesScene);
@@ -46,30 +47,54 @@ void MainWindow::slot_fileSave()
                                     this, "Save Xml", ".", "Xml files (*.xml)");
 }
 
-void MainWindow::createMenu()
+
+void MainWindow::createActions()
 {
-    fileMenu = menuBar()->addMenu(tr("&File"));
 
     fileOpen = new QAction(tr("&Open"), this);
     connect(fileOpen, SIGNAL(triggered()), this, SLOT(slot_fileOpen()));
-    fileMenu->addAction(fileOpen);
 
     fileSave = new QAction(tr("&Save"), this);
     connect(fileSave, SIGNAL(triggered()), this, SLOT(slot_fileSave()));
-    fileMenu->addAction(fileSave);
-
-    fileMenu->addSeparator();
 
     fileExit = new QAction(tr("&Exit"), this);
     connect(fileExit, SIGNAL(triggered()), this, SLOT(close()));
+
+    showClassesAct = new QAction(tr("&Classes"), this);
+    showClassesAct->setCheckable(true);
+    connect(showClassesAct, SIGNAL(triggered()), this, SLOT(showClasses()));
+
+    showFieldsAct = new QAction(tr("&Fields"), this);
+    showFieldsAct->setCheckable(true);
+    connect(showFieldsAct, SIGNAL(triggered()), this, SLOT(showFields()));
+
+    showObjectsAct = new QAction(tr("&Objects"), this);
+    showObjectsAct->setCheckable(true);
+    connect(showObjectsAct, SIGNAL(triggered()), this, SLOT(showObjects()));
+
+    displayModeGroup = new QActionGroup(this);
+    displayModeGroup->addAction(showClassesAct);
+    displayModeGroup->addAction(showFieldsAct);
+    displayModeGroup->addAction(showObjectsAct);
+}
+
+void MainWindow::createMenu()
+{
+    fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(fileOpen);
+    fileMenu->addAction(fileSave);
+    fileMenu->addSeparator();
     fileMenu->addAction(fileExit);
+
+    viewMenu = menuBar()->addMenu(tr("&View"));
+    viewMenu->addAction(showClassesAct);
+    viewMenu->addAction(showFieldsAct);
+    viewMenu->addAction(showObjectsAct);
 }
 
 void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
 {
     freeResources();
-
-    this->displayMode = displayMode;
 
     int tablesCount = dbHandler->getTablesCount();
     tableViews = new QVector<TableView*>(tablesCount);
@@ -80,23 +105,6 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
 
         tv->setID(i);
         tv->setTableName(dbHandler->getTableName(i));
-        tv->setGeometry(dbHandler->getTableGeometry(i, displayMode));
-
-        switch (displayMode)
-        {
-            case CLASSES:
-                tv->setModel(nullptr);
-                break;
-
-            case FIELDS:
-                tv->setModel(dbHandler->getTableFieldsModel(i));
-                break;
-
-            case OBJECTS:
-                tv->setModel(dbHandler->getTableObjectsModel(i));
-                break;
-        }
-
         tv->setAccesMod(accesMod);
         tv->show();
 
@@ -118,19 +126,55 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
         (*tableViews)[i] = tv;
     }
 
-   tablesScene->adjustSize();
+    setDisplayMode(displayMode);
 }
 
-void MainWindow::freeResources()
+void MainWindow::setDisplayMode(DisplayMode mode)
 {
-    if (tableViews == nullptr)
-        return;
+    displayMode = mode;
+    int tablesCount = tableViews->size();
 
-    foreach (TableView *view, *tableViews)
-        delete view;
+    TableView::setEmitSignals(false);
 
-    delete tableViews;
-    tableViews = nullptr;
+    switch (mode)
+    {
+        case CLASSES:
+        {
+            showClassesAct->setChecked(true);
+
+            for (int i = 0; i < tablesCount; i++)
+                tableViews->at(i)->setModel(nullptr);
+
+            break;
+        }
+
+        case FIELDS:
+        {
+            showFieldsAct->setChecked(true);
+
+            for (int i = 0; i < tablesCount; i++)
+                tableViews->at(i)->setModel(dbHandler->getTableFieldsModel(i));
+
+            break;
+        }
+
+        case OBJECTS:
+        {
+            showObjectsAct->setChecked(true);
+
+            for (int i = 0; i < tablesCount; i++)
+                tableViews->at(i)->setModel(dbHandler->getTableObjectsModel(i));
+
+            break;
+        }
+    }
+
+    for (int i = 0; i < tablesCount; i++)
+        tableViews->at(i)->setGeometry(dbHandler->getTableGeometry(i, mode));
+
+    TableView::setEmitSignals(true);
+
+    tablesScene->adjustSize();
 }
 
 void MainWindow::tableXChanged(uint tableID, int x)
@@ -166,4 +210,16 @@ void MainWindow::tableNameChanged(uint tableID, const QString &name)
     tablesScene->adjustSize();
 
     dbHandler->setTableName(tableID, name);
+}
+
+void MainWindow::freeResources()
+{
+    if (tableViews == nullptr)
+        return;
+
+    foreach (TableView *view, *tableViews)
+        delete view;
+
+    delete tableViews;
+    tableViews = nullptr;
 }

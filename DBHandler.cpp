@@ -92,7 +92,7 @@ void DBHandler::setTableHeight(uint tableID, int h, DisplayMode mode)
 {
     Q_ASSERT_X(tables != nullptr, "setTableHeight", "tables = nullptr");
 
-    tables->at(tableID)->setCoordX(h, mode);
+    tables->at(tableID)->setHeight(h, mode);
 }
 
 
@@ -100,7 +100,7 @@ void DBHandler::setTableWidth(uint tableID, int w, DisplayMode mode)
 {
     Q_ASSERT_X(tables != nullptr, "setTableWidth", "tables = nullptr");
 
-    tables->at(tableID)->setCoordY(w, mode);
+    tables->at(tableID)->setWidth(w, mode);
 }
 
 void DBHandler::save()

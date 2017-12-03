@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QActionGroup>
 #include <QScrollArea>
 
 #include "GlobalDefinitions.h"
@@ -26,6 +27,10 @@ public:
 private slots:
     void slot_fileOpen();
     void slot_fileSave();
+    void showClasses() {setDisplayMode(CLASSES);}
+    void showFields() {setDisplayMode(FIELDS);}
+    void showObjects() {setDisplayMode(OBJECTS);}
+
     void tableXChanged(uint tableID, int x);
     void tableYChanged(uint tableID, int y);
     void tableWidthChanged(uint tableID, int width);
@@ -34,8 +39,14 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
     QMenu *fileMenu;
     QAction *fileOpen, *fileExit, *fileSave;
+
+    QMenu *viewMenu;
+    QActionGroup *displayModeGroup;
+    QAction *showClassesAct, *showFieldsAct, *showObjectsAct;
+
     DBHandler *dbHandler;
     DisplayMode displayMode;
     QVector<TableView*> *tableViews;
@@ -43,8 +54,10 @@ private:
     QWidget *tablesScene;
     QScrollArea *scrollArea;
 
+    void createActions();
     void createMenu();
     void freeResources();
+    void setDisplayMode(DisplayMode mode);
 };
 
 #endif // MAINWINDOW_H
