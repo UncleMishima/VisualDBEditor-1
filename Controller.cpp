@@ -8,7 +8,9 @@ Controller::Controller()
     // debug For now this is it, later we will create it in another thread
     dbHandler = new DBHandler;
 
-    mainWindow = new MainWindow(dbHandler);
+    mainWindow = new MainWindow(dbHandler, this);
+
+    connect(this, SIGNAL(save()), dbHandler, SLOT(save()));
 
     connect(this, SIGNAL(openConnection(DBType,QStringList,uint)),
             dbHandler, SLOT(openConnection(DBType,QStringList,uint)));
@@ -21,11 +23,12 @@ Controller::Controller()
 
     connect(dbHandler, SIGNAL(connectionSuccess()),
             this, SLOT(connectionSuccess()));
-
 }
 
 Controller::~Controller()
 {
+    delete mainWindow;
+    delete dbHandler;
 }
 
 void Controller::start()
@@ -34,6 +37,11 @@ void Controller::start()
 
     QStringList options(QString("test.xml"));
     emit openConnection(XML_FILE, options, STRUCTURE_EDIT);
+}
+
+void Controller::saveTables()
+{
+    emit save();
 }
 
 void Controller::connectionSuccess()

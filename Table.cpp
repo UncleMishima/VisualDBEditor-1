@@ -1,6 +1,6 @@
 #include "Table.h"
 
-Table::Table(QObject *parent){}
+Table::Table(){}
 
 QString Table::getName()
 {

@@ -15,10 +15,12 @@ public:
     explicit Controller();
     ~Controller();
     void start();
+    void saveTables();
 
 signals:
     void openConnection(DBType type, QStringList options, uint flags);
     void fillTables();
+    void save();
 
 public slots:
     void connectionSuccess();

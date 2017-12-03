@@ -6,10 +6,12 @@
 
 #include "DBHandler.h"
 #include "TableView.h"
+#include "Controller.h"
 
-MainWindow::MainWindow(DBHandler *h):
+MainWindow::MainWindow(DBHandler *h, Controller *c):
     ui(new Ui::MainWindow),
     dbHandler(h),
+    controller(c),
     tableViews(nullptr),
     tablesScene(new QWidget),
     scrollArea(new QScrollArea)
@@ -41,12 +43,17 @@ void MainWindow::slot_fileOpen()
                                 "XML file(*.xml)");
 }
 
-void MainWindow::slot_fileSave()
+void MainWindow::slot_fileSaveAs()
 {
     QString filePath = QFileDialog::getSaveFileName(
                                     this, "Save Xml", ".", "Xml files (*.xml)");
 }
 
+
+void MainWindow::slot_fileSave()
+{
+    controller->saveTables();
+}
 
 void MainWindow::createActions()
 {
@@ -56,6 +63,9 @@ void MainWindow::createActions()
 
     fileSave = new QAction(tr("&Save"), this);
     connect(fileSave, SIGNAL(triggered()), this, SLOT(slot_fileSave()));
+
+    fileSaveAs = new QAction(tr("&Save As..."), this);
+    connect(fileSaveAs, SIGNAL(triggered()), this, SLOT(slot_fileSaveAs()));
 
     fileExit = new QAction(tr("&Exit"), this);
     connect(fileExit, SIGNAL(triggered()), this, SLOT(close()));
@@ -82,6 +92,7 @@ void MainWindow::createMenu()
 {
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(fileOpen);
+    fileMenu->addAction(fileSave);
     fileMenu->addAction(fileSave);
     fileMenu->addSeparator();
     fileMenu->addAction(fileExit);
