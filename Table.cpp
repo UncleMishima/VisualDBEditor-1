@@ -1,138 +1,91 @@
 #include "Table.h"
 
-Table::Table(QObject *parent) : QObject(parent)
-{
-    //fieldsModel = nullptr;
-    //rowsModel = nullptr;
-}
-
+Table::Table(QObject *parent){}
 
 QString Table::getName()
 {
     return name;
 }
 
-QStandardItemModel* Table::getModel()
-{
-    return model;
-}
-
-QStandardItemModel* Table::getFieldsModel()
+QStandardItemModel *Table::getFieldsModel()
 {
     return fieldsModel;
 }
 
-QStandardItemModel* Table::getRowsModel()
+QStandardItemModel *Table::getObjectsModel()
 {
-    return rowsModel;
+    return objectsModel;
 }
 
-
-void Table::setName(QString name)
+void Table::setName(const QString &name)
 {
     this->name = name;
 }
 
-void Table::setModel(QStandardItemModel *im)
-{
-    model = im;
-}
-
-void Table::setFieldsModel(QStandardItemModel *im)
+void Table::setObjectsModel(QStandardItemModel *im)
 {
     fieldsModel = im;
 }
 
 void Table::setRowsModel(QStandardItemModel *im)
 {
-    rowsModel = im;
+    objectsModel = im;
 }
 
-void Table::setCoordX(int x)
+void Table::setCoord(int x, int y, DisplayMode mode)
 {
-    xCoord = x;
+    coordX[mode] = x;
+    coordY[mode] = y;
 }
 
-void Table::setCoordY(int y)
+void Table::resize(int w, int h, DisplayMode mode)
 {
-    yCoord = y;
+    tableWidth[mode] = w;
+    tableHeight[mode] = h;
 }
 
-void Table::setWidth(int w)
+int Table::getCoordX(DisplayMode mode)
 {
-    width = w;
+    return coordX[mode];
 }
 
-void Table::setHeight(int h)
+int Table::getCoordY(DisplayMode mode)
 {
-    height = h;
+    return coordY[mode];
 }
 
-
-void Table::setCoord(int x, int y, int i)
+int Table::getWidth(DisplayMode mode)
 {
-    coordX[i] = x;
-    coordY[i] = y;
+    return tableWidth[mode];
 }
 
-void Table::setResize(int w, int h, int i)
+int Table::getHeight(DisplayMode mode)
 {
-    tableWidth[i] = w;
-    tableHeight[i] = h;
+    return tableHeight[mode];
 }
 
-void Table::setFieldsAndRows(int f, int r)
+QRect Table::getGeometry(DisplayMode mode)
 {
-    fieldsCount = f;
-    rowsCount = r;
+   return QRect(coordX[mode], coordY[mode],
+                tableWidth[mode], tableHeight[mode]);
 }
 
-int Table::getCoordX()
+void Table::setCoordX(int x, DisplayMode mode)
 {
-    return xCoord;
+    coordX[mode] = x;
 }
 
-int Table::getCoordY()
+void Table::setCoordY(int y, DisplayMode mode)
 {
-    return yCoord;
+    coordY[mode] = y;
 }
 
-int Table::getWidth()
+void Table::setWidth(int w, DisplayMode mode)
 {
-    return width;
+    tableWidth[mode] = w;
 }
 
-int Table::getHeight()
+void Table::setHeight(int h, DisplayMode mode)
 {
-    return height;
-}
-
-int Table::getCoordX(int i)
-{
-    return coordX[i];
-}
-
-int Table::getCoordY(int i)
-{
-    return coordY[i];
-}
-
-int Table::getWidth(int i)
-{
-    return tableWidth[i];
-}
-
-int Table::getHeight(int i)
-{
-    return tableHeight[i];
-}
-
-int Table::getFieldsCount()
-{
-    return fieldsCount;
-}
-
-int Table::getRowsCount()
-{
-    return rowsCount;
+    tableHeight[mode] = h;
 }

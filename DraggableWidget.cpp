@@ -2,8 +2,9 @@
 
 #include "DraggableWidget.h"
 
-DraggableWidget::DraggableWidget(QWidget *parent): QWidget(parent),
-                                                   _isDraggable(true)
+DraggableWidget::DraggableWidget(QWidget *parent):
+    QWidget(parent),
+    _isDraggable(true)
 {
 
 }
@@ -40,6 +41,13 @@ void DraggableWidget::mouseMoveEvent(QMouseEvent *event)
     if (!step.isNull())
     {
         dragStartPos += step;
-        move(pos() + step);
+
+        QPoint newPos = pos() + step;
+        int &x = newPos.rx(), &y = newPos.ry();
+
+        x = (x < 0) ? 0 : x;
+        y = (y < 0) ? 0 : y;
+
+        move(newPos);
     }
 }

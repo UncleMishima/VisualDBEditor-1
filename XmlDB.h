@@ -9,27 +9,26 @@
 #include <QStringList>
 #include <QTableView>
 
-#include "Table.h"
 #include "AbstractDB.h"
+
+class Table;
 
 class XmlDB : public AbstractDB
 {
 public:
-    XmlDB(QString fp);
+    XmlDB(const QString &fp);
 
     void parseTable(QXmlStreamReader& );
 
-    void readXmlFile(QString);
+    void readXmlFile(const QString &);
 
     void fillModel(Table* tb, QStringList& fields, QStringList& rows);
 
-    QVector<Table *>* fillTables(DisplayMode m, QVector<Table *> *tables) override;
-
-    QTableView tv;
+    QVector<Table *>* fillTables() override;
 
 private:
     QString filePath;
-    QVector<Table* > tables;
+    QVector<Table* > *tables;
     QStringList fields;
     QStringList rows;
 };

@@ -1,61 +1,51 @@
 #ifndef DBHANDLER_H
 #define DBHANDLER_H
 
-#include <tuple>
-#include "AbstractDB.h"
 #include "GlobalDefinitions.h"
-#include "XmlDB.h"
+
+class AbstractDB;
+class Table;
 
 class DBHandler : public QObject
 {
     Q_OBJECT
 public:
     DBHandler();
+    ~DBHandler() {freeResources();}
 
-    void setTables(QVector<Table*>*);
-    QVector<Table*>* getTables();
+    AccessMode getAccessMod();
+    int getTablesCount();
+    QString getTableName(uint tableID);
+    QRect getTableGeometry(uint tableID, DisplayMode mode);
+    QAbstractItemModel *getTableFieldsModel(uint tableID);
+    QAbstractItemModel *getTableObjectsModel(uint tableID);
 
-    void setAccessMod(AccessMod am);
-    AccessMod getAccessMod();
-
-    QVector< std::tuple<QString, QRect, QAbstractItemModel*> >* getTablesData();
-
-    void setTableName(uint tableID, QString tableName, DisplayMode mode);
+    void setAccessMod(AccessMode am);
+    void setTableName(uint tableID, const QString &tableName);
     void setTableX(uint tableID, int x, DisplayMode mode);
     void setTableY(uint tableID, int y, DisplayMode mode);
-    void setTableW(uint tableID, int w, DisplayMode mode);
-    void setTableH(uint tableID, int h, DisplayMode mode);
+    void setTableWidth(uint tableID, int w, DisplayMode mode);
+    void setTableHeight(uint tableID, int h, DisplayMode mode);
 
 signals:
     void connectionSuccess();
     void connectionFailed(QString errorMsg);
-    void fillTablesSuccess(QVector<Table*>* tables);
+    void fillTablesSuccess();
     void fillTablesFailed(QString errorMsg);
     void saveSuccess();
     void saveFailed(QString errorMsg);
 
 public slots:
-    void openConnection(
-            DBType t,
-            QString url,
-            QString dbName,
-            QString userName,
-            QString password,
-            ConnectionFlags f
-            );
-
-    void fillTables(DisplayMode m, QVector<Table *> *tables);
+    void openConnection(DBType type, QStringList options, uint flags);
+    void fillTables();
+    void save();
 
 private:
-    AbstractDB* db;
-    QVector<Table*>* tables;
-    AccessMod accessMod;
+    AbstractDB *db = nullptr;
+    QVector<Table*> *tables = nullptr;
+    AccessMode accessMod;
 
-    QVector< std::tuple<QString, QRect, QAbstractItemModel*> >* tablesData;
-
-    void save();
-    void freeUnusedMemmory();
-
+    void freeResources();
 };
 
 #endif // DBHANDLER_H

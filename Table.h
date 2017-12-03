@@ -5,67 +5,46 @@
 #include <QString>
 #include <QStandardItemModel>
 #include <QStandardItem>
+#include "GlobalDefinitions.h"
 
-#define DISPLAYNODE_COUNT 3
+#define DISPLAY_MODES_COUNT 3
 
-class Table : public QObject
+class Table
 {
-    Q_OBJECT
 private:
     QString name;
-    int coordX[DISPLAYNODE_COUNT];
-    int coordY[DISPLAYNODE_COUNT];
-    int tableWidth[DISPLAYNODE_COUNT];
-    int tableHeight[DISPLAYNODE_COUNT];
+    int coordX[DISPLAY_MODES_COUNT];
+    int coordY[DISPLAY_MODES_COUNT];
+    int tableWidth[DISPLAY_MODES_COUNT];
+    int tableHeight[DISPLAY_MODES_COUNT];
 
-    int xCoord, yCoord, width, height;
-
-    int fieldsCount, rowsCount;
-
-    QStandardItemModel* fieldsModel;
-    QStandardItemModel* rowsModel;
-    QStandardItemModel* model;
+    QStandardItemModel* fieldsModel = nullptr;
+    QStandardItemModel* objectsModel = nullptr;
 
 public:
     explicit Table(QObject *parent = 0);
 
-
     QString getName();
-    int getCoordX();
-    int getCoordY();
-    int getWidth();
-    int getHeight();
+    int getCoordX(DisplayMode mode);
+    int getCoordY(DisplayMode mode);
+    int getWidth(DisplayMode mode);
+    int getHeight(DisplayMode mode);
+    QRect getGeometry(DisplayMode mode);
+    QStandardItemModel *getFieldsModel();
+    QStandardItemModel *getObjectsModel();
 
-    int getCoordX(int i);
-    int getCoordY(int i);
-    int getWidth(int i);
-    int getHeight(int i);
+    void setName(const QString &name);
 
-    int getFieldsCount();
-    int getRowsCount();
+    void setCoord(int x, int y, DisplayMode mode);
+    void resize(int w, int h, DisplayMode mode);
 
-    //QStandardItemModel* getRowsModel();
-    QStandardItemModel* getModel();
-    QStandardItemModel* getFieldsModel();
-    QStandardItemModel* getRowsModel();
+    void setCoordX(int x, DisplayMode mode);
+    void setCoordY(int y, DisplayMode mode);
+    void setWidth(int w, DisplayMode mode);
+    void setHeight(int h, DisplayMode mode);
 
-public slots:
-    void setName(QString name);
-
-    void setCoord(int x, int y, int i);
-    void setResize(int w, int h, int i);
-
-    void setCoordX(int x);
-    void setCoordY(int y);
-    void setWidth(int w);
-    void setHeight(int h);
-
-    void setFieldsAndRows(int f, int r);
-    void setRowsModel(QStandardItemModel* );
-    void setFieldsModel(QStandardItemModel* );
-    void setModel(QStandardItemModel* );
-
+    void setRowsModel(QStandardItemModel* im);
+    void setObjectsModel(QStandardItemModel* im);
 };
-
 
 #endif // TABLE_H

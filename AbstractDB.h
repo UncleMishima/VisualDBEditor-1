@@ -1,19 +1,22 @@
 #ifndef ABSTRACTDB_H
 #define ABSTRACTDB_H
 
-#include <QVector>
-
 #include "GlobalDefinitions.h"
-#include "Table.h"
+
+class Table;
 
 class AbstractDB
 {
-public:
+protected:
     AbstractDB();
 
-    //virtual static AbstractDB* openConnection(DBType t, QStringList options, uint flags) = 0;
+public:
+    virtual ~AbstractDB(){}
 
-    virtual QVector<Table *>* fillTables(DisplayMode m, QVector<Table *> *tables) = 0;
+    static AbstractDB *openConnection(DBType type,
+                                      QStringList options,
+                                      uint flags);
+    virtual QVector<Table *>* fillTables() = 0;
 
     //virtual void save();
 

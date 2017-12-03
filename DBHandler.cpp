@@ -1,90 +1,127 @@
 #include "DBHandler.h"
+#include "AbstractDB.h"
+#include "Table.h"
 
 DBHandler::DBHandler()
 {
-
 }
 
-void DBHandler::openConnection(DBType t, QString url, QString dbName, QString userName, QString password, ConnectionFlags f)
+void DBHandler::openConnection(DBType type, QStringList options, uint flags)
 {
-    if(t == XML_FILE)
-    {
-        db = new XmlDB(url);
-    }
-    else qDebug() << "Error: openConnection() : DBHandler";
+    freeResources();
 
+    db = AbstractDB::openConnection(type, options, flags);
     emit connectionSuccess();
 }
 
-void DBHandler::fillTables(DisplayMode m, QVector<Table *> *tables)
+void DBHandler::fillTables()
 {
-    QVector<Table *> *t = db->fillTables(m, tables);
-    emit fillTablesSuccess(t);
+    Q_ASSERT_X(db != nullptr, "fillTables", "db = nullptr");
+
+    tables = db->fillTables();
+    emit fillTablesSuccess();
 }
 
-void DBHandler::setTables(QVector<Table*>* tbs)
-{
-    tables = tbs;
-}
-
-QVector<Table*>* DBHandler::getTables()
-{
-    return tables;
-}
-
-
-void DBHandler::setAccessMod(AccessMod am)
+void DBHandler::setAccessMod(AccessMode am)
 {
     accessMod = am;
 }
 
-AccessMod DBHandler::getAccessMod()
+AccessMode DBHandler::getAccessMod()
 {
     return accessMod;
 }
 
-QVector< std::tuple<QString, QRect, QAbstractItemModel*> >* DBHandler::getTablesData()
+int DBHandler::getTablesCount()
 {
-    return tablesData;
+    Q_ASSERT_X(tables != nullptr, "getTablesCount", "tables = nullptr");
+
+    return tables->size();
 }
 
-void DBHandler::setTableName(uint tableID, QString tableName, DisplayMode mode)
+QString DBHandler::getTableName(uint tableID)
 {
+    Q_ASSERT_X(tables != nullptr, "getTableName", "tables = nullptr");
+
+    return tables->at(tableID)->getName();
+}
+
+QRect DBHandler::getTableGeometry(uint tableID, DisplayMode mode)
+{
+    Q_ASSERT_X(tables != nullptr, "getTableGeometry", "tables = nullptr");
+
+    return tables->at(tableID)->getGeometry(mode);
+}
+
+QAbstractItemModel *DBHandler::getTableFieldsModel(uint tableID)
+{
+    Q_ASSERT_X(tables != nullptr, "getTablefieldsModel", "tables = nullptr");
+
+    return tables->at(tableID)->getFieldsModel();
+}
+
+QAbstractItemModel *DBHandler::getTableObjectsModel(uint tableID)
+{
+    Q_ASSERT_X(tables != nullptr, "getTableObjectsModel", "tables = nullptr");
+
+    return tables->at(tableID)->getObjectsModel();
+}
+
+void DBHandler::setTableName(uint tableID, const QString &tableName)
+{
+    Q_ASSERT_X(tables != nullptr, "setTableName", "tables = nullptr");
+
     tables->at(tableID)->setName(tableName);
 }
 
 void DBHandler::setTableX(uint tableID, int x, DisplayMode mode)
 {
-    tables->at(tableID)->setCoordX(x);
-}
+    Q_ASSERT_X(tables != nullptr, "setTableX", "tables = nullptr");
 
+    tables->at(tableID)->setCoordX(x, mode);
+}
 
 void DBHandler::setTableY(uint tableID, int y, DisplayMode mode)
 {
-    tables->at(tableID)->setCoordY(y);
+    Q_ASSERT_X(tables != nullptr, "setTableY", "tables = nullptr");
+
+    tables->at(tableID)->setCoordY(y, mode);
 }
 
-void DBHandler::setTableH(uint tableID, int h, DisplayMode mode)
+void DBHandler::setTableHeight(uint tableID, int h, DisplayMode mode)
 {
-    tables->at(tableID)->setCoordX(h);
+    Q_ASSERT_X(tables != nullptr, "setTableHeight", "tables = nullptr");
+
+    tables->at(tableID)->setCoordX(h, mode);
 }
 
 
-void DBHandler::setTableW(uint tableID, int w, DisplayMode mode)
+void DBHandler::setTableWidth(uint tableID, int w, DisplayMode mode)
 {
-    tables->at(tableID)->setCoordY(w);
+    Q_ASSERT_X(tables != nullptr, "setTableWidth", "tables = nullptr");
+
+    tables->at(tableID)->setCoordY(w, mode);
 }
-
-
 
 void DBHandler::save()
 {
+    Q_ASSERT_X(db != nullptr, "save", "db = nullptr");
+    Q_ASSERT_X(tables != nullptr, "save", "tables = nullptr");
+
 
 }
 
-void DBHandler::freeUnusedMemmory()
+void DBHandler::freeResources()
 {
+    if (db != nullptr)
+        delete db;
 
+    if (tables == nullptr)
+        return;
+
+    foreach (Table *t, *tables)
+        delete t;
+
+    delete tables;
+    tables = nullptr;
 }
-
-
