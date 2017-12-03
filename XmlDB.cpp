@@ -16,8 +16,8 @@ void XmlDB::readXmlFile(const QString &path)
 
     if (!file->open(QIODevice::ReadOnly | QIODevice::Text) )
     {
-       //qDebug() << "Error: File not open";
-       return;
+        qDebug() << "Error: File not open" << file->errorString();
+        return;
     }
 
     QXmlStreamReader xmlReader(file);
@@ -36,18 +36,13 @@ void XmlDB::readXmlFile(const QString &path)
 
             if(xmlReader.name() == "Database")
             {
-                //qDebug() << "[Database]: ";
                 int numOfTables = xmlReader.attributes().value("tablesCount").toString().toInt();
                 tables = new QVector<Table*>;
                 tables->reserve(numOfTables);
 
-
                 xmlReader.readNext();
 
                 int accessMode = xmlReader.attributes().value("accessMode").toString().toInt();
-
-                //xmlReader.readNext();
-
                 //qDebug() << "Count of tables: " << numOfTables << " Access mode: " << accessMode;
             }
 
@@ -64,9 +59,7 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
     if(xmlReader.tokenType() != QXmlStreamReader::StartElement
             && xmlReader.name() != "Table")
     {
-        //qDebug() << "Called XML parseQuestionElement "
-        //         << "without a question Element in the XML stream!";
-
+        qDebug() << "praseTable() :: Called wrong XML tag: " << xmlReader.name();
         return;
     }
 
@@ -87,20 +80,6 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
     QStandardItemModel* model = new QStandardItemModel(countOfRows, 2);
     QStandardItemModel* model2 = new QStandardItemModel(countOfRows, countOfFields);
 
-    //set table's coords
-    //int xCoord = xmlReader.attributes().value("xCoord").toString().toInt();
-    //int yCoord = xmlReader.attributes().value("yCoord").toString().toInt();
-    //tb->setCoord(xCoord, yCoord);
-    //qDebug() << "get coords" << tb->getCoordX() << tb->getCoordY();
-
-    //set table's resize
-    //int width = xmlReader.attributes().value("width").toString().toInt();
-    //int height = xmlReader.attributes().value("heigh").toString().toInt();
-    //tb->setResize(width, height);
-    //qDebug() << "get resize" << tb->getWidth() << tb->getHeight();
-
-    //xmlReader.readNext();
-
     int index = 0;
 
     while(!(xmlReader.tokenType() == QXmlStreamReader::EndElement
@@ -110,7 +89,6 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
         {
             if(xmlReader.name() == "DispalyParams")
             {
-                int displayMode = xmlReader.attributes().value("displayMode").toString().toInt();
                 int xCoord = xmlReader.attributes().value("xCoord").toString().toInt();
                 int yCoord = xmlReader.attributes().value("yCoord").toString().toInt();
                 int width = xmlReader.attributes().value("width").toString().toInt();
@@ -121,9 +99,7 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
 
                 ++index;
 
-                //qDebug() << index;
-                //qDebug() << displayMode;
-                qDebug() << displayMode << xCoord << yCoord << width << heigh;
+                //qDebug() << displayMode << xCoord << yCoord << width << heigh;
 
             }
 
@@ -138,31 +114,16 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
                 tb->setObjectsModel(model);
             }
 
-
-
             if(xmlReader.name() == "Row")
             {
-                //int c = 0;
-//                for(int i = 0; i < countOfRows; i++)
-//                {
-                    for(int j = 0; j < countOfFields; j++)
-                    {
-                        model2->setItem(current, j, new QStandardItem(xmlReader.attributes().at(j).value().toString())  );
-
-
-
-                        //model->setItem(i, 1, new QStandardItem(xmlReader.attributes().at(i).value().toString()) );
-                        //rows << xmlReader.attributes().at(i).value().toString();
-                        //qDebug() << xmlReader.attributes().at(j).name() << xmlReader.attributes().at(j).value();
-
-                    }
-                    ++current;
-                    //c++;
-//                }
+                for(int j = 0; j < countOfFields; j++)
+                {
+                    model2->setItem(current, j, new QStandardItem(xmlReader.attributes().at(j).value().toString())  );
+                }
+                ++current;
 
                 tb->setRowsModel(model2);
             }
-            fillModel(tb, fields, rows);
         }
         xmlReader.readNext();
     }
@@ -170,24 +131,6 @@ void XmlDB::parseTable(QXmlStreamReader& xmlReader)
     tables->push_back(tb);
 
     return;
-
-}
-
-void XmlDB::fillModel(Table* tb, QStringList& fields, QStringList& rows)
-{
-    //qDebug() << "Here we are";
-//    for(int i = 0; i < fields.size(); i++)
-//    {
-//        for(int j = 0; j < rows.size(); j++)
-//        {
-//            ////qDebug() << i << j << fields[i] << rows[j];
-//        }
-//    }
-
-    //tb->getModel()->setItem(0, 0, new QStandardItem(rows[0]));
-    //tb->getModel()->setItem(0, 1, new QStandardItem(rows[1]));
-    //tb->getModel()->setItem(1, 0, new QStandardItem(rows[2]));
-    //tb->model->setItem(1, 1, new QStandardItem(rows[3]));
 }
 
 QVector<Table *>* XmlDB::fillTables()

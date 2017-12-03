@@ -22,7 +22,7 @@ public:
 
     void readXmlFile(const QString &);
 
-    void fillModel(Table* tb, QStringList& fields, QStringList& rows);
+    void writeXmlFile(const QString &);
 
     QVector<Table *>* fillTables() override;
 
