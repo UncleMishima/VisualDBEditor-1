@@ -7,4 +7,5 @@ job1:
   stage: build
   script:
     - qmake *.pro
+    - make qmake_all
     - make
