@@ -1,6 +1,5 @@
 TEMPLATE = subdirs
 
-CONFIG = ordered
-
 SUBDIRS += \
-    src/VisualDBEditor
+    src/VisualDBEditor \
+    tests
