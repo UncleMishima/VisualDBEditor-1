@@ -18,18 +18,16 @@ class XmlDB : public AbstractDB
 public:
     XmlDB(const QString &fp);
 
-    void parseTable(QXmlStreamReader& );
-
-    tuple<QVector<Table *> *, AccessMode> readXmlFile(const QString &);
-
     tuple<QVector<Table *>*, AccessMode> fillTables() override;
-
-    void save();
+    void save(QVector<Table* > *tables);
 
 private:
     QString filePath;
+    QXmlStreamReader xmlReader;
     QXmlStreamWriter xmlWriter;
-    QVector<Table* > *tables;
+
+    void parseTable(QVector<Table *> *tables );
+    tuple<QVector<Table *> *, AccessMode> readXmlFile(const QString &);
 };
 
 #endif // XMLDB_H

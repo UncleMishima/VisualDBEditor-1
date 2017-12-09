@@ -18,7 +18,7 @@ public:
                                       uint flags);
     virtual tuple<QVector<Table *>*, AccessMode> fillTables() = 0;
 
-    virtual void save() = 0;
+    virtual void save(QVector<Table* > *tables) = 0;
 
 };
 
