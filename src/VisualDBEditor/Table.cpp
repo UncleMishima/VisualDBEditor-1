@@ -2,6 +2,15 @@
 
 Table::Table(){}
 
+Table::~Table()
+{
+    if (fieldsModel != nullptr)
+        delete fieldsModel;
+
+    if (objectsModel != nullptr)
+        delete objectsModel;
+}
+
 QString Table::getName()
 {
     return name;
@@ -22,12 +31,12 @@ void Table::setName(const QString &name)
     this->name = name;
 }
 
-void Table::setObjectsModel(QStandardItemModel *im)
+void Table::setFieldsModel(QStandardItemModel *im)
 {
     fieldsModel = im;
 }
 
-void Table::setRowsModel(QStandardItemModel *im)
+void Table::setObjectsModel(QStandardItemModel *im)
 {
     objectsModel = im;
 }
@@ -88,4 +97,12 @@ void Table::setWidth(int w, DisplayMode mode)
 void Table::setHeight(int h, DisplayMode mode)
 {
     tableHeight[mode] = h;
+}
+
+void Table::setGeometry(const QRect &rect, DisplayMode mode)
+{
+    coordX[mode] = rect.x();
+    coordY[mode] = rect.y();
+    tableWidth[mode] = rect.width();
+    tableHeight[mode] = rect.height();
 }

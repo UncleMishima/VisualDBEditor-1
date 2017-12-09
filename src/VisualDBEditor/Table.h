@@ -23,6 +23,7 @@ private:
 
 public:
     explicit Table();
+    ~Table();
 
     QString getName();
     int getCoordX(DisplayMode mode);
@@ -42,9 +43,10 @@ public:
     void setCoordY(int y, DisplayMode mode);
     void setWidth(int w, DisplayMode mode);
     void setHeight(int h, DisplayMode mode);
+    void setGeometry(const QRect &rect, DisplayMode mode);
 
-    void setRowsModel(QStandardItemModel* im);
     void setObjectsModel(QStandardItemModel* im);
+    void setFieldsModel(QStandardItemModel* im);
 };
 
 #endif // TABLE_H
