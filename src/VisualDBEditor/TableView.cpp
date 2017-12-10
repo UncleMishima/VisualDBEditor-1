@@ -65,7 +65,6 @@ void TableView::setAccesMod(AccessMode mode)
             setDraggable(false);
             view->setEditTriggers(QAbstractItemView::DoubleClicked);
             break;
-
         }
 
         case STRUCTURE_EDIT:
@@ -105,7 +104,6 @@ void TableView::resizeEvent(QResizeEvent *event)
 
     if (oldSize.height() != size.height())
         emit heightChanged(id, size.height());
-
 }
 
 void TableView::enterEvent(QEvent*)

@@ -24,7 +24,8 @@ SOURCES += main.cpp \
     DBHandler.cpp \
     DraggableWidget.cpp \
     TableView.cpp \
-    MainWindow.cpp
+    MainWindow.cpp \
+    Relation.cpp
 
 HEADERS += \
     Controller.h \
@@ -35,7 +36,8 @@ HEADERS += \
     DBHandler.h \
     DraggableWidget.h \
     TableView.h \
-    MainWindow.h
+    MainWindow.h \
+    Relation.h
 
 FORMS += \
     MainWindow.ui
