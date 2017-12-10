@@ -8,6 +8,7 @@
 #include "TableView.h"
 #include "Controller.h"
 #include "TablesDrawingArea.h"
+#include "Relation.h"
 
 MainWindow::MainWindow(DBHandler *h, Controller *c):
     ui(new Ui::MainWindow),
@@ -139,6 +140,11 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
     }
 
     setDisplayMode(displayMode);
+
+    tablesDrawingArea->setRelations(dbHandler->getRelations());
+    tablesDrawingArea->setTableViews(tableViews);
+    tablesDrawingArea->setDisplayMode(&(this->displayMode));
+
 }
 
 void MainWindow::setDisplayMode(DisplayMode mode)
@@ -192,6 +198,7 @@ void MainWindow::setDisplayMode(DisplayMode mode)
 void MainWindow::tableXChanged(uint tableID, int x)
 {
     tablesDrawingArea->adjustSize();
+    tablesDrawingArea->update();
 
     dbHandler->setTableX(tableID, x, displayMode);
 }
@@ -199,6 +206,7 @@ void MainWindow::tableXChanged(uint tableID, int x)
 void MainWindow::tableYChanged(uint tableID, int y)
 {
     tablesDrawingArea->adjustSize();
+    tablesDrawingArea->update();
 
     dbHandler->setTableY(tableID, y, displayMode);
 }
@@ -206,6 +214,7 @@ void MainWindow::tableYChanged(uint tableID, int y)
 void MainWindow::tableWidthChanged(uint tableID, int width)
 {
     tablesDrawingArea->adjustSize();
+    tablesDrawingArea->update();
 
     dbHandler->setTableWidth(tableID, width, displayMode);
 }
@@ -213,6 +222,7 @@ void MainWindow::tableWidthChanged(uint tableID, int width)
 void MainWindow::tableHeightChanged(uint tableID, int height)
 {
     tablesDrawingArea->adjustSize();
+    tablesDrawingArea->update();
 
     dbHandler->setTableHeight(tableID, height, displayMode);
 }
@@ -220,6 +230,7 @@ void MainWindow::tableHeightChanged(uint tableID, int height)
 void MainWindow::tableNameChanged(uint tableID, const QString &name)
 {
     tablesDrawingArea->adjustSize();
+    tablesDrawingArea->update();
 
     dbHandler->setTableName(tableID, name);
 }

@@ -15,6 +15,7 @@ class DBHandler;
 class TableView;
 class Controller;
 class TablesDrawingArea;
+class Relation;
 
 class MainWindow: public QMainWindow
 {
