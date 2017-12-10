@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     DraggableWidget.cpp \
     TableView.cpp \
     MainWindow.cpp \
-    Relation.cpp
+    Relation.cpp \
+    TablesDrawingArea.cpp
 
 HEADERS += \
     Controller.h \
@@ -37,7 +38,8 @@ HEADERS += \
     DraggableWidget.h \
     TableView.h \
     MainWindow.h \
-    Relation.h
+    Relation.h \
+    TablesDrawingArea.h
 
 FORMS += \
     MainWindow.ui

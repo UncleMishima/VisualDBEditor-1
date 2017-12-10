@@ -7,13 +7,15 @@
 #include "DBHandler.h"
 #include "TableView.h"
 #include "Controller.h"
+#include "TablesDrawingArea.h"
+#include "Relation.h"
 
 MainWindow::MainWindow(DBHandler *h, Controller *c):
     ui(new Ui::MainWindow),
     dbHandler(h),
     controller(c),
     tableViews(nullptr),
-    tablesScene(new QWidget),
+    tablesDrawingArea(new TablesDrawingArea),
     scrollArea(new QScrollArea)
 {
     ui->setupUi(this);
@@ -23,7 +25,7 @@ MainWindow::MainWindow(DBHandler *h, Controller *c):
     createActions();
     createMenu();
 
-    scrollArea->setWidget(tablesScene);
+    scrollArea->setWidget(tablesDrawingArea);
     setCentralWidget(scrollArea);
 }
 
@@ -112,7 +114,7 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
 
     for (int i = 0; i < tablesCount; i++)
     {
-        TableView *tv = new TableView(tablesScene);
+        TableView *tv = new TableView(tablesDrawingArea);
 
         tv->setID(i);
         tv->setTableName(dbHandler->getTableName(i));
@@ -138,6 +140,11 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
     }
 
     setDisplayMode(displayMode);
+
+    tablesDrawingArea->setRelations(dbHandler->getRelations());
+    tablesDrawingArea->setTableViews(tableViews);
+    tablesDrawingArea->setDisplayMode(&(this->displayMode));
+
 }
 
 void MainWindow::setDisplayMode(DisplayMode mode)
@@ -185,40 +192,45 @@ void MainWindow::setDisplayMode(DisplayMode mode)
 
     TableView::setEmitSignals(true);
 
-    tablesScene->adjustSize();
+    tablesDrawingArea->adjustSize();
 }
 
 void MainWindow::tableXChanged(uint tableID, int x)
 {
-    tablesScene->adjustSize();
+    tablesDrawingArea->adjustSize();
+    tablesDrawingArea->update();
 
     dbHandler->setTableX(tableID, x, displayMode);
 }
 
 void MainWindow::tableYChanged(uint tableID, int y)
 {
-    tablesScene->adjustSize();
+    tablesDrawingArea->adjustSize();
+    tablesDrawingArea->update();
 
     dbHandler->setTableY(tableID, y, displayMode);
 }
 
 void MainWindow::tableWidthChanged(uint tableID, int width)
 {
-    tablesScene->adjustSize();
+    tablesDrawingArea->adjustSize();
+    tablesDrawingArea->update();
 
     dbHandler->setTableWidth(tableID, width, displayMode);
 }
 
 void MainWindow::tableHeightChanged(uint tableID, int height)
 {
-    tablesScene->adjustSize();
+    tablesDrawingArea->adjustSize();
+    tablesDrawingArea->update();
 
     dbHandler->setTableHeight(tableID, height, displayMode);
 }
 
 void MainWindow::tableNameChanged(uint tableID, const QString &name)
 {
-    tablesScene->adjustSize();
+    tablesDrawingArea->adjustSize();
+    tablesDrawingArea->update();
 
     dbHandler->setTableName(tableID, name);
 }
