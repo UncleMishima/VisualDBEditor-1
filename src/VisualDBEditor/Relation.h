@@ -9,9 +9,9 @@ public:
     Relation();
 
     void setFirstTableId(uint id) {firstTableId = id;}
-    void setFirstTableFieldNumber(uint number) {firstTableFieldNumber = number;}
+    void setFirstTableFieldNumber(uint n) {firstTableFieldNumber = n;}
     void setSecondTableId(uint id) {secondTableId = id;}
-    void setSecondTableFieldNumber(uint number) {secondTableFieldNumber = number;}
+    void setSecondTableFieldNumber(uint n) {secondTableFieldNumber = n;}
 
     uint getFirstTableId() {return firstTableId;}
     uint getFirstTableFieldNumber() {return firstTableFieldNumber;}
