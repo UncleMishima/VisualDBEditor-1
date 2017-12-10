@@ -1,6 +1,7 @@
 #include "DBHandler.h"
 #include "AbstractDB.h"
 #include "Table.h"
+#include "Relation.h"
 
 DBHandler::DBHandler()
 {
@@ -18,18 +19,18 @@ void DBHandler::fillTables()
 {
     Q_ASSERT_X(db != nullptr, "fillTables", "db = nullptr");
 
-    tie<QVector<Table*>*&, AccessMode&>(tables, accessMod) = db->fillTables();
+    tie<QVector<Table*>*&, QVector<Relation*>*&>(tables, relations) = db->fillTables();
     emit fillTablesSuccess();
 }
 
-void DBHandler::setAccessMod(AccessMode am)
+void DBHandler::setRelations(QVector<Relation*>* r)
 {
-    accessMod = am;
+    relations = r;
 }
 
-AccessMode DBHandler::getAccessMod()
+QVector<Relation*>* DBHandler::getRelations()
 {
-    return accessMod;
+    return relations;
 }
 
 int DBHandler::getTablesCount()

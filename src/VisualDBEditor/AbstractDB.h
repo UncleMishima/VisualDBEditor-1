@@ -4,6 +4,7 @@
 #include "GlobalDefinitions.h"
 
 class Table;
+class Relation;
 
 class AbstractDB
 {
@@ -16,7 +17,7 @@ public:
     static AbstractDB *openConnection(DBType type,
                                       QStringList options,
                                       uint);
-    virtual tuple<QVector<Table *>*, AccessMode> fillTables() = 0;
+    virtual tuple<QVector<Table *>*, QVector<Relation *>* > fillTables() = 0;
 
     virtual void save(QVector<Table* > *tables) = 0;
 

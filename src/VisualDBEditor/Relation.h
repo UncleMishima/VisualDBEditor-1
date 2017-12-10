@@ -6,7 +6,7 @@
 class Relation
 {
 public:
-    Relation();
+    //Relation();
 
     void setFirstTableId(uint id) {firstTableId = id;}
     void setFirstTableFieldNumber(uint number) {firstTableFieldNumber = number;}
