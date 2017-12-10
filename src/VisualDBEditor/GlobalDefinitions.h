@@ -17,6 +17,8 @@ enum DBType
     POSTGRES_DB
 };
 
+Q_DECLARE_METATYPE(DBType)
+
 enum XmlFlag
 {
     NO_FLAG,

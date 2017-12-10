@@ -2,6 +2,7 @@
 #define CONTROLLER_H
 
 #include <QObject>
+#include <QThread>
 
 #include "GlobalDefinitions.h"
 
@@ -29,6 +30,7 @@ public slots:
 private:
     DBHandler *dbHandler;
     MainWindow *mainWindow;
+    QThread dbHandlerThread;
 };
 
 #endif // CONTROLLER_H

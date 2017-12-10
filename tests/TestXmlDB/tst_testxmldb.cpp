@@ -61,7 +61,7 @@ void TestXmlDB::initTestCase()
     fieldsModel = new QStandardItemModel(2, 2);
     objectsModel = new QStandardItemModel(2, 2);
 
-    fieldsModel->setItem(0, 0, new QStandardItem(QString("Worker id")));
+    fieldsModel->setItem(0, 0, new QStandardItem(QString("WorkerId")));
     fieldsModel->setItem(0, 1, new QStandardItem(QString("int")));
     fieldsModel->setItem(1, 0, new QStandardItem(QString("post")));
     fieldsModel->setItem(1, 1, new QStandardItem(QString("string")));
