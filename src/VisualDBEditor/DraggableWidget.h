@@ -9,7 +9,7 @@ class DraggableWidget: public QWidget
 public:
     explicit DraggableWidget(QWidget *parent = nullptr);
 
-    bool isDraggable(){return _isDraggable;}
+    bool isDraggable() {return _isDraggable;}
     void setDraggable(bool isDraggable) {_isDraggable = isDraggable;}
 
 protected:

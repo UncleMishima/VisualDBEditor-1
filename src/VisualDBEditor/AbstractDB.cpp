@@ -7,8 +7,7 @@ AbstractDB::AbstractDB()
 }
 
 AbstractDB *AbstractDB::openConnection(DBType type,
-                                       QStringList options,
-                                       uint flags)
+                                       QStringList options, uint)
 {
     switch (type)
     {
