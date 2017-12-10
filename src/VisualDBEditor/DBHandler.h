@@ -5,6 +5,7 @@
 
 class AbstractDB;
 class Table;
+class Relation;
 
 class DBHandler : public QObject
 {
@@ -13,14 +14,14 @@ public:
     DBHandler();
     ~DBHandler() {freeResources();}
 
-    AccessMode getAccessMod();
+    QVector<Relation*>* getRelations();
     int getTablesCount();
     QString getTableName(uint tableID);
     QRect getTableGeometry(uint tableID, DisplayMode mode);
     QAbstractItemModel *getTableFieldsModel(uint tableID);
     QAbstractItemModel *getTableObjectsModel(uint tableID);
 
-    void setAccessMod(AccessMode am);
+    void setRelations(QVector<Relation*>* r);
     void setTableName(uint tableID, const QString &tableName);
     void setTableX(uint tableID, int x, DisplayMode mode);
     void setTableY(uint tableID, int y, DisplayMode mode);
@@ -43,7 +44,7 @@ public slots:
 private:
     AbstractDB *db = nullptr;
     QVector<Table*> *tables = nullptr;
-    AccessMode accessMod;
+    QVector<Relation*> *relations = nullptr;
 
     void freeResources();
 };

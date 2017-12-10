@@ -8,10 +8,13 @@ XmlDB::XmlDB(const QString &fp) : filePath(fp)
 
 }
 
-tuple<QVector<Table *> *, AccessMode> XmlDB::readXmlFile(const QString &path)
+uint tableCounter = 0;
+
+tuple<QVector<Table *> *, QVector<Relation *> *> XmlDB::readXmlFile(const QString &path)
 {
     QFile* file = new QFile(path);
     QVector<Table*> *tables = new QVector<Table*>;
+    QVector<Relation*> *relations = new QVector<Relation*>;
 
     if (!file->open(QIODevice::ReadOnly | QIODevice::Text) )
     {
@@ -52,9 +55,38 @@ tuple<QVector<Table *> *, AccessMode> XmlDB::readXmlFile(const QString &path)
             {
                 parseTable(tables);
             }
+
+            if(xmlReader.name() == "Relation")
+            {
+                Relation* r = new Relation();
+                QString leftTableName = xmlReader.attributes()
+                        .value("leftTableName").toString();
+                //QString leftFieldName = xmlReader.attributes().value("leftFieldName").toString();
+                QString rightTableName = xmlReader.attributes()
+                        .value("rightTableName").toString();
+                //QString rightFieldName = xmlReader.attributes().value("rightFieldName").toString();
+
+                qDebug() << tableID["Teachers"];
+                qDebug() << tableID["Info"];
+
+                for(int i = 0; i < tableID.size(); i++)
+                {
+                    if(leftTableName == "Teachers")
+                    {
+                        r->setFirstTableId(tableID["Teachers"]);
+                    }
+
+                    if(rightTableName == "Info")
+                    {
+                        r->setSecondTableId(tableID["Info"]);
+                    }
+                }
+
+                relations->push_back(r);
+            }
         }
     }
-    return tuple<QVector<Table *> *, AccessMode>(tables, accessMode);
+    return tuple<QVector<Table *> *, QVector<Relation*>*>(tables, relations);
 }
 
 void XmlDB::parseTable(QVector<Table *> *tables)
@@ -62,7 +94,7 @@ void XmlDB::parseTable(QVector<Table *> *tables)
     if(xmlReader.tokenType() != QXmlStreamReader::StartElement
             && xmlReader.name() != "Table")
     {
-        qDebug() << "praseTable() :: Called wrong XML tag: " << xmlReader.name();
+        qDebug() << "parseTable() :: Called wrong XML tag: " << xmlReader.name();
         return;
     }
 
@@ -84,6 +116,10 @@ void XmlDB::parseTable(QVector<Table *> *tables)
     QStandardItemModel* objectsModel = new QStandardItemModel(countOfRows, countOfFields);
 
     int index = 0;
+
+    tableID.insert(tb->getName(), tableCounter);
+
+    ++tableCounter;
 
     while(!(xmlReader.tokenType() == QXmlStreamReader::EndElement
             && xmlReader.name() == "Table"))
@@ -145,7 +181,7 @@ void XmlDB::parseTable(QVector<Table *> *tables)
     return;
 }
 
-tuple<QVector<Table *> *, AccessMode> XmlDB::fillTables()
+tuple<QVector<Table *> *, QVector<Relation *> *> XmlDB::fillTables()
 {
     return readXmlFile(filePath);
 }

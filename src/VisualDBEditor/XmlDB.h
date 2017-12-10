@@ -10,6 +10,7 @@
 #include <QTableView>
 
 #include "AbstractDB.h"
+#include "Relation.h"
 
 class Table;
 
@@ -18,7 +19,9 @@ class XmlDB : public AbstractDB
 public:
     XmlDB(const QString &fp);
 
-    tuple<QVector<Table *>*, AccessMode> fillTables() override;
+    QMap<QString, uint> tableID;
+
+    tuple<QVector<Table *>*, QVector<Relation *> *> fillTables() override;
     void save(QVector<Table* > *tables);
 
 private:
@@ -27,7 +30,7 @@ private:
     QXmlStreamWriter xmlWriter;
 
     void parseTable(QVector<Table *> *tables );
-    tuple<QVector<Table *> *, AccessMode> readXmlFile(const QString &);
+    tuple<QVector<Table *> *, QVector<Relation *> *> readXmlFile(const QString &);
 };
 
 #endif // XMLDB_H
