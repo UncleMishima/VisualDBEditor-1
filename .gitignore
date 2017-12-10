@@ -38,7 +38,7 @@ Thumbs.db
 debug/
 release/
 bin/
-target_wrapper.sh
+target_wrapper*
 tests/Test*/Test*
 !tests/Test*/Test*.pro
 
