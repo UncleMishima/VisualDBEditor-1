@@ -12,8 +12,8 @@
         <DisplayParams displayMode="0" xCoord="25" yCoord="19" width="100" heigh="37"/>
         <DisplayParams displayMode="1" xCoord="90" yCoord="23" width="100" heigh="100"/>
         <DisplayParams displayMode="2" xCoord="110" yCoord="43" width="143" heigh="300"/>
-        <Fields Worker id="int" post="string"/>
-        <Row Worker id="1" post="CEO"/>
-        <Row Worker id="2" post="Manager"/>
+        <Fields WorkerId="int" post="string"/>
+        <Row WorkerId="1" post="CEO"/>
+        <Row WorkerId="2" post="Manager"/>
     </Table>
 </Database>
