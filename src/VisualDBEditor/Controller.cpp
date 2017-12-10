@@ -4,11 +4,15 @@
 
 Controller::Controller()
 {
-
-    // debug For now this is it, later we will create it in another thread
     dbHandler = new DBHandler;
+    dbHandler->moveToThread(&dbHandlerThread);
 
     mainWindow = new MainWindow(dbHandler, this);
+
+    qRegisterMetaType<DBType>();
+
+    connect(&dbHandlerThread, SIGNAL(finished()),
+             dbHandler, SLOT(deleteLater()));
 
     connect(this, SIGNAL(save()), dbHandler, SLOT(save()));
 
@@ -23,12 +27,16 @@ Controller::Controller()
 
     connect(dbHandler, SIGNAL(connectionSuccess()),
             this, SLOT(connectionSuccess()));
+
+    dbHandlerThread.start();
 }
 
 Controller::~Controller()
 {
     delete mainWindow;
-    delete dbHandler;
+
+    dbHandlerThread.quit();
+    dbHandlerThread.wait();
 }
 
 void Controller::start()
