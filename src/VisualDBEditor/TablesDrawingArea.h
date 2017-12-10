@@ -12,6 +12,9 @@ public:
 signals:
 
 public slots:
+
+protected:
+    void paintEvent(QPaintEvent *);
 };
 
 #endif // TABLESDRAWINGAREA_H

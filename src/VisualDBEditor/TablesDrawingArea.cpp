@@ -1,6 +1,11 @@
 #include "TablesDrawingArea.h"
 
-TablesDrawingArea::TablesDrawingArea(QWidget *parent) : QWidget(parent)
+TablesDrawingArea::TablesDrawingArea(QWidget *parent): QWidget(parent)
+{
+
+}
+
+void TablesDrawingArea::paintEvent(QPaintEvent *)
 {
 
 }

@@ -14,6 +14,7 @@ class MainWindow;
 class DBHandler;
 class TableView;
 class Controller;
+class TablesDrawingArea;
 
 class MainWindow: public QMainWindow
 {
@@ -55,7 +56,7 @@ private:
     QVector<TableView*> *tableViews;
 
     // TableView widgets and relations are drawn inside this widget
-    QWidget *tablesScene;
+    TablesDrawingArea *tablesDrawingArea;
     QScrollArea *scrollArea;
 
     void createActions();
