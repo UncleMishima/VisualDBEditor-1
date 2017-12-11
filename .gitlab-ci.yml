@@ -11,15 +11,7 @@ job1:
     - make qmake_all
     - make
   cache:
-    - .qmake.stash
-    - Makefile
-    - bin/
-    - build/
-    - src/VisualDBEditor/Makefile
-    - tests/Makefile
-    - tests/TestXmlDB/Makefile
-    - tests/TestXmlDB/TestXmlDB
-    - tests/TestXmlDB/target_wrapper.sh
+    untracked: true
     
 job2:
   stage: test
