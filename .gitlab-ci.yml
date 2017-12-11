@@ -10,12 +10,12 @@ job1:
     - qmake *.pro
     - make qmake_all
     - make
-  cache:
+  artifacts:
     untracked: true
     
 job2:
   stage: test
   script:
     - make check
-  cache:
+  artifacts:
     untracked: true
