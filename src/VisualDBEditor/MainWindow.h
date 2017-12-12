@@ -31,6 +31,7 @@ private slots:
     void slot_fileOpen();
     void slot_fileSaveAs();
     void slot_fileSave();
+    void slot_chooseFont();
     void showClasses() {setDisplayMode(CLASSES);}
     void showFields() {setDisplayMode(FIELDS);}
     void showObjects() {setDisplayMode(OBJECTS);}
@@ -47,6 +48,9 @@ private:
 
     QMenu *fileMenu;
     QAction *fileOpen, *fileExit, *fileSave, *fileSaveAs;
+
+    QMenu *tableMenu;
+    QAction *chooseFont;
 
     QMenu *viewMenu;
     QActionGroup *displayModeGroup;

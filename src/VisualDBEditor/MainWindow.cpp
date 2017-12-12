@@ -3,6 +3,8 @@
 
 #include <QFileDialog>
 #include <QFile>
+#include <QFontDialog>
+#include <QLineEdit>
 
 #include "DBHandler.h"
 #include "TableView.h"
@@ -56,6 +58,23 @@ void MainWindow::slot_fileSave()
     controller->saveTables();
 }
 
+void MainWindow::slot_chooseFont()
+{
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, QFont("Times", 12), this, QString::fromUtf8("Choose the font"));
+    if (ok)
+    {
+        for(int i = 0; i < tableViews.size(); i++)
+        {
+            tableViews.at(i)->setFont(font);
+        }
+    }
+    else
+    {
+        //if user pushed "Cancel" activated default font(Times, 12pt)
+    }
+}
+
 void MainWindow::applyToAll()
 {
     for (int i = 0; i < tableViews.size(); i++)
@@ -65,6 +84,7 @@ void MainWindow::applyToAll()
         dbHandler->setTablePos(i, pos, CLASSES);
         dbHandler->setTablePos(i, pos, OBJECTS);
         dbHandler->setTablePos(i, pos, FIELDS);
+//>>>>>>> master
     }
 }
 
@@ -82,6 +102,9 @@ void MainWindow::createActions()
 
     fileExit = new QAction(tr("&Exit"), this);
     connect(fileExit, SIGNAL(triggered()), this, SLOT(close()));
+
+    chooseFont = new QAction(tr("&Choose font"), this);
+    connect(chooseFont, SIGNAL(triggered()), this, SLOT(slot_chooseFont()));
 
     showClassesAct = new QAction(tr("&Classes"), this);
     showClassesAct->setCheckable(true);
@@ -112,6 +135,9 @@ void MainWindow::createMenu()
     fileMenu->addAction(fileSave);
     fileMenu->addSeparator();
     fileMenu->addAction(fileExit);
+
+    tableMenu = menuBar()->addMenu(tr("&Table"));
+    tableMenu->addAction(chooseFont);
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(showClassesAct);
