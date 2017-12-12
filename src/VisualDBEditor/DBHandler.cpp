@@ -89,6 +89,13 @@ void DBHandler::setTableY(uint tableID, int y, DisplayMode mode)
     tables->at(tableID)->setCoordY(y, mode);
 }
 
+void DBHandler::setTablePos(uint tableID, const QPoint &pos, DisplayMode mode)
+{
+    Q_ASSERT_X(tables != nullptr, "setTablePos", "tables = nullptr");
+
+    tables->at(tableID)->setCoord(pos.x(), pos.y(), mode);
+}
+
 void DBHandler::setTableHeight(uint tableID, int h, DisplayMode mode)
 {
     Q_ASSERT_X(tables != nullptr, "setTableHeight", "tables = nullptr");
