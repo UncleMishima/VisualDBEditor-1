@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QFontDialog>
+#include <QLineEdit>
 
 #include "DBHandler.h"
 #include "TableView.h"
@@ -62,11 +63,16 @@ void MainWindow::slot_chooseFont()
 {
     bool ok;
     QFont font = QFontDialog::getFont(&ok, QFont("Times", 12), this, QString::fromUtf8("Выберите шрифт"));
-    if (ok) {
-        // устанавливается выбранный пользователем шрифт
-    } else {
-        // Пользователь нажал кнопку "Cancel"; Устанавливается начальный шрифт.
-        //В данном случае Times, 12.
+    if (ok)
+    {
+        for(int i = 0; i < tableViews->size(); i++)
+        {
+            tableViews->at(i)->setFont(font);
+        }
+    }
+    else
+    {
+        //if user pushed "Cancel" activated default font(Times, 12pt)
     }
 }
 
