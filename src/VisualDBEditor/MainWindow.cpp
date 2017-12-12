@@ -16,7 +16,6 @@ MainWindow::MainWindow(DBHandler *h, Controller *c):
     ui(new Ui::MainWindow),
     dbHandler(h),
     controller(c),
-    tableViews(nullptr),
     tablesDrawingArea(new TablesDrawingArea),
     scrollArea(new QScrollArea)
 {
@@ -62,17 +61,30 @@ void MainWindow::slot_fileSave()
 void MainWindow::slot_chooseFont()
 {
     bool ok;
-    QFont font = QFontDialog::getFont(&ok, QFont("Times", 12), this, QString::fromUtf8("Выберите шрифт"));
+    QFont font = QFontDialog::getFont(&ok, QFont("Times", 12), this, QString::fromUtf8("Choose the font"));
     if (ok)
     {
-        for(int i = 0; i < tableViews->size(); i++)
+        for(int i = 0; i < tableViews.size(); i++)
         {
-            tableViews->at(i)->setFont(font);
+            tableViews.at(i)->setFont(font);
         }
     }
     else
     {
         //if user pushed "Cancel" activated default font(Times, 12pt)
+    }
+}
+
+void MainWindow::applyToAll()
+{
+    for (int i = 0; i < tableViews.size(); i++)
+    {
+        QPoint pos = tableViews.at(i)->pos();
+
+        dbHandler->setTablePos(i, pos, CLASSES);
+        dbHandler->setTablePos(i, pos, OBJECTS);
+        dbHandler->setTablePos(i, pos, FIELDS);
+//>>>>>>> master
     }
 }
 
@@ -110,6 +122,9 @@ void MainWindow::createActions()
     displayModeGroup->addAction(showClassesAct);
     displayModeGroup->addAction(showFieldsAct);
     displayModeGroup->addAction(showObjectsAct);
+
+    applyToAllAct = new QAction(tr("&Applay to all"), this);
+    connect(applyToAllAct, SIGNAL(triggered()), this, SLOT(applyToAll()));
 }
 
 void MainWindow::createMenu()
@@ -128,6 +143,8 @@ void MainWindow::createMenu()
     viewMenu->addAction(showClassesAct);
     viewMenu->addAction(showFieldsAct);
     viewMenu->addAction(showObjectsAct);
+    viewMenu->addSeparator();
+    viewMenu->addAction(applyToAllAct);
 }
 
 void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
@@ -135,7 +152,7 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
     freeResources();
 
     int tablesCount = dbHandler->getTablesCount();
-    tableViews = new QVector<TableView*>(tablesCount);
+    tableViews.reserve(tablesCount);
 
     for (int i = 0; i < tablesCount; i++)
     {
@@ -161,13 +178,13 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
         connect(tv, SIGNAL(tableNameChanged(uint,QString)),
                 this, SLOT(tableNameChanged(uint,QString)));
 
-        (*tableViews)[i] = tv;
+        tableViews.append(tv);
     }
 
     setDisplayMode(displayMode);
 
     tablesDrawingArea->setRelations(dbHandler->getRelations());
-    tablesDrawingArea->setTableViews(tableViews);
+    tablesDrawingArea->setTableViews(&tableViews);
     tablesDrawingArea->setDisplayMode(&(this->displayMode));
 
 }
@@ -175,7 +192,7 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
 void MainWindow::setDisplayMode(DisplayMode mode)
 {
     displayMode = mode;
-    int tablesCount = tableViews->size();
+    int tablesCount = tableViews.size();
 
     TableView::setEmitSignals(false);
 
@@ -186,7 +203,7 @@ void MainWindow::setDisplayMode(DisplayMode mode)
             showClassesAct->setChecked(true);
 
             for (int i = 0; i < tablesCount; i++)
-                tableViews->at(i)->setModel(nullptr);
+                tableViews.at(i)->setModel(nullptr);
 
             break;
         }
@@ -196,7 +213,7 @@ void MainWindow::setDisplayMode(DisplayMode mode)
             showFieldsAct->setChecked(true);
 
             for (int i = 0; i < tablesCount; i++)
-                tableViews->at(i)->setModel(dbHandler->getTableFieldsModel(i));
+                tableViews.at(i)->setModel(dbHandler->getTableFieldsModel(i));
 
             break;
         }
@@ -206,14 +223,14 @@ void MainWindow::setDisplayMode(DisplayMode mode)
             showObjectsAct->setChecked(true);
 
             for (int i = 0; i < tablesCount; i++)
-                tableViews->at(i)->setModel(dbHandler->getTableObjectsModel(i));
+                tableViews.at(i)->setModel(dbHandler->getTableObjectsModel(i));
 
             break;
         }
     }
 
     for (int i = 0; i < tablesCount; i++)
-        tableViews->at(i)->setGeometry(dbHandler->getTableGeometry(i, mode));
+        tableViews.at(i)->setGeometry(dbHandler->getTableGeometry(i, mode));
 
     TableView::setEmitSignals(true);
 
@@ -262,12 +279,9 @@ void MainWindow::tableNameChanged(uint tableID, const QString &name)
 
 void MainWindow::freeResources()
 {
-    if (tableViews == nullptr)
-        return;
-
-    foreach (TableView *view, *tableViews)
+    foreach (TableView *view, tableViews)
         delete view;
 
-    delete tableViews;
-    tableViews = nullptr;
+    tableViews.clear();
+    tableViews.squeeze();
 }

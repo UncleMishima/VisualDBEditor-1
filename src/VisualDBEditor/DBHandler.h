@@ -25,6 +25,7 @@ public:
     void setTableName(uint tableID, const QString &tableName);
     void setTableX(uint tableID, int x, DisplayMode mode);
     void setTableY(uint tableID, int y, DisplayMode mode);
+    void setTablePos(uint tableID, const QPoint &pos, DisplayMode mode);
     void setTableWidth(uint tableID, int w, DisplayMode mode);
     void setTableHeight(uint tableID, int h, DisplayMode mode);
 

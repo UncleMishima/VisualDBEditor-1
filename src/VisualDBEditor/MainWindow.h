@@ -35,6 +35,7 @@ private slots:
     void showClasses() {setDisplayMode(CLASSES);}
     void showFields() {setDisplayMode(FIELDS);}
     void showObjects() {setDisplayMode(OBJECTS);}
+    void applyToAll();
 
     void tableXChanged(uint tableID, int x);
     void tableYChanged(uint tableID, int y);
@@ -53,12 +54,12 @@ private:
 
     QMenu *viewMenu;
     QActionGroup *displayModeGroup;
-    QAction *showClassesAct, *showFieldsAct, *showObjectsAct;
+    QAction *showClassesAct, *showFieldsAct, *showObjectsAct, *applyToAllAct;
 
     DBHandler *dbHandler;
     Controller* controller;
     DisplayMode displayMode;
-    QVector<TableView*> *tableViews;
+    QVector<TableView*> tableViews;
 
     // TableView widgets and relations are drawn inside this widget
     TablesDrawingArea *tablesDrawingArea;
