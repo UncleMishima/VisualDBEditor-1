@@ -78,3 +78,5 @@ tests/Test*/Test*
 *.dll
 *.exe
 
+# Project specific
+db-examples/
