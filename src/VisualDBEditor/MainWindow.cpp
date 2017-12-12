@@ -3,6 +3,7 @@
 
 #include <QFileDialog>
 #include <QFile>
+#include <QFontDialog>
 
 #include "DBHandler.h"
 #include "TableView.h"
@@ -57,6 +58,18 @@ void MainWindow::slot_fileSave()
     controller->saveTables();
 }
 
+void MainWindow::slot_chooseFont()
+{
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, QFont("Times", 12), this, QString::fromUtf8("Выберите шрифт"));
+    if (ok) {
+        // устанавливается выбранный пользователем шрифт
+    } else {
+        // Пользователь нажал кнопку "Cancel"; Устанавливается начальный шрифт.
+        //В данном случае Times, 12.
+    }
+}
+
 void MainWindow::createActions()
 {
 
@@ -71,6 +84,9 @@ void MainWindow::createActions()
 
     fileExit = new QAction(tr("&Exit"), this);
     connect(fileExit, SIGNAL(triggered()), this, SLOT(close()));
+
+    chooseFont = new QAction(tr("&Choose font"), this);
+    connect(chooseFont, SIGNAL(triggered()), this, SLOT(slot_chooseFont()));
 
     showClassesAct = new QAction(tr("&Classes"), this);
     showClassesAct->setCheckable(true);
@@ -98,6 +114,9 @@ void MainWindow::createMenu()
     fileMenu->addAction(fileSave);
     fileMenu->addSeparator();
     fileMenu->addAction(fileExit);
+
+    tableMenu = menuBar()->addMenu(tr("&Table"));
+    tableMenu->addAction(chooseFont);
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(showClassesAct);
