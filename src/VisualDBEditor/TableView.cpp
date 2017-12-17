@@ -21,8 +21,8 @@ TableView::TableView(QWidget *parent):
 
     tableName->setFrameStyle(QFrame::StyledPanel);
     tableName->setAlignment(Qt::AlignCenter);
-    tableName->setStyleSheet("background-color: grey;"
-                             "font: 10pt;");
+    tableName->setStyleSheet("background-color: grey;");
+    tableName->setFont(QFont("Arial", 14));
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setSpacing(0);
@@ -34,6 +34,7 @@ TableView::TableView(QWidget *parent):
 void TableView::setModel(QAbstractItemModel *model)
 {
     view->setModel(model);
+    view->setFont(QFont("Arial", 14));
 
     if (model == nullptr)
         view->setVisible(false);
