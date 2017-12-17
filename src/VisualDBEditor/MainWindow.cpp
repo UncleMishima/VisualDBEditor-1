@@ -58,6 +58,7 @@ void MainWindow::slot_fileSave()
     controller->saveTables();
 }
 
+/*
 void MainWindow::slot_chooseFont()
 {
     bool ok;
@@ -74,6 +75,7 @@ void MainWindow::slot_chooseFont()
         //if user pushed "Cancel" activated default font(Times, 12pt)
     }
 }
+*/
 
 void MainWindow::applyToAll()
 {
@@ -103,8 +105,9 @@ void MainWindow::createActions()
     fileExit = new QAction(tr("&Exit"), this);
     connect(fileExit, SIGNAL(triggered()), this, SLOT(close()));
 
-    chooseFont = new QAction(tr("&Choose font"), this);
-    connect(chooseFont, SIGNAL(triggered()), this, SLOT(slot_chooseFont()));
+    //font view action and connect
+    //chooseFont = new QAction(tr("&Choose font"), this);
+    //connect(chooseFont, SIGNAL(triggered()), this, SLOT(slot_chooseFont()));
 
     showClassesAct = new QAction(tr("&Classes"), this);
     showClassesAct->setCheckable(true);
@@ -136,8 +139,9 @@ void MainWindow::createMenu()
     fileMenu->addSeparator();
     fileMenu->addAction(fileExit);
 
-    tableMenu = menuBar()->addMenu(tr("&Table"));
-    tableMenu->addAction(chooseFont);
+    //font view menu
+    //tableMenu = menuBar()->addMenu(tr("&Table"));
+    //tableMenu->addAction(chooseFont);
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(showClassesAct);
