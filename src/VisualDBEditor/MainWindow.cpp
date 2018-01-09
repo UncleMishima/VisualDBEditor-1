@@ -86,7 +86,6 @@ void MainWindow::applyToAll()
         dbHandler->setTablePos(i, pos, CLASSES);
         dbHandler->setTablePos(i, pos, OBJECTS);
         dbHandler->setTablePos(i, pos, FIELDS);
-//>>>>>>> master
     }
 }
 

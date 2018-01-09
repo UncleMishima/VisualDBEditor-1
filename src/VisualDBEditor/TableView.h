@@ -37,12 +37,22 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
     void enterEvent(QEvent *event) override;
     void leaveEvent(QEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
+
+private slots:
+    void addRow();
+    void deleteRow();
 
 private:
     uint id;
     QLabel *tableName;
     QTableView *view;
+    QItemSelectionModel *selectionModel;
     static bool _isEmitSignals;
+
+    QAction *addRowAct, *deleteRowAct;
+
+    void createActions();
 };
 
 #endif // TABLEVIEW_H

@@ -3,6 +3,11 @@
 #include <QSizeGrip>
 #include <QMoveEvent>
 #include <QResizeEvent>
+#include <QMenu>
+
+/// debug
+#include <QDebug>
+///
 
 #include "TableView.h"
 
@@ -29,6 +34,8 @@ TableView::TableView(QWidget *parent):
     layout->addWidget(this->tableName);
     layout->addWidget(view);
     setLayout(layout);
+
+    createActions();
 }
 
 void TableView::setModel(QAbstractItemModel *model)
@@ -117,4 +124,58 @@ void TableView::leaveEvent(QEvent*)
 {
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+}
+
+void TableView::contextMenuEvent(QContextMenuEvent *event)
+{
+   QMenu menu(this);
+
+   menu.addAction(addRowAct);
+   menu.addAction(deleteRowAct);
+
+   if (view->selectionModel()->selectedIndexes().isEmpty())
+       deleteRowAct->setEnabled(false);
+   else
+       deleteRowAct->setEnabled(true);
+
+   menu.exec(event->globalPos());
+}
+
+void TableView::addRow()
+{
+    QModelIndexList indexList = view->selectionModel()->selectedIndexes();
+    QAbstractItemModel *model = view->model();
+    int row = indexList.isEmpty() ? model->rowCount()
+                                  : indexList.last().row();
+
+    model->insertRow(row);
+}
+
+void TableView::deleteRow()
+{
+    QAbstractItemModel *model = view->model();
+    QModelIndexList indexList = view->selectionModel()->selectedIndexes();
+
+        qDebug() << "----------Deleting Test---------";
+        qDebug() << "Selected itmes count " << indexList.size();
+    foreach (QModelIndex i, indexList)
+    {
+        bool b;
+        //sleep?
+        while ((b = model->removeRow(i.row())) == false);
+        qDebug() << (b ? "true" : "false");
+    }
+        qDebug() << "-------------------";
+}
+
+void TableView::createActions()
+{
+    addRowAct = new QAction(this);
+    connect(addRowAct, SIGNAL(triggered()), this, SLOT(addRow()));
+
+    deleteRowAct = new QAction(this);
+    connect(deleteRowAct, SIGNAL(triggered()), SLOT(deleteRow()));
+
+    addRowAct->setText("add");
+    deleteRowAct->setText("delete");
 }
