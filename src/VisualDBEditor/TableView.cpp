@@ -154,18 +154,18 @@ void TableView::addRow()
 void TableView::deleteRow()
 {
     QAbstractItemModel *model = view->model();
-    QModelIndexList indexList = view->selectionModel()->selectedIndexes();
+    QModelIndexList indexList;
 
-        qDebug() << "----------Deleting Test---------";
-        qDebug() << "Selected itmes count " << indexList.size();
-    foreach (QModelIndex i, indexList)
+    while (true)
     {
-        bool b;
-        //sleep?
-        while ((b = model->removeRow(i.row())) == false);
-        qDebug() << (b ? "true" : "false");
+
+        indexList = view->selectionModel()->selectedIndexes();
+
+        if (indexList.isEmpty())
+            return;
+
+        model->removeRow(indexList.first().row());
     }
-        qDebug() << "-------------------";
 }
 
 void TableView::createActions()
