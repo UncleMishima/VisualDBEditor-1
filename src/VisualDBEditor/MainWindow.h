@@ -16,6 +16,7 @@ class TableView;
 class Controller;
 class TablesDrawingArea;
 class Relation;
+class AddClass;
 
 class MainWindow: public QMainWindow
 {
@@ -32,6 +33,8 @@ private slots:
     void slot_fileSaveAs();
     void slot_fileSave();
     //void slot_chooseFont();
+    void slot_addClasses();
+    void slot_deleteClasses();
     void showClasses() {setDisplayMode(CLASSES);}
     void showFields() {setDisplayMode(FIELDS);}
     void showObjects() {setDisplayMode(OBJECTS);}
@@ -49,6 +52,9 @@ private:
     QMenu *fileMenu;
     QAction *fileOpen, *fileExit, *fileSave, *fileSaveAs;
 
+    QMenu *classMenu;
+    QAction *addClasses, *deleteClasses;
+
     //font view menu elelments
     //QMenu *tableMenu;
     //QAction *chooseFont;
@@ -57,6 +63,7 @@ private:
     QActionGroup *displayModeGroup;
     QAction *showClassesAct, *showFieldsAct, *showObjectsAct, *applyToAllAct;
 
+    AddClass *newClass;
     DBHandler *dbHandler;
     Controller* controller;
     DisplayMode displayMode;

@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "ui_AddClass.h"
 
 #include <QFileDialog>
 #include <QFile>
@@ -11,6 +12,7 @@
 #include "Controller.h"
 #include "TablesDrawingArea.h"
 #include "Relation.h"
+#include "AddClass.h"
 
 MainWindow::MainWindow(DBHandler *h, Controller *c):
     ui(new Ui::MainWindow),
@@ -77,6 +79,17 @@ void MainWindow::slot_chooseFont()
 }
 */
 
+void MainWindow::slot_addClasses()
+{
+    newClass = new AddClass();
+    newClass->show();
+}
+
+void MainWindow::slot_deleteClasses()
+{
+
+}
+
 void MainWindow::applyToAll()
 {
     for (int i = 0; i < tableViews.size(); i++)
@@ -108,6 +121,12 @@ void MainWindow::createActions()
     //font view action and connect
     //chooseFont = new QAction(tr("&Choose font"), this);
     //connect(chooseFont, SIGNAL(triggered()), this, SLOT(slot_chooseFont()));
+
+    addClasses = new QAction(tr("&Add"), this);
+    connect(addClasses, SIGNAL(triggered()), this, SLOT(slot_addClasses()));
+
+    deleteClasses = new QAction(tr("&Delete"), this);
+    connect(deleteClasses, SIGNAL(triggered()), this, SLOT(slot_deleteClasses()));
 
     showClassesAct = new QAction(tr("&Classes"), this);
     showClassesAct->setCheckable(true);
@@ -142,6 +161,11 @@ void MainWindow::createMenu()
     //font view menu
     //tableMenu = menuBar()->addMenu(tr("&Table"));
     //tableMenu->addAction(chooseFont);
+
+    //create menu
+    classMenu = menuBar()->addMenu(tr("&Classes"));
+    classMenu->addAction(addClasses);
+    classMenu->addAction(deleteClasses);
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(showClassesAct);
