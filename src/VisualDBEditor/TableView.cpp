@@ -5,10 +5,6 @@
 #include <QResizeEvent>
 #include <QMenu>
 
-/// debug
-#include <QDebug>
-///
-
 #include "TableView.h"
 
 bool TableView::_isEmitSignals = true;
@@ -42,11 +38,35 @@ void TableView::setModel(QAbstractItemModel *model)
 {
     view->setModel(model);
     view->setFont(QFont("Arial", 14));
+}
 
-    if (model == nullptr)
+void TableView::setDisplayMod(DisplayMode mode)
+{
+    if (mode == CLASSES)
+    {
         view->setVisible(false);
+        addRowAct->setVisible(false);
+        deleteRowAct->setVisible(false);
+    }
     else
+    {
         view->setVisible(true);
+        addRowAct->setVisible(true);
+        deleteRowAct->setVisible(true);
+
+        if (mode == FIELDS)
+        {
+            addRowAct->setText(tr("&Add Field"));
+            deleteRowAct->setText(tr("&Delete Field"));
+
+            return;
+        }
+        else
+        {
+            addRowAct->setText(tr("&Add Object"));
+            deleteRowAct->setText(tr("&Delete Object"));
+        }
+    }
 }
 
 void TableView::setTableName(const QString &name)
@@ -175,7 +195,4 @@ void TableView::createActions()
 
     deleteRowAct = new QAction(this);
     connect(deleteRowAct, SIGNAL(triggered()), SLOT(deleteRow()));
-
-    addRowAct->setText("add");
-    deleteRowAct->setText("delete");
 }

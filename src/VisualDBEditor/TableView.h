@@ -17,6 +17,7 @@ public:
     void setID(uint i) {id = i;}
     void setTableName(const QString &name);
     void setModel(QAbstractItemModel *model);
+    void setDisplayMod(DisplayMode mode);
     void setAccesMod(AccessMode mode);
     static void setEmitSignals(bool b) {_isEmitSignals = b;}
 

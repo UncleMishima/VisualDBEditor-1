@@ -233,7 +233,10 @@ void MainWindow::setDisplayMode(DisplayMode mode)
     }
 
     for (int i = 0; i < tablesCount; i++)
+    {
         tableViews.at(i)->setGeometry(dbHandler->getTableGeometry(i, mode));
+        tableViews.at(i)->setDisplayMod(mode);
+    }
 
     TableView::setEmitSignals(true);
 
