@@ -5,6 +5,7 @@
 #include <QThread>
 
 #include "GlobalDefinitions.h"
+#include <QStandardItemModel>
 
 class DBHandler;
 class MainWindow;
@@ -17,11 +18,14 @@ public:
     ~Controller();
     void start();
     void saveTables();
+    void createNewTable(QString tableName, QStandardItemModel* objectsModel, QStandardItemModel* fieldModel);
+
 
 signals:
     void openConnection(DBType type, QStringList options, uint flags);
     void fillTables();
     void save();
+    void createTable(QString tableName, QStandardItemModel* objectsModel, QStandardItemModel* fieldModel);
 
 public slots:
     void connectionSuccess();

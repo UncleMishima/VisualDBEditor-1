@@ -34,6 +34,8 @@ void Table::setName(const QString &name)
 void Table::setFieldsModel(QStandardItemModel *im)
 {
     fieldsModel = im;
+
+    fieldsModel->setHorizontalHeaderLabels(QStringList() << "Name" << "Type");
 }
 
 void Table::setObjectsModel(QStandardItemModel *im)

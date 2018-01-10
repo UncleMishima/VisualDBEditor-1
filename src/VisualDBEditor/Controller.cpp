@@ -28,6 +28,9 @@ Controller::Controller()
     connect(dbHandler, SIGNAL(connectionSuccess()),
             this, SLOT(connectionSuccess()));
 
+    connect(this, SIGNAL(createTable(QString,QStandardItemModel*,QStandardItemModel*)),
+            dbHandler, SLOT(createTable(QString,QStandardItemModel*,QStandardItemModel*)), Qt::BlockingQueuedConnection);
+
     dbHandlerThread.start();
 }
 
@@ -38,6 +41,13 @@ Controller::~Controller()
     dbHandlerThread.quit();
     dbHandlerThread.wait();
 }
+
+
+void Controller::createNewTable(QString tableName, QStandardItemModel* objectsModel, QStandardItemModel* fieldModel)
+{
+    emit createTable(tableName, objectsModel, fieldModel);
+}
+
 
 void Controller::start()
 {

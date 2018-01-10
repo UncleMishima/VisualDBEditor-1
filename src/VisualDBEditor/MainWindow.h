@@ -39,6 +39,7 @@ private slots:
     void showFields() {setDisplayMode(FIELDS);}
     void showObjects() {setDisplayMode(OBJECTS);}
     void applyToAll();
+    void addNewClass();
 
     void tableXChanged(uint tableID, int x);
     void tableYChanged(uint tableID, int y);

@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QFontDialog>
 #include <QLineEdit>
+#include <QDebug>
 
 #include "DBHandler.h"
 #include "TableView.h"
@@ -83,7 +84,60 @@ void MainWindow::slot_addClasses()
 {
     newClass = new AddClass();
     newClass->show();
+
+    if(newClass->exec() == QDialog::Accepted)
+    {
+        addNewClass();
+    }
+    else if(newClass->exec() == QDialog::Rejected)
+    {
+        qDebug() << "Table has not created";
+    }
 }
+
+void MainWindow::addNewClass()
+{
+    QStandardItemModel* objectsModel = new QStandardItemModel();
+    QStandardItemModel* fieldsModel = new QStandardItemModel();
+
+    for(int j = 0; j < newClass->ITEM_COUNT; j++)
+    {
+        if(newClass->ui->fieldsTableWidget->item(0, j) == nullptr || newClass->ui->fieldsTableWidget->item(1, j) == nullptr)
+        {
+            continue;
+        }
+        else
+        {
+            fieldsModel->setItem(j, 0, new QStandardItem(newClass->ui->fieldsTableWidget->item(0, j)->text()));
+            fieldsModel->setItem(j, 1, new QStandardItem(newClass->ui->fieldsTableWidget->item(1, j)->text()));
+        }
+    }
+
+    for(int i = 0; i < newClass->ITEM_COUNT; i++)
+    {
+        for(int j = 0; j < newClass->ITEM_COUNT; j++)
+        {
+            if(newClass->ui->objectsTableWidget->item(i, j) == nullptr)
+            {
+                continue;
+            }
+            else
+            {
+                objectsModel->setItem(i, j, new QStandardItem(newClass->ui->objectsTableWidget->item(i, j)->text()));
+            }
+        }
+    }
+
+    QString tableName = newClass->ui->lineEdit->text();
+    controller->createTable(tableName, objectsModel, fieldsModel);
+    showTables(STRUCTURE_EDIT, displayMode);
+
+    //QTableView* tv = new QTableView();
+    //tv->setModel(objectsModel);
+    //tv->setModel(fieldsModel);
+    //tv->show();
+}
+
 
 void MainWindow::slot_deleteClasses()
 {
@@ -188,6 +242,7 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
 
         tv->setID(i);
         tv->setTableName(dbHandler->getTableName(i));
+        qDebug() << tv->getTableName();
         tv->setAccesMod(accesMod);
         tv->show();
 

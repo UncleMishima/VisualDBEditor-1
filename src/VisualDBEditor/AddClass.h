@@ -17,11 +17,16 @@ public:
     ~AddClass();
 
     //QTableWidget* table;
-    QTableView* table;
-    QStandardItemModel* model;
+    //QTableView* table;
+    //QStandardItemModel* model;
+
+    //void addNewClass();
+
+    const unsigned int ITEM_COUNT = 20;
+    Ui::Dialog* ui;
 
 private:
-    Ui::Dialog* ui;
+
 
 };
 
