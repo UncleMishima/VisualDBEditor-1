@@ -2,6 +2,7 @@
 #define DBHANDLER_H
 
 #include "GlobalDefinitions.h"
+#include <QStandardItemModel>
 
 class AbstractDB;
 class Table;
@@ -41,6 +42,8 @@ public slots:
     void openConnection(DBType type, QStringList options, uint flags);
     void fillTables();
     void save();
+    void createTable(QString tableName, QStandardItemModel *objectsModel, QStandardItemModel *fieldModel);
+    void deleteClass(uint id);
 
 private:
     AbstractDB *db = nullptr;

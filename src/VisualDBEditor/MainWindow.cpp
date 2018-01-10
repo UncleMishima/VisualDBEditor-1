@@ -1,16 +1,19 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "ui_addclass.h"
 
 #include <QFileDialog>
 #include <QFile>
 #include <QFontDialog>
 #include <QLineEdit>
+#include <QDebug>
 
 #include "DBHandler.h"
 #include "TableView.h"
 #include "Controller.h"
 #include "TablesDrawingArea.h"
 #include "Relation.h"
+#include "AddClass.h"
 
 MainWindow::MainWindow(DBHandler *h, Controller *c):
     ui(new Ui::MainWindow),
@@ -77,6 +80,78 @@ void MainWindow::slot_chooseFont()
 }
 */
 
+void MainWindow::slot_addClasses()
+{
+    newClass = new AddClass();
+    newClass->show();
+
+    if(newClass->exec() == QDialog::Accepted)
+    {
+        addNewClass();
+    }
+    else if(newClass->exec() == QDialog::Rejected)
+    {
+        qDebug() << "Table has not created";
+    }
+}
+
+void MainWindow::addNewClass()
+{
+    QStandardItemModel* objectsModel = new QStandardItemModel();
+    QStandardItemModel* fieldsModel = new QStandardItemModel();
+
+    for(int j = 0; j < newClass->ITEM_COUNT; j++)
+    {
+        if(newClass->ui->fieldsTableWidget->item(0, j) == nullptr || newClass->ui->fieldsTableWidget->item(1, j) == nullptr)
+        {
+            continue;
+        }
+        else
+        {
+            fieldsModel->setItem(j, 0, new QStandardItem(newClass->ui->fieldsTableWidget->item(0, j)->text()));
+            fieldsModel->setItem(j, 1, new QStandardItem(newClass->ui->fieldsTableWidget->item(1, j)->text()));
+        }
+    }
+
+    for(int i = 0; i < newClass->ITEM_COUNT; i++)
+    {
+        for(int j = 0; j < newClass->ITEM_COUNT; j++)
+        {
+            if(newClass->ui->objectsTableWidget->item(i, j) == nullptr)
+            {
+                continue;
+            }
+            else
+            {
+                objectsModel->setItem(i, j, new QStandardItem(newClass->ui->objectsTableWidget->item(i, j)->text()));
+            }
+        }
+    }
+
+    QString tableName = newClass->ui->lineEdit->text();
+    controller->createTable(tableName, objectsModel, fieldsModel);
+    showTables(STRUCTURE_EDIT, displayMode);
+
+    //QTableView* tv = new QTableView();
+    //tv->setModel(objectsModel);
+    //tv->setModel(fieldsModel);
+    //tv->show();
+}
+
+void MainWindow::deleteClass(uint id)
+{
+    controller->deleteClass(id);
+
+    for(int i = id + 1; i < tableViews.size(); i++)
+    {
+        tableViews.at(i)->setID(i-1);
+    }
+
+    tableViews.at(id)->deleteLater();
+    tableViews.remove(id);
+}
+
+
 void MainWindow::applyToAll()
 {
     for (int i = 0; i < tableViews.size(); i++)
@@ -107,6 +182,9 @@ void MainWindow::createActions()
     //font view action and connect
     //chooseFont = new QAction(tr("&Choose font"), this);
     //connect(chooseFont, SIGNAL(triggered()), this, SLOT(slot_chooseFont()));
+
+    addClasses = new QAction(tr("&Add"), this);
+    connect(addClasses, SIGNAL(triggered()), this, SLOT(slot_addClasses()));
 
     showClassesAct = new QAction(tr("&Classes"), this);
     showClassesAct->setCheckable(true);
@@ -142,6 +220,10 @@ void MainWindow::createMenu()
     //tableMenu = menuBar()->addMenu(tr("&Table"));
     //tableMenu->addAction(chooseFont);
 
+    //create menu
+    classMenu = menuBar()->addMenu(tr("&Classes"));
+    classMenu->addAction(addClasses);
+
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(showClassesAct);
     viewMenu->addAction(showFieldsAct);
@@ -163,6 +245,7 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
 
         tv->setID(i);
         tv->setTableName(dbHandler->getTableName(i));
+        qDebug() << tv->getTableName();
         tv->setAccesMod(accesMod);
         tv->show();
 
@@ -180,6 +263,9 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
 
         connect(tv, SIGNAL(tableNameChanged(uint,QString)),
                 this, SLOT(tableNameChanged(uint,QString)));
+
+        connect(tv, SIGNAL(deleteClassS(uint)),
+                this, SLOT(deleteClass(uint)));
 
         tableViews.append(tv);
     }
@@ -286,7 +372,7 @@ void MainWindow::tableNameChanged(uint tableID, const QString &name)
 void MainWindow::freeResources()
 {
     foreach (TableView *view, tableViews)
-        delete view;
+        view->deleteLater();
 
     tableViews.clear();
     tableViews.squeeze();

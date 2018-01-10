@@ -50,6 +50,7 @@ void Table::setFieldsModel(QStandardItemModel *im)
 {
     fieldsModel = im;
 
+    fieldsModel->setHorizontalHeaderLabels(QStringList() << "Name" << "Type");
     qRegisterMetaType<QVector<int>>();
 
     connect(fieldsModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
@@ -59,6 +60,14 @@ void Table::setFieldsModel(QStandardItemModel *im)
 void Table::setObjectsModel(QStandardItemModel *im)
 {
     objectsModel = im;
+
+    QStringList objectsModelHHLabels;
+    Q_ASSERT_X(fieldsModel != nullptr, "setObjectsModel", "fieldsModel = nullptr");
+    for (int i = 0; i < fieldsModel->rowCount(); i++)
+    {
+        objectsModelHHLabels << fieldsModel->item(i, 0)->data(Qt::DisplayRole).toString();
+    }
+    objectsModel->setHorizontalHeaderLabels(objectsModelHHLabels);
 }
 
 void Table::setCoord(int x, int y, DisplayMode mode)

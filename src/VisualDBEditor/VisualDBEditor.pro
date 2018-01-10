@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     TableView.cpp \
     MainWindow.cpp \
     Relation.cpp \
-    TablesDrawingArea.cpp
+    TablesDrawingArea.cpp \
+    AddClass.cpp
 
 HEADERS += \
     Controller.h \
@@ -39,10 +40,12 @@ HEADERS += \
     TableView.h \
     MainWindow.h \
     Relation.h \
-    TablesDrawingArea.h
+    TablesDrawingArea.h \
+    AddClass.h
 
 FORMS += \
-    MainWindow.ui
+    MainWindow.ui \
+    addclass.ui
 
 include( ../../common.pri )
 

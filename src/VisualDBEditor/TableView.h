@@ -32,6 +32,7 @@ signals:
     void widthChanged(uint id, int width);
     void heightChanged(uint id, int height);
     void tableNameChanged(uint id, const QString &name);
+    void deleteClassS(uint id);
 
 protected:
     void moveEvent(QMoveEvent *event) override;
@@ -43,6 +44,8 @@ protected:
 private slots:
     void addRow();
     void deleteRow();
+    void deleteClass();
+
 
 private:
     uint id;
@@ -51,7 +54,7 @@ private:
     QItemSelectionModel *selectionModel;
     static bool _isEmitSignals;
 
-    QAction *addRowAct, *deleteRowAct;
+    QAction *addRowAct, *deleteRowAct, *deleteClassAct;
 
     void createActions();
 };

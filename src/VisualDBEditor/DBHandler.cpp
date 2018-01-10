@@ -18,9 +18,34 @@ void DBHandler::openConnection(DBType type, QStringList options, uint flags)
 void DBHandler::fillTables()
 {
     Q_ASSERT_X(db != nullptr, "fillTables", "db = nullptr");
-
+    //Table* table = new Table();
+    //tables->push_back(table);
     tie<QVector<Table*>*&, QVector<Relation*>*&>(tables, relations) = db->fillTables();
     emit fillTablesSuccess();
+}
+
+void DBHandler::createTable(QString tableName, QStandardItemModel *objectsModel, QStandardItemModel *fieldModel)
+{
+    Table* table = new Table();
+
+    table->setName(tableName);
+
+    for(int i = 0; i < 3; i++)
+    {
+        table->setWidth(100, (DisplayMode)i);
+        table->setHeight(100, (DisplayMode)i);
+        table->setCoordX(150, (DisplayMode)i);
+        table->setCoordY(350, (DisplayMode)i);
+    }
+    table->setFieldsModel(fieldModel);
+    table->setObjectsModel(objectsModel);
+
+    tables->push_back(table);
+}
+
+void DBHandler::deleteClass(uint id)
+{
+    tables->remove(id);
 }
 
 void DBHandler::setRelations(QVector<Relation*>* r)

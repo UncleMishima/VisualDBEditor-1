@@ -175,7 +175,6 @@ void XmlDB::parseTable(QVector<Table *> *tables)
         objectsModelHHLabels << fieldsModel->item(i, 0)->data(Qt::DisplayRole).toString();
     }
     objectsModel->setHorizontalHeaderLabels(objectsModelHHLabels);
-    ///
 
     tables->push_back(tb);
 
