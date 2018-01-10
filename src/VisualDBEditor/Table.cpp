@@ -1,6 +1,9 @@
 #include "Table.h"
 
-Table::Table(){}
+Table::Table() : QObject(nullptr)
+{
+
+}
 
 Table::~Table()
 {
@@ -23,6 +26,18 @@ QStandardItemModel *Table::getFieldsModel()
 
 QStandardItemModel *Table::getObjectsModel()
 {
+    /// debug. Temporary solution
+    if (isFieldsModelChanged)
+    {
+        QStringList objectsModelHHLabels;
+        for (int i = 0; i < fieldsModel->rowCount(); i++)
+        {
+            objectsModelHHLabels << fieldsModel->item(i, 0)->data(Qt::DisplayRole).toString();
+        }
+        objectsModel->setHorizontalHeaderLabels(objectsModelHHLabels);
+    }
+    ///
+
     return objectsModel;
 }
 
@@ -34,6 +49,11 @@ void Table::setName(const QString &name)
 void Table::setFieldsModel(QStandardItemModel *im)
 {
     fieldsModel = im;
+
+    qRegisterMetaType<QVector<int>>();
+
+    connect(fieldsModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+                          SLOT(fieldsModelChanged()));
 }
 
 void Table::setObjectsModel(QStandardItemModel *im)
