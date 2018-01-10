@@ -43,6 +43,11 @@ void DBHandler::createTable(QString tableName, QStandardItemModel *objectsModel,
     tables->push_back(table);
 }
 
+void DBHandler::deleteClass(uint id)
+{
+    tables->remove(id);
+}
+
 void DBHandler::setRelations(QVector<Relation*>* r)
 {
     relations = r;

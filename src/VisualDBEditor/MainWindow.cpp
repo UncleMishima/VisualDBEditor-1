@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "ui_addclass.h"
 
 #include <QFileDialog>
 #include <QFile>
@@ -137,11 +138,19 @@ void MainWindow::addNewClass()
     //tv->show();
 }
 
-
-void MainWindow::slot_deleteClasses()
+void MainWindow::deleteClass(uint id)
 {
+    controller->deleteClass(id);
 
+    for(int i = id + 1; i < tableViews.size(); i++)
+    {
+        tableViews.at(i)->setID(i-1);
+    }
+
+    tableViews.at(id)->deleteLater();
+    tableViews.remove(id);
 }
+
 
 void MainWindow::applyToAll()
 {
@@ -176,9 +185,6 @@ void MainWindow::createActions()
 
     addClasses = new QAction(tr("&Add"), this);
     connect(addClasses, SIGNAL(triggered()), this, SLOT(slot_addClasses()));
-
-    deleteClasses = new QAction(tr("&Delete"), this);
-    connect(deleteClasses, SIGNAL(triggered()), this, SLOT(slot_deleteClasses()));
 
     showClassesAct = new QAction(tr("&Classes"), this);
     showClassesAct->setCheckable(true);
@@ -217,7 +223,6 @@ void MainWindow::createMenu()
     //create menu
     classMenu = menuBar()->addMenu(tr("&Classes"));
     classMenu->addAction(addClasses);
-    classMenu->addAction(deleteClasses);
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(showClassesAct);
@@ -258,6 +263,9 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
 
         connect(tv, SIGNAL(tableNameChanged(uint,QString)),
                 this, SLOT(tableNameChanged(uint,QString)));
+
+        connect(tv, SIGNAL(deleteClassS(uint)),
+                this, SLOT(deleteClass(uint)));
 
         tableViews.append(tv);
     }
@@ -364,7 +372,7 @@ void MainWindow::tableNameChanged(uint tableID, const QString &name)
 void MainWindow::freeResources()
 {
     foreach (TableView *view, tableViews)
-        delete view;
+        view->deleteLater();
 
     tableViews.clear();
     tableViews.squeeze();

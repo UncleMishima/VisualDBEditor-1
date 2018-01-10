@@ -152,6 +152,7 @@ void TableView::contextMenuEvent(QContextMenuEvent *event)
 
    menu.addAction(addRowAct);
    menu.addAction(deleteRowAct);
+   menu.addAction(deleteClassAct);
 
    if (view->selectionModel()->selectedIndexes().isEmpty())
        deleteRowAct->setEnabled(false);
@@ -195,4 +196,13 @@ void TableView::createActions()
 
     deleteRowAct = new QAction(this);
     connect(deleteRowAct, SIGNAL(triggered()), SLOT(deleteRow()));
+
+    deleteClassAct = new QAction(tr("Delete class"), this);
+    connect(deleteClassAct, SIGNAL(triggered()), SLOT(deleteClass()));
+
+}
+
+void TableView::deleteClass()
+{
+    emit deleteClassS(id);
 }

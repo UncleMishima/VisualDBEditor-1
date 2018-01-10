@@ -34,12 +34,12 @@ private slots:
     void slot_fileSave();
     //void slot_chooseFont();
     void slot_addClasses();
-    void slot_deleteClasses();
     void showClasses() {setDisplayMode(CLASSES);}
     void showFields() {setDisplayMode(FIELDS);}
     void showObjects() {setDisplayMode(OBJECTS);}
     void applyToAll();
     void addNewClass();
+    void deleteClass(uint id);
 
     void tableXChanged(uint tableID, int x);
     void tableYChanged(uint tableID, int y);
@@ -54,7 +54,7 @@ private:
     QAction *fileOpen, *fileExit, *fileSave, *fileSaveAs;
 
     QMenu *classMenu;
-    QAction *addClasses, *deleteClasses;
+    QAction *addClasses;
 
     //font view menu elelments
     //QMenu *tableMenu;

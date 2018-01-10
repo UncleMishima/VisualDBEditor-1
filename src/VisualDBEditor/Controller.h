@@ -19,6 +19,7 @@ public:
     void start();
     void saveTables();
     void createNewTable(QString tableName, QStandardItemModel* objectsModel, QStandardItemModel* fieldModel);
+    void deleteClass(uint id);
 
 
 signals:
@@ -26,6 +27,7 @@ signals:
     void fillTables();
     void save();
     void createTable(QString tableName, QStandardItemModel* objectsModel, QStandardItemModel* fieldModel);
+    void deleteClassS(uint id);
 
 public slots:
     void connectionSuccess();

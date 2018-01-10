@@ -43,6 +43,7 @@ public slots:
     void fillTables();
     void save();
     void createTable(QString tableName, QStandardItemModel *objectsModel, QStandardItemModel *fieldModel);
+    void deleteClass(uint id);
 
 private:
     AbstractDB *db = nullptr;
