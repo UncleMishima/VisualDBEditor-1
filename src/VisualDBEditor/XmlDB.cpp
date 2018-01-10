@@ -167,7 +167,7 @@ void XmlDB::parseTable(QVector<Table *> *tables)
         xmlReader.readNext();
     }
 
-    // debug Header labels settings. Need to think where we must place it.
+    /// debug Header labels settings. Need to think where we must place it.
     fieldsModel->setHorizontalHeaderLabels(QStringList() << "Name" << "Type");
     QStringList objectsModelHHLabels;
     for (int i = 0; i < fieldsModel->rowCount(); i++)
@@ -175,6 +175,7 @@ void XmlDB::parseTable(QVector<Table *> *tables)
         objectsModelHHLabels << fieldsModel->item(i, 0)->data(Qt::DisplayRole).toString();
     }
     objectsModel->setHorizontalHeaderLabels(objectsModelHHLabels);
+    ///
 
     tables->push_back(tb);
 

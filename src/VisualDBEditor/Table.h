@@ -1,6 +1,7 @@
 #ifndef TABLE_H
 #define TABLE_H
 
+#include <QObject>
 #include <QString>
 #include <QStandardItemModel>
 #include <QStandardItem>
@@ -9,18 +10,9 @@
 
 #define DISPLAY_MODES_COUNT 3
 
-class Table
+class Table : public QObject
 {
-private:
-    QString name;
-    int coordX[DISPLAY_MODES_COUNT];
-    int coordY[DISPLAY_MODES_COUNT];
-    int tableWidth[DISPLAY_MODES_COUNT];
-    int tableHeight[DISPLAY_MODES_COUNT];
-
-    QStandardItemModel* fieldsModel = nullptr;
-    QStandardItemModel* objectsModel = nullptr;
-
+    Q_OBJECT
 public:
     explicit Table();
     ~Table();
@@ -47,6 +39,21 @@ public:
 
     void setObjectsModel(QStandardItemModel* im);
     void setFieldsModel(QStandardItemModel* im);
+
+private slots:
+    void fieldsModelChanged() {isFieldsModelChanged = true;}
+
+private:
+    QString name;
+    int coordX[DISPLAY_MODES_COUNT];
+    int coordY[DISPLAY_MODES_COUNT];
+    int tableWidth[DISPLAY_MODES_COUNT];
+    int tableHeight[DISPLAY_MODES_COUNT];
+    bool isFieldsModelChanged = false;
+
+    QStandardItemModel* fieldsModel = nullptr;
+    QStandardItemModel* objectsModel = nullptr;
+
 };
 
 #endif // TABLE_H

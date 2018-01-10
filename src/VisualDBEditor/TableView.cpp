@@ -3,6 +3,7 @@
 #include <QSizeGrip>
 #include <QMoveEvent>
 #include <QResizeEvent>
+#include <QMenu>
 
 #include "TableView.h"
 
@@ -29,17 +30,43 @@ TableView::TableView(QWidget *parent):
     layout->addWidget(this->tableName);
     layout->addWidget(view);
     setLayout(layout);
+
+    createActions();
 }
 
 void TableView::setModel(QAbstractItemModel *model)
 {
     view->setModel(model);
     view->setFont(QFont("Arial", 14));
+}
 
-    if (model == nullptr)
+void TableView::setDisplayMod(DisplayMode mode)
+{
+    if (mode == CLASSES)
+    {
         view->setVisible(false);
+        addRowAct->setVisible(false);
+        deleteRowAct->setVisible(false);
+    }
     else
+    {
         view->setVisible(true);
+        addRowAct->setVisible(true);
+        deleteRowAct->setVisible(true);
+
+        if (mode == FIELDS)
+        {
+            addRowAct->setText(tr("&Add Field"));
+            deleteRowAct->setText(tr("&Delete Field"));
+
+            return;
+        }
+        else
+        {
+            addRowAct->setText(tr("&Add Object"));
+            deleteRowAct->setText(tr("&Delete Object"));
+        }
+    }
 }
 
 void TableView::setTableName(const QString &name)
@@ -117,4 +144,55 @@ void TableView::leaveEvent(QEvent*)
 {
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+}
+
+void TableView::contextMenuEvent(QContextMenuEvent *event)
+{
+   QMenu menu(this);
+
+   menu.addAction(addRowAct);
+   menu.addAction(deleteRowAct);
+
+   if (view->selectionModel()->selectedIndexes().isEmpty())
+       deleteRowAct->setEnabled(false);
+   else
+       deleteRowAct->setEnabled(true);
+
+   menu.exec(event->globalPos());
+}
+
+void TableView::addRow()
+{
+    QModelIndexList indexList = view->selectionModel()->selectedIndexes();
+    QAbstractItemModel *model = view->model();
+    int row = indexList.isEmpty() ? model->rowCount()
+                                  : indexList.last().row();
+
+    model->insertRow(row);
+}
+
+void TableView::deleteRow()
+{
+    QAbstractItemModel *model = view->model();
+    QModelIndexList indexList;
+
+    while (true)
+    {
+
+        indexList = view->selectionModel()->selectedIndexes();
+
+        if (indexList.isEmpty())
+            return;
+
+        model->removeRow(indexList.first().row());
+    }
+}
+
+void TableView::createActions()
+{
+    addRowAct = new QAction(this);
+    connect(addRowAct, SIGNAL(triggered()), this, SLOT(addRow()));
+
+    deleteRowAct = new QAction(this);
+    connect(deleteRowAct, SIGNAL(triggered()), SLOT(deleteRow()));
 }
