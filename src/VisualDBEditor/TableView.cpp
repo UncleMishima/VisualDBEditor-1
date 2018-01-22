@@ -76,6 +76,30 @@ void TableView::setTableName(const QString &name)
         emit tableNameChanged(id, name);
 }
 
+void TableView::setCoords(uint id, int x, int y)
+{
+    this->move(x, y);
+    emit xChanged(id, x);
+    emit yChanged(id, y);
+}
+
+/*
+void TableView::setYCoord(int y)
+{
+    emit yChanged(y);
+}
+
+void TableView::setWidth(int w)
+{
+    emit widthChanged(w);
+}
+
+void TableView::setHeight(int h)
+{
+    emit heightChanged(h);
+}
+*/
+
 void TableView::setAccesMod(AccessMode mode)
 {
     switch (mode)

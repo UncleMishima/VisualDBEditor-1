@@ -10,6 +10,35 @@ XmlDB::XmlDB(const QString &fp) : filePath(fp)
 
 uint tableCounter = 0;
 
+QString XmlDB::displayModeToString(DisplayMode mode)
+{
+    QString str;
+    switch(mode)
+    {
+    case CLASSES:
+        str = "CLASSES";
+        break;
+    case FIELDS:
+        str = "FIELDS";
+        break;
+    case OBJECTS:
+        str = "OBJECTS";
+        break;
+    default:
+        str = "UNKNOWN";
+    }
+    return str;
+}
+
+DisplayMode XmlDB::stringToDisplayMode(QString str)
+{
+    DisplayMode mode;
+    if(str == "CLASSES") mode = CLASSES;
+    if(str == "FIELDS")  mode = FIELDS;
+    if(str == "OBJECTS") mode = OBJECTS;
+    return mode;
+}
+
 tuple<QVector<Table *> *, QVector<Relation *> *> XmlDB::readXmlFile(const QString &path)
 {
     QFile* file = new QFile(path);
@@ -101,19 +130,17 @@ void XmlDB::parseTable(QVector<Table *> *tables)
     //set table's name
     QString tName = xmlReader.attributes().value("tableName").toString();
     tb->setName(tName);
-    //qDebug() << "tables name" << tb->getName();
 
     //set counts of fields and rows
     int countOfFields = xmlReader.attributes().value("fieldsCount").toString().toInt();
     int countOfRows = xmlReader.attributes().value("rowsCount").toString().toInt();
-    //qDebug() << "get counts" << tb->getFieldsCount() << tb->getRowsCount();
 
     //set table's model size
     int current = 0;
     QStandardItemModel* fieldsModel = new QStandardItemModel(countOfFields, 2);
     QStandardItemModel* objectsModel = new QStandardItemModel(countOfRows, countOfFields);
 
-    int index = 0;
+    //int index = 0;
 
     tableID.insert(tb->getName(), tableCounter);
 
@@ -126,17 +153,22 @@ void XmlDB::parseTable(QVector<Table *> *tables)
         {
             if(xmlReader.name() == "DisplayParams")
             {
+                DisplayMode displayMode = stringToDisplayMode(xmlReader.attributes().value("displayMode").toString());
+                //QString displayMode = xmlReader.attributes().value("displayMode").toString();
                 int xCoord = xmlReader.attributes().value("xCoord").toString().toInt();
                 int yCoord = xmlReader.attributes().value("yCoord").toString().toInt();
                 int width = xmlReader.attributes().value("width").toString().toInt();
                 int heigh = xmlReader.attributes().value("heigh").toString().toInt();
 
-                tb->setCoord(xCoord, yCoord, (DisplayMode)index);
-                tb->resize(width, heigh, (DisplayMode)index);
+                //tb->setDisplayMode();
+                tb->setCoord(xCoord, yCoord, displayMode);
+                tb->resize(width, heigh, displayMode);
 
-                ++index;
+                //++index;
+                //if(displayMode == stringToDisplayMode("CLASSES") || displayMode == stringToDisplayMode("OBJECTS") || displayMode == stringToDisplayMode("FIELDS")) qDebug() << "YES";
+                //else qDebug() << "NO";
 
-                //qDebug() << displayMode << xCoord << yCoord << width << heigh;
+                qDebug() << displayModeToString(displayMode) << " " << xmlReader.attributes().value("displayMode").toString() << xCoord << yCoord << width << heigh;
 
             }
 
@@ -221,7 +253,7 @@ void XmlDB::save(QVector<Table *> *tables)
         for(int j = 0; j < DISPLAY_MODES_COUNT; j++)
         {
             xmlWriter.writeStartElement("DisplayParams");
-            xmlWriter.writeAttribute("displayMode", QString::number(j));
+            xmlWriter.writeAttribute("displayMode", displayModeToString(DisplayMode(j)));
             xmlWriter.writeAttribute("xCoord", QString::number(tables->at(i)->getCoordX((DisplayMode)j)));
             xmlWriter.writeAttribute("yCoord", QString::number(tables->at(i)->getCoordY((DisplayMode)j)));
             xmlWriter.writeAttribute("width", QString::number(tables->at(i)->getWidth((DisplayMode)j)));

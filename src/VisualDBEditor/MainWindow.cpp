@@ -32,6 +32,11 @@ MainWindow::MainWindow(DBHandler *h, Controller *c):
 
     createMenu();
     createToolBar();
+    
+    zoomCounter = 0;
+    zoomFactor = 30;
+    mwCenterXCoord = this->width()/2;
+    mwCenterYCoord = this->height()/2;
 
     scrollArea->setWidget(tablesDrawingArea);
     setCentralWidget(scrollArea);
@@ -99,6 +104,53 @@ void MainWindow::slot_addClasses()
     else if(newClass->exec() == QDialog::Rejected)
     {
         qDebug() << "Table has not created";
+    }
+}
+
+void MainWindow::slot_zoomIn()
+{
+    if(zoomCounter <= zoomFactor)
+    {
+        for(int i = 0; i < tableViews.size(); ++i)
+        {
+            double newXCoord = tableViews.at(i)->x() + (mwCenterXCoord - tableViews.at(i)->x())/tableViews.at(i)->getDragStep();
+            double newYCoord = tableViews.at(i)->y() + (mwCenterYCoord - tableViews.at(i)->y())/tableViews.at(i)->getDragStep();
+            tableViews.at(i)->setCoords(tableViews.at(i)->getID(), newXCoord, newYCoord);
+            //++zoomCounter;
+        }
+    }
+    else return;
+
+    applyToAll();
+}
+
+void MainWindow::slot_zoomOut()
+{
+    if(zoomCounter >= -zoomFactor)
+    {
+        for(int i = 0; i < tableViews.size(); ++i)
+        {
+            double newXCoord = tableViews.at(i)->x() - (mwCenterXCoord - tableViews.at(i)->x())/tableViews.at(i)->getDragStep();
+            double newYCoord = tableViews.at(i)->y() - (mwCenterYCoord - tableViews.at(i)->y())/tableViews.at(i)->getDragStep();
+            tableViews.at(i)->setCoords(tableViews.at(i)->getID(), newXCoord, newYCoord);
+            //--zoomCounter;
+        }
+    }
+    else return;
+
+    applyToAll();
+}
+
+void MainWindow::moveTables(int zoomF)
+{
+    double mwCenterXCoord = this->geometry().width()/2;
+    double mwCenterYCoord = this->geometry().height()/2;
+
+    for(int i = 0; i < tableViews.size(); ++i)
+    {
+        double newXCoord = tableViews.at(i)->x() + (mwCenterXCoord - tableViews.at(i)->x())/zoomFactor;
+        double newYCoord = tableViews.at(i)->y() + (mwCenterYCoord - tableViews.at(i)->y())/zoomFactor;
+        tableViews.at(i)->setCoords(tableViews.at(i)->getID(), newXCoord, newYCoord);
     }
 }
 
@@ -192,6 +244,7 @@ void MainWindow::createMenu()
     createFileMenu();
     createClassMenu();
     createViewMenu();
+    createScaleMenu();
 
     //QMenu *classMenu = menuBar()->addMenu(tr("&Classes"));
 }
@@ -262,6 +315,34 @@ void MainWindow::createViewMenu()
     viewMenu->addAction(showObjectsAct);
     viewMenu->addSeparator();
     viewMenu->addAction(applyToAllAct);
+}
+
+void MainWindow::createScaleMenu()
+{
+    QMenu *scaleMenu;
+    QMenu *zoomMenu;
+    QAction *zoomIn, *zoomOut;
+    QShortcut *keyLeft, *keyRight;
+
+    zoomIn = new QAction(tr("&Zoom In"), this);
+    connect(zoomIn, SIGNAL(triggered()), this, SLOT(slot_zoomIn()));
+
+    zoomOut = new QAction(tr("&Zoom Out"), this);
+    connect(zoomOut, SIGNAL(triggered()), this, SLOT(slot_zoomOut()));
+
+    scaleMenu = menuBar()->addMenu(tr("&Scale"));
+    zoomMenu = new QMenu(tr("&Zoom"));
+    scaleMenu->addMenu(zoomMenu);
+    zoomMenu->addAction(zoomIn);
+    zoomMenu->addAction(zoomOut);
+
+    keyLeft = new QShortcut(this);
+    keyLeft->setKey(Qt::CTRL + Qt::Key_Left);
+    connect(keyLeft, SIGNAL(activated()), this, SLOT(slot_zoomOut()));
+
+    keyRight = new QShortcut(this);
+    keyRight->setKey(Qt::CTRL + Qt::Key_Right);
+    connect(keyRight, SIGNAL(activated()), this, SLOT(slot_zoomIn()));
 }
 
 void MainWindow::createToolBar()

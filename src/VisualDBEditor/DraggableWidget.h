@@ -11,6 +11,7 @@ public:
 
     bool isDraggable() {return _isDraggable;}
     void setDraggable(bool isDraggable) {_isDraggable = isDraggable;}
+    int getDragStep();
 
 protected:
     void mouseMoveEvent(QMouseEvent *event) override;

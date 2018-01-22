@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QActionGroup>
 #include <QScrollArea>
+#include <QShortcut>
 
 #include "GlobalDefinitions.h"
 
@@ -35,6 +36,8 @@ private slots:
     void slot_fileSave();
     //void slot_chooseFont();
     void slot_addClasses();
+    void slot_zoomIn();
+    void slot_zoomOut();
     void showClasses() {setDisplayMode(CLASSES);}
     void showFields() {setDisplayMode(FIELDS);}
     void showObjects() {setDisplayMode(OBJECTS);}
@@ -60,6 +63,18 @@ private:
     QAction *showClassesAct, *showFieldsAct, *showObjectsAct, *applyToAllAct;
     QAction *relationEditing;
 
+    QMenu *scaleMenu;
+    QMenu *zoomMenu;
+    QAction *zoomIn, *zoomOut;
+
+    int zoomCounter;
+    int zoomFactor;
+
+    double mwCenterXCoord;
+    double mwCenterYCoord;
+
+    QShortcut *keyLeft, *keyRight;
+
     AddClass *newClass;
     DBHandler *dbHandler;
     Controller* controller;
@@ -73,6 +88,11 @@ private:
     TablesDrawingArea *tablesDrawingArea;
     QScrollArea *scrollArea;
 
+<<<<<<< HEAD
+=======
+    void createActions();
+    void createShortcuts();
+>>>>>>> master
     void createMenu();
     void createFileMenu();
     void createClassMenu();
@@ -81,6 +101,7 @@ private:
 
     void freeResources();
     void setDisplayMode(DisplayMode mode);
+    void moveTables(int zoomF);
 };
 
 #endif // MAINWINDOW_H
