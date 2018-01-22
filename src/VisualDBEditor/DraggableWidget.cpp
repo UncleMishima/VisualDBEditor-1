@@ -9,6 +9,11 @@ DraggableWidget::DraggableWidget(QWidget *parent):
 
 }
 
+int DraggableWidget::getDragStep()
+{
+    return dragStep;
+}
+
 void DraggableWidget::mousePressEvent(QMouseEvent *event)
 {
     if (_isDraggable && event->button() == Qt::LeftButton)
