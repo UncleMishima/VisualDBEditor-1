@@ -27,14 +27,14 @@ MainWindow::MainWindow(DBHandler *h, Controller *c):
     setWindowTitle(QString("VisualDBEditor"));
 
     zoomCounter = 0;
-    zoomFactor = 10;
+    zoomFactor = 30;
 
     createActions();
     createMenu();
     createShortcuts();
 
-    mwCenterXCoord = this->geometry().width()/2;
-    mwCenterYCoord = this->geometry().height()/2;
+    mwCenterXCoord = this->width()/2;
+    mwCenterYCoord = this->height()/2;
 
     scrollArea->setWidget(tablesDrawingArea);
     setCentralWidget(scrollArea);
@@ -108,10 +108,10 @@ void MainWindow::slot_zoomIn()
     {
         for(int i = 0; i < tableViews.size(); ++i)
         {
-            double newXCoord = tableViews.at(i)->x() + (mwCenterXCoord - tableViews.at(i)->x())/zoomFactor;
-            double newYCoord = tableViews.at(i)->y() + (mwCenterYCoord - tableViews.at(i)->y())/zoomFactor;
+            double newXCoord = tableViews.at(i)->x() + (mwCenterXCoord - tableViews.at(i)->x())/tableViews.at(i)->getDragStep();
+            double newYCoord = tableViews.at(i)->y() + (mwCenterYCoord - tableViews.at(i)->y())/tableViews.at(i)->getDragStep();
             tableViews.at(i)->setCoords(tableViews.at(i)->getID(), newXCoord, newYCoord);
-            ++zoomCounter;
+            //++zoomCounter;
         }
     }
     else return;
@@ -123,10 +123,10 @@ void MainWindow::slot_zoomOut()
     {
         for(int i = 0; i < tableViews.size(); ++i)
         {
-            double newXCoord = tableViews.at(i)->x() - (mwCenterXCoord - tableViews.at(i)->x())/zoomFactor;
-            double newYCoord = tableViews.at(i)->y() - (mwCenterYCoord - tableViews.at(i)->y())/zoomFactor;
+            double newXCoord = tableViews.at(i)->x() - (mwCenterXCoord - tableViews.at(i)->x())/tableViews.at(i)->getDragStep();
+            double newYCoord = tableViews.at(i)->y() - (mwCenterYCoord - tableViews.at(i)->y())/tableViews.at(i)->getDragStep();
             tableViews.at(i)->setCoords(tableViews.at(i)->getID(), newXCoord, newYCoord);
-            --zoomCounter;
+            //--zoomCounter;
         }
     }
     else return;
