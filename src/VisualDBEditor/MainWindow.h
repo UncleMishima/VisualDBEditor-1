@@ -34,6 +34,8 @@ private slots:
     void slot_fileSave();
     //void slot_chooseFont();
     void slot_addClasses();
+    void slot_zoomIn();
+    void slot_zoomOut();
     void showClasses() {setDisplayMode(CLASSES);}
     void showFields() {setDisplayMode(FIELDS);}
     void showObjects() {setDisplayMode(OBJECTS);}
@@ -63,6 +65,10 @@ private:
     QMenu *viewMenu;
     QActionGroup *displayModeGroup;
     QAction *showClassesAct, *showFieldsAct, *showObjectsAct, *applyToAllAct;
+
+    QMenu *scaleMenu;
+    QMenu *zoomMenu;
+    QAction *zoomIn, *zoomOut;
 
     AddClass *newClass;
     DBHandler *dbHandler;

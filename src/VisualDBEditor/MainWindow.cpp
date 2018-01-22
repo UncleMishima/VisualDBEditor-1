@@ -95,6 +95,16 @@ void MainWindow::slot_addClasses()
     }
 }
 
+void MainWindow::slot_zoomIn()
+{
+
+}
+
+void MainWindow::slot_zoomOut()
+{
+
+}
+
 void MainWindow::addNewClass()
 {
     QStandardItemModel* objectsModel = new QStandardItemModel();
@@ -205,6 +215,12 @@ void MainWindow::createActions()
 
     applyToAllAct = new QAction(tr("&Applay to all"), this);
     connect(applyToAllAct, SIGNAL(triggered()), this, SLOT(applyToAll()));
+
+    zoomIn = new QAction(tr("&Zoom In"), this);
+    connect(zoomIn, SIGNAL(triggered()), this, SLOT(slot_zoomIn()));
+
+    zoomOut = new QAction(tr("&Zoom Out"), this);
+    connect(zoomOut, SIGNAL(triggered()), this, SLOT(slot_zoomOut()));
 }
 
 void MainWindow::createMenu()
@@ -230,6 +246,12 @@ void MainWindow::createMenu()
     viewMenu->addAction(showObjectsAct);
     viewMenu->addSeparator();
     viewMenu->addAction(applyToAllAct);
+
+    scaleMenu = menuBar()->addMenu(tr("&Scale"));
+    zoomMenu = new QMenu(tr("&Zoom"));
+    scaleMenu->addMenu(zoomMenu);
+    zoomMenu->addAction(zoomIn);
+    zoomMenu->addAction(zoomOut);
 }
 
 void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
