@@ -40,6 +40,7 @@ private slots:
     void applyToAll();
     void addNewClass();
     void deleteClass(uint id);
+    void switchRelationsEditingMode();
 
     void tableXChanged(uint tableID, int x);
     void tableYChanged(uint tableID, int y);
@@ -55,12 +56,14 @@ private:
     //QAction *chooseFont;
 
     QAction *showClassesAct, *showFieldsAct, *showObjectsAct, *applyToAllAct;
+    QAction *relationEditing;
 
     AddClass *newClass;
     DBHandler *dbHandler;
     Controller* controller;
     DisplayMode displayMode;
     QVector<TableView*> tableViews;
+    bool isRelationsEditingModeActivated;
 
     // TableView widgets and relations are drawn inside this widget
     TablesDrawingArea *tablesDrawingArea;
@@ -70,6 +73,7 @@ private:
     void createFileMenu();
     void createClassMenu();
     void createViewMenu();
+    void createToolBar();
 
     void freeResources();
     void setDisplayMode(DisplayMode mode);

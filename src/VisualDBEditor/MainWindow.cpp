@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QFontDialog>
 #include <QLineEdit>
+#include <QToolBar>
 #include <QDebug>
 
 #include "DBHandler.h"
@@ -19,6 +20,7 @@ MainWindow::MainWindow(DBHandler *h, Controller *c):
     ui(new Ui::MainWindow),
     dbHandler(h),
     controller(c),
+    isRelationsEditingModeActivated(false),
     tablesDrawingArea(new TablesDrawingArea),
     scrollArea(new QScrollArea)
 {
@@ -27,6 +29,7 @@ MainWindow::MainWindow(DBHandler *h, Controller *c):
     setWindowTitle(QString("VisualDBEditor"));
 
     createMenu();
+    createToolBar();
 
     scrollArea->setWidget(tablesDrawingArea);
     setCentralWidget(scrollArea);
@@ -150,6 +153,11 @@ void MainWindow::deleteClass(uint id)
     tableViews.remove(id);
 }
 
+void MainWindow::switchRelationsEditingMode()
+{
+   isRelationsEditingModeActivated = !isRelationsEditingModeActivated;
+}
+
 
 void MainWindow::applyToAll()
 {
@@ -176,6 +184,8 @@ void MainWindow::createMenu()
     createFileMenu();
     createClassMenu();
     createViewMenu();
+
+    //QMenu *classMenu = menuBar()->addMenu(tr("&Classes"));
 }
 
 void MainWindow::createFileMenu()
@@ -205,19 +215,18 @@ void MainWindow::createFileMenu()
 
 void MainWindow::createClassMenu()
 {
-    QMenu *classMenu;
+    QMenu *classMenu = menuBar()->addMenu(tr("&Classes"));
     QAction *addClasses;
 
     addClasses = new QAction(tr("&Add"), this);
     connect(addClasses, SIGNAL(triggered()), this, SLOT(slot_addClasses()));
 
-    classMenu = menuBar()->addMenu(tr("&Classes"));
     classMenu->addAction(addClasses);
 }
 
 void MainWindow::createViewMenu()
 {
-    QMenu *viewMenu;
+    QMenu *viewMenu = menuBar()->addMenu(tr("&View"));
     QActionGroup *displayModeGroup;
 
     showClassesAct = new QAction(tr("&Classes"), this);
@@ -240,12 +249,26 @@ void MainWindow::createViewMenu()
     applyToAllAct = new QAction(tr("&Applay to all"), this);
     connect(applyToAllAct, SIGNAL(triggered()), this, SLOT(applyToAll()));
 
-    viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(showClassesAct);
     viewMenu->addAction(showFieldsAct);
     viewMenu->addAction(showObjectsAct);
     viewMenu->addSeparator();
     viewMenu->addAction(applyToAllAct);
+}
+
+void MainWindow::createToolBar()
+{
+    QToolBar *toolBar = new QToolBar;
+
+    relationEditing = new QAction(tr("&Relation editing"), this);
+    relationEditing->setCheckable(true);
+    relationEditing->setChecked(false);
+
+    connect(relationEditing, SIGNAL(triggered()),
+            this, SLOT(switchRelationsEditingMode()));
+
+    toolBar->addAction(relationEditing);
+    addToolBar(toolBar);
 }
 
 void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
