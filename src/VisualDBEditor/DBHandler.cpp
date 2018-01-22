@@ -150,12 +150,21 @@ void DBHandler::freeResources()
     if (db != nullptr)
         delete db;
 
-    if (tables == nullptr)
-        return;
+    if (tables != nullptr)
+    {
+        foreach (Table *t, *tables)
+            delete t;
 
-    foreach (Table *t, *tables)
-        delete t;
+        delete tables;
+        tables = nullptr;
+    }
 
-    delete tables;
-    tables = nullptr;
+    if (relations != nullptr)
+    {
+        foreach (Relation *r, *relations)
+            delete r;
+
+        delete relations;
+        relations = nullptr;
+    }
 }

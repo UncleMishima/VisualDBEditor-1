@@ -50,18 +50,10 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    QMenu *fileMenu;
-    QAction *fileOpen, *fileExit, *fileSave, *fileSaveAs;
-
-    QMenu *classMenu;
-    QAction *addClasses;
-
     //font view menu elelments
     //QMenu *tableMenu;
     //QAction *chooseFont;
 
-    QMenu *viewMenu;
-    QActionGroup *displayModeGroup;
     QAction *showClassesAct, *showFieldsAct, *showObjectsAct, *applyToAllAct;
 
     AddClass *newClass;
@@ -74,8 +66,11 @@ private:
     TablesDrawingArea *tablesDrawingArea;
     QScrollArea *scrollArea;
 
-    void createActions();
     void createMenu();
+    void createFileMenu();
+    void createClassMenu();
+    void createViewMenu();
+
     void freeResources();
     void setDisplayMode(DisplayMode mode);
 };

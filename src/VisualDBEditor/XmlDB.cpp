@@ -21,8 +21,6 @@ tuple<QVector<Table *> *, QVector<Relation *> *> XmlDB::readXmlFile(const QStrin
         qDebug() << "Error: File not open" << file->errorString();
     }
 
-    AccessMode accessMode;
-
     xmlReader.setDevice(file);
 
     while( !xmlReader.atEnd() && !xmlReader.hasError() )
@@ -45,7 +43,7 @@ tuple<QVector<Table *> *, QVector<Relation *> *> XmlDB::readXmlFile(const QStrin
                 xmlReader.readNext();
 
                 //int accessMode = xmlReader.attributes().value("accessMode").toString().toInt();
-                accessMode = (AccessMode)xmlReader.attributes().value("accessMode").toString().toInt();
+                //accessMode = (AccessMode)xmlReader.attributes().value("accessMode").toString().toInt();
                 //                qDebug() << "Count of tables: "
                 //                         << numOfTables << " Access mode: "
                 //                         << accessMode;

@@ -26,7 +26,6 @@ MainWindow::MainWindow(DBHandler *h, Controller *c):
 
     setWindowTitle(QString("VisualDBEditor"));
 
-    createActions();
     createMenu();
 
     scrollArea->setWidget(tablesDrawingArea);
@@ -100,7 +99,7 @@ void MainWindow::addNewClass()
     QStandardItemModel* objectsModel = new QStandardItemModel();
     QStandardItemModel* fieldsModel = new QStandardItemModel();
 
-    for(int j = 0; j < newClass->ITEM_COUNT; j++)
+    for(uint j = 0; j < newClass->ITEM_COUNT; j++)
     {
         if(newClass->ui->fieldsTableWidget->item(0, j) == nullptr || newClass->ui->fieldsTableWidget->item(1, j) == nullptr)
         {
@@ -113,9 +112,9 @@ void MainWindow::addNewClass()
         }
     }
 
-    for(int i = 0; i < newClass->ITEM_COUNT; i++)
+    for(uint i = 0; i < newClass->ITEM_COUNT; i++)
     {
-        for(int j = 0; j < newClass->ITEM_COUNT; j++)
+        for(uint j = 0; j < newClass->ITEM_COUNT; j++)
         {
             if(newClass->ui->objectsTableWidget->item(i, j) == nullptr)
             {
@@ -164,8 +163,25 @@ void MainWindow::applyToAll()
     }
 }
 
-void MainWindow::createActions()
+void MainWindow::createMenu()
 {
+    //font view menu
+    //tableMenu = menuBar()->addMenu(tr("&Table"));
+    //tableMenu->addAction(chooseFont);
+
+    //font view action and connect
+    //chooseFont = new QAction(tr("&Choose font"), this);
+    //connect(chooseFont, SIGNAL(triggered()), this, SLOT(slot_chooseFont()));
+
+    createFileMenu();
+    createClassMenu();
+    createViewMenu();
+}
+
+void MainWindow::createFileMenu()
+{
+    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+    QAction *fileOpen, *fileExit, *fileSave, *fileSaveAs;
 
     fileOpen = new QAction(tr("&Open"), this);
     connect(fileOpen, SIGNAL(triggered()), this, SLOT(slot_fileOpen()));
@@ -179,12 +195,30 @@ void MainWindow::createActions()
     fileExit = new QAction(tr("&Exit"), this);
     connect(fileExit, SIGNAL(triggered()), this, SLOT(close()));
 
-    //font view action and connect
-    //chooseFont = new QAction(tr("&Choose font"), this);
-    //connect(chooseFont, SIGNAL(triggered()), this, SLOT(slot_chooseFont()));
+    fileMenu->addAction(fileOpen);
+    fileMenu->addAction(fileSave);
+    fileMenu->addAction(fileSave);
+    fileMenu->addAction(fileSaveAs);
+    fileMenu->addSeparator();
+    fileMenu->addAction(fileExit);
+}
+
+void MainWindow::createClassMenu()
+{
+    QMenu *classMenu;
+    QAction *addClasses;
 
     addClasses = new QAction(tr("&Add"), this);
     connect(addClasses, SIGNAL(triggered()), this, SLOT(slot_addClasses()));
+
+    classMenu = menuBar()->addMenu(tr("&Classes"));
+    classMenu->addAction(addClasses);
+}
+
+void MainWindow::createViewMenu()
+{
+    QMenu *viewMenu;
+    QActionGroup *displayModeGroup;
 
     showClassesAct = new QAction(tr("&Classes"), this);
     showClassesAct->setCheckable(true);
@@ -205,24 +239,6 @@ void MainWindow::createActions()
 
     applyToAllAct = new QAction(tr("&Applay to all"), this);
     connect(applyToAllAct, SIGNAL(triggered()), this, SLOT(applyToAll()));
-}
-
-void MainWindow::createMenu()
-{
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(fileOpen);
-    fileMenu->addAction(fileSave);
-    fileMenu->addAction(fileSave);
-    fileMenu->addSeparator();
-    fileMenu->addAction(fileExit);
-
-    //font view menu
-    //tableMenu = menuBar()->addMenu(tr("&Table"));
-    //tableMenu->addAction(chooseFont);
-
-    //create menu
-    classMenu = menuBar()->addMenu(tr("&Classes"));
-    classMenu->addAction(addClasses);
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(showClassesAct);
