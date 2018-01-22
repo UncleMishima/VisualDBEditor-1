@@ -51,10 +51,12 @@ void TestXmlDB::initTestCase()
     table->setName(QString("Workers"));
     table->setFieldsModel(fieldsModel);
     table->setObjectsModel(objectsModel);
+
+/* need to fix display mode in test case
     table->setGeometry(QRect(5, 19, 100, 37), CLASSES);
     table->setGeometry(QRect(57, 23, 100, 100), FIELDS);
     table->setGeometry(QRect(61, 43, 143, 300), OBJECTS);
-
+*/
     testTables << table;
 
     table = new Table;
@@ -74,10 +76,14 @@ void TestXmlDB::initTestCase()
     table->setName(QString("Aassignments"));
     table->setFieldsModel(fieldsModel);
     table->setObjectsModel(objectsModel);
+
+
+
+ /* need to fix display mode in test case
     table->setGeometry(QRect(25, 19, 100, 37), CLASSES);
     table->setGeometry(QRect(90, 23, 100, 100), FIELDS);
     table->setGeometry(QRect(110, 43, 143, 300), OBJECTS);
-
+*/
     testTables << table;
 }
 
