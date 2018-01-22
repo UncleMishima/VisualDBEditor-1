@@ -8,6 +8,7 @@
 #include <QLineEdit>
 #include <QToolBar>
 #include <QDebug>
+#include <QMouseEvent>
 
 #include "DBHandler.h"
 #include "TableView.h"
@@ -15,6 +16,7 @@
 #include "TablesDrawingArea.h"
 #include "Relation.h"
 #include "AddClass.h"
+#include "RelationsManager.h"
 
 MainWindow::MainWindow(DBHandler *h, Controller *c):
     ui(new Ui::MainWindow),
@@ -33,12 +35,15 @@ MainWindow::MainWindow(DBHandler *h, Controller *c):
 
     scrollArea->setWidget(tablesDrawingArea);
     setCentralWidget(scrollArea);
+
+    relationsManager = new RelationsManager(this);
 }
 
 MainWindow::~MainWindow()
 {
     freeResources();
 
+    delete relationsManager;
     delete ui;
 }
 
@@ -156,6 +161,9 @@ void MainWindow::deleteClass(uint id)
 void MainWindow::switchRelationsEditingMode()
 {
    isRelationsEditingModeActivated = !isRelationsEditingModeActivated;
+
+   if (!isRelationsEditingModeActivated)
+    clicksCount = 0;
 }
 
 
@@ -306,15 +314,21 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
         connect(tv, SIGNAL(deleteClassS(uint)),
                 this, SLOT(deleteClass(uint)));
 
+        connect(tv, SIGNAL(clicked(uint)), this, SLOT(tableClicked(uint)));
+
         tableViews.append(tv);
     }
 
     setDisplayMode(displayMode);
 
-    tablesDrawingArea->setRelations(dbHandler->getRelations());
+
+    QVector<Relation*> *relations = dbHandler->getRelations();
+
+    relationsManager->setRelations(relations);
+
+    tablesDrawingArea->setRelations(relations);
     tablesDrawingArea->setTableViews(&tableViews);
     tablesDrawingArea->setDisplayMode(&(this->displayMode));
-
 }
 
 void MainWindow::setDisplayMode(DisplayMode mode)
@@ -406,6 +420,37 @@ void MainWindow::tableNameChanged(uint tableID, const QString &name)
     tablesDrawingArea->update();
 
     dbHandler->setTableName(tableID, name);
+}
+
+void MainWindow::tableClicked(uint tableId)
+{
+    if (!isRelationsEditingModeActivated)
+        return;
+
+    clicksCount++;
+
+    TableView *view = tableViews.at(tableId);
+
+    if (clicksCount == 1)
+    {
+        relationsManager->setFirstTableView(view);
+        relationsManager->setFirstTableFieldsModel(dbHandler->getTableFieldsModel(view->getID()));
+
+        return;
+    }
+
+    if (clicksCount == 2)
+    {
+        relationsManager->setSecondTableView(view);
+        relationsManager->setSecondTableFieldsModel(dbHandler->getTableFieldsModel(view->getID()));
+
+        relationsManager->exec();
+
+        clicksCount = 0;
+
+        return;
+    }
+
 }
 
 void MainWindow::freeResources()

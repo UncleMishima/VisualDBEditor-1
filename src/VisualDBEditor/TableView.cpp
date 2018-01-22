@@ -1,5 +1,4 @@
 #include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QSizeGrip>
 #include <QMoveEvent>
 #include <QResizeEvent>
@@ -102,6 +101,13 @@ void TableView::setAccesMod(AccessMode mode)
             break;
         }
     }
+}
+
+void TableView::mouseReleaseEvent(QMouseEvent *event)
+{
+    emit clicked(id);
+
+    DraggableWidget::mouseMoveEvent(event);
 }
 
 void TableView::moveEvent(QMoveEvent *event)

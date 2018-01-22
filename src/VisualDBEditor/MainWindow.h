@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -16,6 +16,7 @@ class TableView;
 class Controller;
 class TablesDrawingArea;
 class Relation;
+class RelationsManager;
 class AddClass;
 
 class MainWindow: public QMainWindow
@@ -47,6 +48,7 @@ private slots:
     void tableWidthChanged(uint tableID, int width);
     void tableHeightChanged(uint tableID, int height);
     void tableNameChanged(uint tableID, const QString &name);
+    void tableClicked(uint tableId);
 
 private:
     Ui::MainWindow *ui;
@@ -63,7 +65,9 @@ private:
     Controller* controller;
     DisplayMode displayMode;
     QVector<TableView*> tableViews;
+    RelationsManager *relationsManager;
     bool isRelationsEditingModeActivated;
+    int clicksCount = 0; // used to determine when RelationManager must be shown
 
     // TableView widgets and relations are drawn inside this widget
     TablesDrawingArea *tablesDrawingArea;

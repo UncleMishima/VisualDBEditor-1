@@ -33,8 +33,11 @@ signals:
     void heightChanged(uint id, int height);
     void tableNameChanged(uint id, const QString &name);
     void deleteClassS(uint id);
+    void clicked(uint id);
+
 
 protected:
+    void mouseReleaseEvent(QMouseEvent* event) override;
     void moveEvent(QMoveEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
     void enterEvent(QEvent *event) override;
