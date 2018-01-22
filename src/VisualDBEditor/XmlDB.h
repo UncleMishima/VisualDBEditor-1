@@ -21,6 +21,9 @@ public:
 
     QMap<QString, uint> tableID;
 
+    QString displayModeToString(DisplayMode mode);
+    DisplayMode stringToDisplayMode(QString str);
+
     tuple<QVector<Table *>*, QVector<Relation *> *> fillTables() override;
     void save(QVector<Table* > *tables);
 
