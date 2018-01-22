@@ -33,6 +33,9 @@ MainWindow::MainWindow(DBHandler *h, Controller *c):
     createMenu();
     createShortcuts();
 
+    mwCenterXCoord = this->geometry().width()/2;
+    mwCenterYCoord = this->geometry().height()/2;
+
     scrollArea->setWidget(tablesDrawingArea);
     setCentralWidget(scrollArea);
 }
@@ -103,21 +106,33 @@ void MainWindow::slot_zoomIn()
 {
     if(zoomCounter <= zoomFactor)
     {
-        ++zoomCounter;
-        moveTables();
+        for(int i = 0; i < tableViews.size(); ++i)
+        {
+            double newXCoord = tableViews.at(i)->x() + (mwCenterXCoord - tableViews.at(i)->x())/zoomFactor;
+            double newYCoord = tableViews.at(i)->y() + (mwCenterYCoord - tableViews.at(i)->y())/zoomFactor;
+            tableViews.at(i)->setCoords(tableViews.at(i)->getID(), newXCoord, newYCoord);
+            ++zoomCounter;
+        }
     }
+    else return;
 }
 
 void MainWindow::slot_zoomOut()
 {
     if(zoomCounter >= -zoomFactor)
     {
-        --zoomCounter;
-        moveTables();
+        for(int i = 0; i < tableViews.size(); ++i)
+        {
+            double newXCoord = tableViews.at(i)->x() - (mwCenterXCoord - tableViews.at(i)->x())/zoomFactor;
+            double newYCoord = tableViews.at(i)->y() - (mwCenterYCoord - tableViews.at(i)->y())/zoomFactor;
+            tableViews.at(i)->setCoords(tableViews.at(i)->getID(), newXCoord, newYCoord);
+            --zoomCounter;
+        }
     }
+    else return;
 }
 
-void MainWindow::moveTables()
+void MainWindow::moveTables(int zoomF)
 {
     double mwCenterXCoord = this->geometry().width()/2;
     double mwCenterYCoord = this->geometry().height()/2;

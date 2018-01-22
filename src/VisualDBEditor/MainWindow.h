@@ -74,6 +74,9 @@ private:
     int zoomCounter;
     int zoomFactor;
 
+    double mwCenterXCoord;
+    double mwCenterYCoord;
+
     QShortcut *keyLeft, *keyRight;
 
     AddClass *newClass;
@@ -91,7 +94,7 @@ private:
     void createMenu();
     void freeResources();
     void setDisplayMode(DisplayMode mode);
-    void moveTables();
+    void moveTables(int zoomF);
 };
 
 #endif // MAINWINDOW_H
