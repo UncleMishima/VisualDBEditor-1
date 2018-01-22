@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QActionGroup>
 #include <QScrollArea>
+#include <QShortcut>
 
 #include "GlobalDefinitions.h"
 
@@ -70,6 +71,11 @@ private:
     QMenu *zoomMenu;
     QAction *zoomIn, *zoomOut;
 
+    int zoomCounter;
+    int zoomFactor;
+
+    QShortcut *keyLeft, *keyRight;
+
     AddClass *newClass;
     DBHandler *dbHandler;
     Controller* controller;
@@ -81,9 +87,11 @@ private:
     QScrollArea *scrollArea;
 
     void createActions();
+    void createShortcuts();
     void createMenu();
     void freeResources();
     void setDisplayMode(DisplayMode mode);
+    void moveTables();
 };
 
 #endif // MAINWINDOW_H

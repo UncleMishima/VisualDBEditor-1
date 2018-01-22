@@ -26,8 +26,12 @@ MainWindow::MainWindow(DBHandler *h, Controller *c):
 
     setWindowTitle(QString("VisualDBEditor"));
 
+    zoomCounter = 0;
+    zoomFactor = 10;
+
     createActions();
     createMenu();
+    createShortcuts();
 
     scrollArea->setWidget(tablesDrawingArea);
     setCentralWidget(scrollArea);
@@ -97,12 +101,33 @@ void MainWindow::slot_addClasses()
 
 void MainWindow::slot_zoomIn()
 {
-
+    if(zoomCounter <= zoomFactor)
+    {
+        ++zoomCounter;
+        moveTables();
+    }
 }
 
 void MainWindow::slot_zoomOut()
 {
+    if(zoomCounter >= -zoomFactor)
+    {
+        --zoomCounter;
+        moveTables();
+    }
+}
 
+void MainWindow::moveTables()
+{
+    double mwCenterXCoord = this->geometry().width()/2;
+    double mwCenterYCoord = this->geometry().height()/2;
+
+    for(int i = 0; i < tableViews.size(); ++i)
+    {
+        double newXCoord = tableViews.at(i)->x() + (mwCenterXCoord - tableViews.at(i)->x())/zoomFactor;
+        double newYCoord = tableViews.at(i)->y() + (mwCenterYCoord - tableViews.at(i)->y())/zoomFactor;
+        tableViews.at(i)->setCoords(tableViews.at(i)->getID(), newXCoord, newYCoord);
+    }
 }
 
 void MainWindow::addNewClass()
@@ -252,6 +277,17 @@ void MainWindow::createMenu()
     scaleMenu->addMenu(zoomMenu);
     zoomMenu->addAction(zoomIn);
     zoomMenu->addAction(zoomOut);
+}
+
+void MainWindow::createShortcuts()
+{
+    keyLeft = new QShortcut(this);
+    keyLeft->setKey(Qt::CTRL + Qt::Key_Left);
+    connect(keyLeft, SIGNAL(activated()), this, SLOT(slot_zoomOut()));
+
+    keyRight = new QShortcut(this);
+    keyRight->setKey(Qt::CTRL + Qt::Key_Right);
+    connect(keyRight, SIGNAL(activated()), this, SLOT(slot_zoomIn()));
 }
 
 void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)

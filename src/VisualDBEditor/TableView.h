@@ -15,6 +15,10 @@ public:
     explicit TableView(QWidget *parent = nullptr);
 
     void setID(uint i) {id = i;}
+    void setCoords(uint id, int x, int y);
+    //void setYCoord(int y);
+    //void setWidth(int w);
+    //void setHeight(int h);
     void setTableName(const QString &name);
     void setModel(QAbstractItemModel *model);
     void setDisplayMod(DisplayMode mode);
