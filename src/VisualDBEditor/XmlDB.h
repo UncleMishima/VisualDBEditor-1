@@ -10,9 +10,9 @@
 #include <QTableView>
 
 #include "AbstractDB.h"
-#include "Relation.h"
 
 class Table;
+class Relation;
 
 class XmlDB : public AbstractDB
 {

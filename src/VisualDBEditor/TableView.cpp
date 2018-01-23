@@ -127,13 +127,6 @@ void TableView::setAccesMod(AccessMode mode)
     }
 }
 
-void TableView::mouseReleaseEvent(QMouseEvent *event)
-{
-    emit clicked(id);
-
-    DraggableWidget::mouseMoveEvent(event);
-}
-
 void TableView::moveEvent(QMoveEvent *event)
 {
     if (!_isEmitSignals)

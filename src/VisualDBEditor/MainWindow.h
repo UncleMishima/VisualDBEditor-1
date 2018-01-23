@@ -63,17 +63,11 @@ private:
     QAction *showClassesAct, *showFieldsAct, *showObjectsAct, *applyToAllAct;
     QAction *relationEditing;
 
-    QMenu *scaleMenu;
-    QMenu *zoomMenu;
-    QAction *zoomIn, *zoomOut;
-
     int zoomCounter;
     int zoomFactor;
 
     double mwCenterXCoord;
     double mwCenterYCoord;
-
-    QShortcut *keyLeft, *keyRight;
 
     AddClass *newClass;
     DBHandler *dbHandler;
@@ -88,16 +82,12 @@ private:
     TablesDrawingArea *tablesDrawingArea;
     QScrollArea *scrollArea;
 
-<<<<<<< HEAD
-=======
-    void createActions();
-    void createShortcuts();
->>>>>>> master
     void createMenu();
     void createFileMenu();
     void createClassMenu();
     void createViewMenu();
     void createToolBar();
+    void createScaleMenu();
 
     void freeResources();
     void setDisplayMode(DisplayMode mode);

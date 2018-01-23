@@ -9,6 +9,7 @@
 #include <QToolBar>
 #include <QDebug>
 #include <QMouseEvent>
+#include <QStandardItemModel>
 
 #include "DBHandler.h"
 #include "TableView.h"
@@ -514,18 +515,20 @@ void MainWindow::tableClicked(uint tableId)
 
     if (clicksCount == 1)
     {
-        relationsManager->setFirstTableView(view);
-        relationsManager->setFirstTableFieldsModel(dbHandler->getTableFieldsModel(view->getID()));
+        relationsManager->setTableView(0, view);
+        relationsManager->setTableFieldsModel(0, (QStandardItemModel*) dbHandler->getTableFieldsModel(view->getID()));
 
         return;
     }
 
     if (clicksCount == 2)
     {
-        relationsManager->setSecondTableView(view);
-        relationsManager->setSecondTableFieldsModel(dbHandler->getTableFieldsModel(view->getID()));
+        relationsManager->setTableView(1, view);
+        relationsManager->setTableFieldsModel(1, (QStandardItemModel*) dbHandler->getTableFieldsModel(view->getID()));
 
         relationsManager->exec();
+
+        tablesDrawingArea->update();
 
         clicksCount = 0;
 

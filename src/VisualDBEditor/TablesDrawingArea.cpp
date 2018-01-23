@@ -26,8 +26,8 @@ void TablesDrawingArea::paintEvent(QPaintEvent *)
         {
             foreach (Relation *relation, *relations)
             {
-                TableView *table1 = tableViews->at(relation->getFirstTableId());
-                TableView *table2 = tableViews->at(relation->getSecondTableId());
+                TableView *table1 = tableViews->at(relation->getTableId(0));
+                TableView *table2 = tableViews->at(relation->getTableId(1));
 
                 painter.drawLine(table1->geometry().center(),
                                  table2->geometry().center());

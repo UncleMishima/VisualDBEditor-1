@@ -5,6 +5,10 @@
 #include <QTableWidget>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QStandardItemModel>
+#include <QMessageBox>
+#include <QtGlobal>
+#include <algorithm>
 
 #include "GlobalDefinitions.h"
 
@@ -19,24 +23,29 @@ public:
     explicit RelationsManager(QWidget *parent = 0);
     ~RelationsManager();
 
-    void setFirstTableView(TableView *view);
-    void setSecondTableView(TableView *view);
-    void setFirstTableFieldsModel(QAbstractItemModel *model);
-    void setSecondTableFieldsModel(QAbstractItemModel *model);
+    void setTableView(uint index, TableView *view);
+    void setTableFieldsModel (int index, QStandardItemModel *model);
     void setRelations(QVector<Relation *> *r);
 
 public slots:
     virtual int exec() override;
+    void addRelation();
+    void removeRelation();
+    void cellChanged(int row, int column);
 
 private:
-    TableView *firstTableView = nullptr;
-    TableView *secondTableView = nullptr;
-    QAbstractItemModel *firstTableFieldsModel = nullptr;
-    QAbstractItemModel *secondTableFieldsModel = nullptr;
+    TableView *tableViews[2] = {nullptr, nullptr};
+    QStandardItemModel *tableFieldsModels[2] = {nullptr, nullptr};
+    // Indeces of relations betwen current tables
+    QVector<int> currentRelationsIndices;
     QVector<Relation*> *relations = nullptr;
 
     QTableWidget *relationsTableWidget;
     QPushButton *addRelationButton;
+
+    void addRow();
+    void initialize();
+    void freeResources();
 };
 
 #endif // RELATIONMANAGER_H

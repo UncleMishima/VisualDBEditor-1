@@ -41,7 +41,7 @@ signals:
 
 
 protected:
-    void mouseReleaseEvent(QMouseEvent* event) override;
+    void mouseReleaseEvent(QMouseEvent*) override {emit clicked(id);}
     void moveEvent(QMoveEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
     void enterEvent(QEvent *event) override;

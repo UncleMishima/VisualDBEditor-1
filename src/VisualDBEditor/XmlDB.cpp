@@ -2,6 +2,7 @@
 
 #include "XmlDB.h"
 #include "Table.h"
+#include "Relation.h"
 
 XmlDB::XmlDB(const QString &fp) : filePath(fp)
 {
@@ -88,26 +89,26 @@ tuple<QVector<Table *> *, QVector<Relation *> *> XmlDB::readXmlFile(const QStrin
                 Relation* r = new Relation();
                 QString leftTableName = xmlReader.attributes()
                         .value("leftTableName").toString();
-                //QString leftFieldName = xmlReader.attributes().value("leftFieldName").toString();
+                QString leftFieldName = xmlReader.attributes().value("leftFieldName").toString();
                 QString rightTableName = xmlReader.attributes()
                         .value("rightTableName").toString();
-                //QString rightFieldName = xmlReader.attributes().value("rightFieldName").toString();
+                QString rightFieldName = xmlReader.attributes().value("rightFieldName").toString();
 
-                qDebug() << tableID["Teachers"];
-                qDebug() << tableID["Info"];
+                uint leftTableId = tableID.value(leftTableName);
+                uint rightTableId = tableID.value(rightTableName);
+                uint leftFieldNumber = tables->at(leftTableId)->getFieldsModel()->findItems(leftFieldName).first()->row();
+                uint rightFieldNumber = tables->at(rightTableId)->getFieldsModel()->findItems(rightFieldName).first()->row();
 
-                for(int i = 0; i < tableID.size(); i++)
-                {
-                    if(leftTableName == "Teachers")
-                    {
-                        r->setFirstTableId(tableID["Teachers"]);
-                    }
+                // It doesn't work. Don't know why.
+                //r->setTableId(0, leftTableId);
+                //r->setTableFieldNumber(0, leftFieldNumber);
+                //r->setTableId(1, rightTableId);
+                //r->setTableFieldNumber(1, rightFieldNumber);
 
-                    if(rightTableName == "Info")
-                    {
-                        r->setSecondTableId(tableID["Info"]);
-                    }
-                }
+                r->tablesId[0] = leftTableId;
+                r->tablesFieldNumbers[0] = leftFieldNumber;
+                r->tablesId[1] = rightTableId;
+                r->tablesFieldNumbers[1] = rightFieldNumber;
 
                 relations->push_back(r);
             }
