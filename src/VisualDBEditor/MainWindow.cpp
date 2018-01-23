@@ -216,7 +216,13 @@ void MainWindow::switchRelationsEditingMode()
    isRelationsEditingModeActivated = !isRelationsEditingModeActivated;
 
    if (!isRelationsEditingModeActivated)
-    clicksCount = 0;
+       clicksCount = 0;
+}
+
+void MainWindow::switchRelationsShowing()
+{
+    tablesDrawingArea->switchRelationsShowing();
+    tablesDrawingArea->update();
 }
 
 
@@ -311,11 +317,17 @@ void MainWindow::createViewMenu()
     applyToAllAct = new QAction(tr("&Applay to all"), this);
     connect(applyToAllAct, SIGNAL(triggered()), this, SLOT(applyToAll()));
 
+    QAction *switchRelationsShowingAct = new QAction(tr("&Show Relations"), this);
+    switchRelationsShowingAct->setCheckable(true);
+    switchRelationsShowingAct->setChecked(true);
+    connect(switchRelationsShowingAct, SIGNAL(triggered()), this, SLOT(switchRelationsShowing()));
+
     viewMenu->addAction(showClassesAct);
     viewMenu->addAction(showFieldsAct);
     viewMenu->addAction(showObjectsAct);
     viewMenu->addSeparator();
     viewMenu->addAction(applyToAllAct);
+    viewMenu->addAction(switchRelationsShowingAct);
 }
 
 void MainWindow::createScaleMenu()

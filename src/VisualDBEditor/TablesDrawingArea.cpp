@@ -12,7 +12,7 @@ TablesDrawingArea::TablesDrawingArea(QWidget *parent): QWidget(parent)
 
 void TablesDrawingArea::paintEvent(QPaintEvent *)
 {
-    if (relations == nullptr)
+    if (!isShowRelations || relations == nullptr)
         return;
 
     QPainter painter(this);

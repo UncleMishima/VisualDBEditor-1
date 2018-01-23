@@ -17,6 +17,7 @@ public:
     void setDisplayMode(DisplayMode *mode) {displayMode = mode;}
     void setTableViews(QVector<TableView*> *views) {tableViews = views;}
     void setRelations(QVector<Relation*> *r) {relations = r;}
+    void switchRelationsShowing() {isShowRelations = !isShowRelations;}
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -25,6 +26,7 @@ private:
     DisplayMode *displayMode =  nullptr;
     QVector<TableView*> *tableViews =  nullptr;
     QVector<Relation*> *relations = nullptr;
+    bool isShowRelations = true;
 };
 
 #endif // TABLESDRAWINGAREA_H

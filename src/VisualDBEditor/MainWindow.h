@@ -45,6 +45,7 @@ private slots:
     void addNewClass();
     void deleteClass(uint id);
     void switchRelationsEditingMode();
+    void switchRelationsShowing();
 
     void tableXChanged(uint tableID, int x);
     void tableYChanged(uint tableID, int y);
