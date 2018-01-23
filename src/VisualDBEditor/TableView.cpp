@@ -3,6 +3,7 @@
 #include <QMoveEvent>
 #include <QResizeEvent>
 #include <QMenu>
+#include <QMessageBox>
 
 #include "TableView.h"
 
@@ -197,6 +198,12 @@ void TableView::addRow()
 
 void TableView::deleteRow()
 {
+    int result = QMessageBox::question(this, tr("VisualDBEditor"),
+                                       tr("Are you shure?"));
+
+    if (result == QMessageBox::No)
+        return;
+
     QAbstractItemModel *model = view->model();
     QModelIndexList indexList;
 
@@ -227,5 +234,5 @@ void TableView::createActions()
 
 void TableView::deleteClass()
 {
-    emit deleteClassS(id);
+    emit deleteClass(id);
 }

@@ -31,7 +31,7 @@ Controller::Controller()
     connect(this, SIGNAL(createTable(QString,QStandardItemModel*,QStandardItemModel*)),
             dbHandler, SLOT(createTable(QString,QStandardItemModel*,QStandardItemModel*)), Qt::BlockingQueuedConnection);
 
-    connect(this, SIGNAL(deleteClassS(uint)),
+    connect(this, SIGNAL(deleteClassSignal(uint)),
             dbHandler, SLOT(deleteClass(uint)));
 
     dbHandlerThread.start();
@@ -53,7 +53,7 @@ void Controller::createNewTable(QString tableName, QStandardItemModel* objectsMo
 
 void Controller::deleteClass(uint id)
 {
-    emit deleteClassS(id);
+    emit deleteClassSignal(id);
 }
 
 
