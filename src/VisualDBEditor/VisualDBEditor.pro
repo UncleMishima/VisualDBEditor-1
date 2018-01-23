@@ -27,7 +27,8 @@ SOURCES += main.cpp \
     MainWindow.cpp \
     Relation.cpp \
     TablesDrawingArea.cpp \
-    AddClass.cpp
+    AddClass.cpp \
+    RelationsManager.cpp
 
 HEADERS += \
     Controller.h \
@@ -41,7 +42,8 @@ HEADERS += \
     MainWindow.h \
     Relation.h \
     TablesDrawingArea.h \
-    AddClass.h
+    AddClass.h \
+    RelationsManager.h
 
 FORMS += \
     MainWindow.ui \

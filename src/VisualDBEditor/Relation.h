@@ -6,23 +6,14 @@
 class Relation
 {
 public:
-    //Relation();
+    void setTableId(uint index, uint id);
+    void setTableFieldNumber(uint index, uint number);
 
-    void setFirstTableId(uint id) {firstTableId = id;}
-    void setFirstTableFieldNumber(uint n) {firstTableFieldNumber = n;}
-    void setSecondTableId(uint id) {secondTableId = id;}
-    void setSecondTableFieldNumber(uint n) {secondTableFieldNumber = n;}
+    uint getTableId(uint index);
+    uint getTableFieldNumber(uint index);
 
-    uint getFirstTableId() {return firstTableId;}
-    uint getFirstTableFieldNumber() {return firstTableFieldNumber;}
-    uint getSecondTableId() {return secondTableId;}
-    uint getSecondTableFieldNumber() {return secondTableFieldNumber;}
-
-private:
-    uint firstTableId;
-    uint firstTableFieldNumber;
-    uint secondTableId;
-    uint secondTableFieldNumber;
+    uint tablesId[2];
+    uint tablesFieldNumbers[2];
 };
 
 #endif // RELATION_H

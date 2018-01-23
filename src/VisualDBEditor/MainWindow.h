@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -17,6 +17,7 @@ class TableView;
 class Controller;
 class TablesDrawingArea;
 class Relation;
+class RelationsManager;
 class AddClass;
 
 class MainWindow: public QMainWindow
@@ -43,33 +44,25 @@ private slots:
     void applyToAll();
     void addNewClass();
     void deleteClass(uint id);
+    void switchRelationsEditingMode();
+    void switchRelationsShowing();
 
     void tableXChanged(uint tableID, int x);
     void tableYChanged(uint tableID, int y);
     void tableWidthChanged(uint tableID, int width);
     void tableHeightChanged(uint tableID, int height);
     void tableNameChanged(uint tableID, const QString &name);
+    void tableClicked(uint tableId);
 
 private:
     Ui::MainWindow *ui;
-
-    QMenu *fileMenu;
-    QAction *fileOpen, *fileExit, *fileSave, *fileSaveAs;
-
-    QMenu *classMenu;
-    QAction *addClasses;
 
     //font view menu elelments
     //QMenu *tableMenu;
     //QAction *chooseFont;
 
-    QMenu *viewMenu;
-    QActionGroup *displayModeGroup;
     QAction *showClassesAct, *showFieldsAct, *showObjectsAct, *applyToAllAct;
-
-    QMenu *scaleMenu;
-    QMenu *zoomMenu;
-    QAction *zoomIn, *zoomOut;
+    QAction *relationEditing;
 
     int zoomCounter;
     int zoomFactor;
@@ -77,21 +70,26 @@ private:
     double mwCenterXCoord;
     double mwCenterYCoord;
 
-    QShortcut *keyLeft, *keyRight;
-
     AddClass *newClass;
     DBHandler *dbHandler;
     Controller* controller;
     DisplayMode displayMode;
     QVector<TableView*> tableViews;
+    RelationsManager *relationsManager;
+    bool isRelationsEditingModeActivated;
+    int clicksCount = 0; // used to determine when RelationManager must be shown
 
     // TableView widgets and relations are drawn inside this widget
     TablesDrawingArea *tablesDrawingArea;
     QScrollArea *scrollArea;
 
-    void createActions();
-    void createShortcuts();
     void createMenu();
+    void createFileMenu();
+    void createClassMenu();
+    void createViewMenu();
+    void createToolBar();
+    void createScaleMenu();
+
     void freeResources();
     void setDisplayMode(DisplayMode mode);
     void moveTables(int zoomF);

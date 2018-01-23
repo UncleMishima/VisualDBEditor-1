@@ -1,5 +1,4 @@
 #include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QSizeGrip>
 #include <QMoveEvent>
 #include <QResizeEvent>

@@ -6,7 +6,10 @@
 #include <QFile>
 #include <QFontDialog>
 #include <QLineEdit>
+#include <QToolBar>
 #include <QDebug>
+#include <QMouseEvent>
+#include <QStandardItemModel>
 
 #include "DBHandler.h"
 #include "TableView.h"
@@ -14,11 +17,13 @@
 #include "TablesDrawingArea.h"
 #include "Relation.h"
 #include "AddClass.h"
+#include "RelationsManager.h"
 
 MainWindow::MainWindow(DBHandler *h, Controller *c):
     ui(new Ui::MainWindow),
     dbHandler(h),
     controller(c),
+    isRelationsEditingModeActivated(false),
     tablesDrawingArea(new TablesDrawingArea),
     scrollArea(new QScrollArea)
 {
@@ -26,24 +31,25 @@ MainWindow::MainWindow(DBHandler *h, Controller *c):
 
     setWindowTitle(QString("VisualDBEditor"));
 
+    createMenu();
+    createToolBar();
+    
     zoomCounter = 0;
     zoomFactor = 30;
-
-    createActions();
-    createMenu();
-    createShortcuts();
-
     mwCenterXCoord = this->width()/2;
     mwCenterYCoord = this->height()/2;
 
     scrollArea->setWidget(tablesDrawingArea);
     setCentralWidget(scrollArea);
+
+    relationsManager = new RelationsManager(this);
 }
 
 MainWindow::~MainWindow()
 {
     freeResources();
 
+    delete relationsManager;
     delete ui;
 }
 
@@ -115,6 +121,8 @@ void MainWindow::slot_zoomIn()
         }
     }
     else return;
+
+    applyToAll();
 }
 
 void MainWindow::slot_zoomOut()
@@ -130,6 +138,8 @@ void MainWindow::slot_zoomOut()
         }
     }
     else return;
+
+    applyToAll();
 }
 
 void MainWindow::moveTables(int zoomF)
@@ -150,7 +160,7 @@ void MainWindow::addNewClass()
     QStandardItemModel* objectsModel = new QStandardItemModel();
     QStandardItemModel* fieldsModel = new QStandardItemModel();
 
-    for(int j = 0; j < newClass->ITEM_COUNT; j++)
+    for(uint j = 0; j < newClass->ITEM_COUNT; j++)
     {
         if(newClass->ui->fieldsTableWidget->item(0, j) == nullptr || newClass->ui->fieldsTableWidget->item(1, j) == nullptr)
         {
@@ -163,9 +173,9 @@ void MainWindow::addNewClass()
         }
     }
 
-    for(int i = 0; i < newClass->ITEM_COUNT; i++)
+    for(uint i = 0; i < newClass->ITEM_COUNT; i++)
     {
-        for(int j = 0; j < newClass->ITEM_COUNT; j++)
+        for(uint j = 0; j < newClass->ITEM_COUNT; j++)
         {
             if(newClass->ui->objectsTableWidget->item(i, j) == nullptr)
             {
@@ -201,6 +211,20 @@ void MainWindow::deleteClass(uint id)
     tableViews.remove(id);
 }
 
+void MainWindow::switchRelationsEditingMode()
+{
+   isRelationsEditingModeActivated = !isRelationsEditingModeActivated;
+
+   if (!isRelationsEditingModeActivated)
+       clicksCount = 0;
+}
+
+void MainWindow::switchRelationsShowing()
+{
+    tablesDrawingArea->switchRelationsShowing();
+    tablesDrawingArea->update();
+}
+
 
 void MainWindow::applyToAll()
 {
@@ -214,8 +238,28 @@ void MainWindow::applyToAll()
     }
 }
 
-void MainWindow::createActions()
+void MainWindow::createMenu()
 {
+    //font view menu
+    //tableMenu = menuBar()->addMenu(tr("&Table"));
+    //tableMenu->addAction(chooseFont);
+
+    //font view action and connect
+    //chooseFont = new QAction(tr("&Choose font"), this);
+    //connect(chooseFont, SIGNAL(triggered()), this, SLOT(slot_chooseFont()));
+
+    createFileMenu();
+    createClassMenu();
+    createViewMenu();
+    createScaleMenu();
+
+    //QMenu *classMenu = menuBar()->addMenu(tr("&Classes"));
+}
+
+void MainWindow::createFileMenu()
+{
+    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+    QAction *fileOpen, *fileExit, *fileSave, *fileSaveAs;
 
     fileOpen = new QAction(tr("&Open"), this);
     connect(fileOpen, SIGNAL(triggered()), this, SLOT(slot_fileOpen()));
@@ -229,12 +273,29 @@ void MainWindow::createActions()
     fileExit = new QAction(tr("&Exit"), this);
     connect(fileExit, SIGNAL(triggered()), this, SLOT(close()));
 
-    //font view action and connect
-    //chooseFont = new QAction(tr("&Choose font"), this);
-    //connect(chooseFont, SIGNAL(triggered()), this, SLOT(slot_chooseFont()));
+    fileMenu->addAction(fileOpen);
+    fileMenu->addAction(fileSave);
+    fileMenu->addAction(fileSave);
+    fileMenu->addAction(fileSaveAs);
+    fileMenu->addSeparator();
+    fileMenu->addAction(fileExit);
+}
+
+void MainWindow::createClassMenu()
+{
+    QMenu *classMenu = menuBar()->addMenu(tr("&Classes"));
+    QAction *addClasses;
 
     addClasses = new QAction(tr("&Add"), this);
     connect(addClasses, SIGNAL(triggered()), this, SLOT(slot_addClasses()));
+
+    classMenu->addAction(addClasses);
+}
+
+void MainWindow::createViewMenu()
+{
+    QMenu *viewMenu = menuBar()->addMenu(tr("&View"));
+    QActionGroup *displayModeGroup;
 
     showClassesAct = new QAction(tr("&Classes"), this);
     showClassesAct->setCheckable(true);
@@ -256,46 +317,38 @@ void MainWindow::createActions()
     applyToAllAct = new QAction(tr("&Applay to all"), this);
     connect(applyToAllAct, SIGNAL(triggered()), this, SLOT(applyToAll()));
 
-    zoomIn = new QAction(tr("&Zoom In"), this);
-    connect(zoomIn, SIGNAL(triggered()), this, SLOT(slot_zoomIn()));
+    QAction *switchRelationsShowingAct = new QAction(tr("&Show Relations"), this);
+    switchRelationsShowingAct->setCheckable(true);
+    switchRelationsShowingAct->setChecked(true);
+    connect(switchRelationsShowingAct, SIGNAL(triggered()), this, SLOT(switchRelationsShowing()));
 
-    zoomOut = new QAction(tr("&Zoom Out"), this);
-    connect(zoomOut, SIGNAL(triggered()), this, SLOT(slot_zoomOut()));
-}
-
-void MainWindow::createMenu()
-{
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(fileOpen);
-    fileMenu->addAction(fileSave);
-    fileMenu->addAction(fileSave);
-    fileMenu->addSeparator();
-    fileMenu->addAction(fileExit);
-
-    //font view menu
-    //tableMenu = menuBar()->addMenu(tr("&Table"));
-    //tableMenu->addAction(chooseFont);
-
-    //create menu
-    classMenu = menuBar()->addMenu(tr("&Classes"));
-    classMenu->addAction(addClasses);
-
-    viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(showClassesAct);
     viewMenu->addAction(showFieldsAct);
     viewMenu->addAction(showObjectsAct);
     viewMenu->addSeparator();
     viewMenu->addAction(applyToAllAct);
+    viewMenu->addAction(switchRelationsShowingAct);
+}
+
+void MainWindow::createScaleMenu()
+{
+    QMenu *scaleMenu;
+    QMenu *zoomMenu;
+    QAction *zoomIn, *zoomOut;
+    QShortcut *keyLeft, *keyRight;
+
+    zoomIn = new QAction(tr("&Zoom In"), this);
+    connect(zoomIn, SIGNAL(triggered()), this, SLOT(slot_zoomIn()));
+
+    zoomOut = new QAction(tr("&Zoom Out"), this);
+    connect(zoomOut, SIGNAL(triggered()), this, SLOT(slot_zoomOut()));
 
     scaleMenu = menuBar()->addMenu(tr("&Scale"));
     zoomMenu = new QMenu(tr("&Zoom"));
     scaleMenu->addMenu(zoomMenu);
     zoomMenu->addAction(zoomIn);
     zoomMenu->addAction(zoomOut);
-}
 
-void MainWindow::createShortcuts()
-{
     keyLeft = new QShortcut(this);
     keyLeft->setKey(Qt::CTRL + Qt::Key_Left);
     connect(keyLeft, SIGNAL(activated()), this, SLOT(slot_zoomOut()));
@@ -303,6 +356,21 @@ void MainWindow::createShortcuts()
     keyRight = new QShortcut(this);
     keyRight->setKey(Qt::CTRL + Qt::Key_Right);
     connect(keyRight, SIGNAL(activated()), this, SLOT(slot_zoomIn()));
+}
+
+void MainWindow::createToolBar()
+{
+    QToolBar *toolBar = new QToolBar;
+
+    relationEditing = new QAction(tr("&Relation editing"), this);
+    relationEditing->setCheckable(true);
+    relationEditing->setChecked(false);
+
+    connect(relationEditing, SIGNAL(triggered()),
+            this, SLOT(switchRelationsEditingMode()));
+
+    toolBar->addAction(relationEditing);
+    addToolBar(toolBar);
 }
 
 void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
@@ -340,15 +408,21 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
         connect(tv, SIGNAL(deleteClassS(uint)),
                 this, SLOT(deleteClass(uint)));
 
+        connect(tv, SIGNAL(clicked(uint)), this, SLOT(tableClicked(uint)));
+
         tableViews.append(tv);
     }
 
     setDisplayMode(displayMode);
 
-    tablesDrawingArea->setRelations(dbHandler->getRelations());
+
+    QVector<Relation*> *relations = dbHandler->getRelations();
+
+    relationsManager->setRelations(relations);
+
+    tablesDrawingArea->setRelations(relations);
     tablesDrawingArea->setTableViews(&tableViews);
     tablesDrawingArea->setDisplayMode(&(this->displayMode));
-
 }
 
 void MainWindow::setDisplayMode(DisplayMode mode)
@@ -440,6 +514,39 @@ void MainWindow::tableNameChanged(uint tableID, const QString &name)
     tablesDrawingArea->update();
 
     dbHandler->setTableName(tableID, name);
+}
+
+void MainWindow::tableClicked(uint tableId)
+{
+    if (!isRelationsEditingModeActivated)
+        return;
+
+    clicksCount++;
+
+    TableView *view = tableViews.at(tableId);
+
+    if (clicksCount == 1)
+    {
+        relationsManager->setTableView(0, view);
+        relationsManager->setTableFieldsModel(0, (QStandardItemModel*) dbHandler->getTableFieldsModel(view->getID()));
+
+        return;
+    }
+
+    if (clicksCount == 2)
+    {
+        relationsManager->setTableView(1, view);
+        relationsManager->setTableFieldsModel(1, (QStandardItemModel*) dbHandler->getTableFieldsModel(view->getID()));
+
+        relationsManager->exec();
+
+        tablesDrawingArea->update();
+
+        clicksCount = 0;
+
+        return;
+    }
+
 }
 
 void MainWindow::freeResources()
