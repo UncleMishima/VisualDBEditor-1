@@ -25,7 +25,7 @@ public:
     DisplayMode stringToDisplayMode(QString str);
 
     tuple<QVector<Table *>*, QVector<Relation *> *> fillTables() override;
-    void save(QVector<Table* > *tables);
+    void save(QVector<Table* > *tables, QVector<Relation *> *relations) override;
 
 private:
     QString filePath;

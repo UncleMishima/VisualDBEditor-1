@@ -200,6 +200,12 @@ void MainWindow::addNewClass()
 
 void MainWindow::deleteClass(uint id)
 {
+    int result = QMessageBox::question(this, tr("VisualDBEditor"),
+                                       tr("Are you shure?"));
+
+    if (result == QMessageBox::No)
+        return;
+
     controller->deleteClass(id);
 
     for(int i = id + 1; i < tableViews.size(); i++)
@@ -405,7 +411,7 @@ void MainWindow::showTables(AccessMode accesMod, DisplayMode displayMode)
         connect(tv, SIGNAL(tableNameChanged(uint,QString)),
                 this, SLOT(tableNameChanged(uint,QString)));
 
-        connect(tv, SIGNAL(deleteClassS(uint)),
+        connect(tv, SIGNAL(deleteClass(uint)),
                 this, SLOT(deleteClass(uint)));
 
         connect(tv, SIGNAL(clicked(uint)), this, SLOT(tableClicked(uint)));

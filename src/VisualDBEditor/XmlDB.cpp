@@ -221,7 +221,7 @@ tuple<QVector<Table *> *, QVector<Relation *> *> XmlDB::fillTables()
 
 
 
-void XmlDB::save(QVector<Table *> *tables)
+void XmlDB::save(QVector<Table *> *tables, QVector<Relation *> *relations)
 {
     QFile file(filePath);
 
@@ -289,6 +289,27 @@ void XmlDB::save(QVector<Table *> *tables)
         }
 
         xmlWriter.writeEndElement(); //end of Table
+    }
+
+    foreach (Relation *r, *relations)
+    {
+        Table *leftTable = tables->at(r->tablesId[0]);
+        Table *rightTable = tables->at(r->tablesId[1]);
+
+        QStandardItem *leftFieldItem = leftTable->getFieldsModel()->item(r->tablesFieldNumbers[0]);
+        QString leftFieldName = leftFieldItem->data(Qt::DisplayRole).toString();
+
+        QStandardItem *rightFieldItem = rightTable->getFieldsModel()->item(r->tablesFieldNumbers[1]);
+        QString rightFieldName = rightFieldItem->data(Qt::DisplayRole).toString();
+
+        xmlWriter.writeStartElement("Relation");
+
+        xmlWriter.writeAttribute("leftTableName", leftTable->getName());
+        xmlWriter.writeAttribute("leftFieldName", leftFieldName);
+        xmlWriter.writeAttribute("rightTableName", rightTable->getName());
+        xmlWriter.writeAttribute("rightFieldName", rightFieldName);
+
+        xmlWriter.writeEndElement();
     }
 
     xmlWriter.writeEndElement(); //end of Database

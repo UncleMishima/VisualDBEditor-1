@@ -36,7 +36,7 @@ signals:
     void widthChanged(uint id, int width);
     void heightChanged(uint id, int height);
     void tableNameChanged(uint id, const QString &name);
-    void deleteClassS(uint id);
+    void deleteClass(uint id);
     void clicked(uint id);
 
 
