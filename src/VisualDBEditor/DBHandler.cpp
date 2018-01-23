@@ -141,7 +141,7 @@ void DBHandler::save()
     Q_ASSERT_X(db != nullptr, "save", "db = nullptr");
     Q_ASSERT_X(tables != nullptr, "save", "tables = nullptr");
 
-    db->save(tables);
+    db->save(tables, relations);
 
 }
 

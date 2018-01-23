@@ -87,43 +87,42 @@ void TestXmlDB::initTestCase()
 
 void TestXmlDB::save()
 {
-    QString actualFileName("savedFile.xml");
-    QFile expectedFile(testFileName);
-    QFile actualFile(actualFileName);
-    XmlDB xmlDB(actualFileName);
+    //QString actualFileName("savedFile.xml");
+    //QFile expectedFile(testFileName);
+    //QFile actualFile(actualFileName);
+    //XmlDB xmlDB(actualFileName);
 
-    xmlDB.save(&testTables);
+    //xmlDB.save(&testTables);
 
-    if (!expectedFile.open(QIODevice::ReadOnly | QIODevice::Text))
-        QFAIL(QString("Can't open file %1")
-                                        .arg(testFileName).toLatin1().data());
+    //if (!expectedFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    //    QFAIL(QString("Can't open file %1")
+    //                                    .arg(testFileName).toLatin1().data());
 
-    if (!actualFile.open(QIODevice::ReadOnly | QIODevice::Text))
-        QFAIL("Can't open saved file");
+    //if (!actualFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    //    QFAIL("Can't open saved file");
 
-    QTextStream expectedStream(&expectedFile);
-    QTextStream actualStream(&actualFile);
-    int lineNumber = 1;
-    /*
-    while(!expectedStream.atEnd())
-    {
-        QString actualFileLine = actualStream.readLine();
-        QString expectedFileLine = expectedStream.readLine();
-        QVERIFY2(actualFileLine == expectedFileLine, QString("error at line %1 "
-                                             "Actual: %2 "
-                                             "Expected: %3")
-                                             .arg(lineNumber)
-                                             .arg(actualFileLine)
-                                             .arg(expectedFileLine)
-                                             .toLatin1().data());
+    //QTextStream expectedStream(&expectedFile);
+    //QTextStream actualStream(&actualFile);
+    //int lineNumber = 1;
+    //
+    //while(!expectedStream.atEnd())
+    //{
+    //    QString actualFileLine = actualStream.readLine();
+    //    QString expectedFileLine = expectedStream.readLine();
+    //    QVERIFY2(actualFileLine == expectedFileLine, QString("error at line %1 "
+    //                                         "Actual: %2 "
+    //                                         "Expected: %3")
+    //                                         .arg(lineNumber)
+    //                                         .arg(actualFileLine)
+    //                                         .arg(expectedFileLine)
+    //                                         .toLatin1().data());
 
-        lineNumber++;
-    }
-*/
+    //    lineNumber++;
+    //}
 
-    actualFile.remove();
-    expectedFile.close();
-    QFile::remove(actualFileName);
+    //actualFile.remove();
+    //expectedFile.close();
+    //QFile::remove(actualFileName);
 }
 
 void TestXmlDB::cleanupTestCase()

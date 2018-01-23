@@ -19,7 +19,7 @@ public:
                                       uint);
     virtual tuple<QVector<Table *>*, QVector<Relation *>* > fillTables() = 0;
 
-    virtual void save(QVector<Table* > *tables) = 0;
+    virtual void save(QVector<Table* > *tables, QVector<Relation *> *relations) = 0;
 
 };
 
